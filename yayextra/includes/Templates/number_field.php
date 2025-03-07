@@ -51,7 +51,7 @@ $max = ! empty( $data['maxNumber'] ) ? (int) $data['maxNumber'] : null;
 echo '<div class="yayextra-option-field-wrap" data-option-field-id="' . esc_attr( $data['id'] ) . '" data-option-field-type="number">';
 Utils::get_template_part( $template_folder, 'label_field', array( 'data' => $data ) );
 
-echo '<div><input type="number" min="' . esc_attr( $min ) . '" max="' . esc_attr( $max ) . '" class="' . esc_attr( $class_names ) . '"  name="option_field_data[' . esc_attr( $opt_set_id ) . '][' . esc_attr( $data['id'] ) . ']" value="' . esc_attr( $value ) . '"/></div>';
+echo '<div><input type="number" min="' . esc_attr( $min ) . '" max="' . esc_attr( $max ) . '" class="' . esc_attr( $class_names ) . '"  name="option_field_data[' . esc_attr( $opt_set_id ) . '][' . esc_attr( $data['id'] ) . ']" value="' . esc_attr( $value ) . '"' . esc_attr( $is_required ? ' required ' : '' ) . ' /></div>';
 echo '</div>';
 
 

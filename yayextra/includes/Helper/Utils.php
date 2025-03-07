@@ -60,7 +60,7 @@ class Utils {
 		// extract( $wp_query->query_vars, EXTR_SKIP );
 		// }
 		// extract( $params, EXTR_SKIP );
-		require $_template_file;
+		include $_template_file;
 	}
 
 	/**
@@ -168,6 +168,11 @@ class Utils {
 			'orderby'    => 'parent',
 			'hide_empty' => false,
 		);
+		
+		if ( self::is_polylang() ) { // Check if Polylang is active
+			$args['lang'] = ''; // Get all languages
+		}
+
 		$all_categories = get_categories( $args );
 		foreach ( $all_categories as $cat ) {
 			$cat_name = str_replace( '&amp;', '&', $cat->name );
@@ -191,12 +196,15 @@ class Utils {
 	 */
 	public static function filter_by_product_tag( $filter ) {
 		$tags         = array();
-		$product_tags = get_terms(
-			array(
-				'taxonomy'   => 'product_tag',
-				'hide_empty' => false,
-			)
-		);
+		$args = [
+			'taxonomy'   => 'product_tag',
+			'hide_empty' => false
+		];
+		
+		if ( self::is_polylang() ) { // Check if Polylang is active
+			$args['lang'] = ''; // Get all languages
+		}
+		$product_tags = get_terms( $args );
 
 		if ( empty( $product_tags ) ) {
 			return array();
@@ -744,5 +752,13 @@ class Utils {
 		}
 
 		return $prod_class->tax_class;
+	}
+
+	/**
+	 * Check if Polylang is active
+	 * @return bool
+	 */
+	public static function is_polylang() {
+		return did_action( 'pll_init' );
 	}
 }

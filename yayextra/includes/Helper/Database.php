@@ -215,22 +215,32 @@ class Database {
 
 	public function get_where_clause() {
 
-		if ( ! isset( $this->filters ) ) {
-			if ( isset( $this->params ) ) {
+		if ( empty( $this->filters ) ) {
+			if ( ! empty( $this->params ) ) {
 				return ' TRUE';
 			}
 			return ' FALSE';
 		}
 
 		$filters = $this->filters;
+		$apply   = $this->apply;
 		$query   = '';
 		foreach ( $filters as $key => $filter ) {
 			if ( 0 < $key ) {
-				$query .= ' OR';
+				if ( ! empty( $apply['value'] ) && $apply['value'] === 'all') {
+					$query .= ' AND';
+				} else {
+					$query .= ' OR';
+				}
 			}
 			$query .= $this->parse_filters_to_query( $filter );
 		}
-		return "( {$query} )";
+		
+		if ( empty ( $query ) ) {
+			return " FALSE";
+		} else {
+			return "( {$query} )";
+		}
 	}
 
 	public function get_join_clause() {

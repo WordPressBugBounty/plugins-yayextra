@@ -37,7 +37,7 @@ if ( $is_edit_option_mode && isset( $_GET['yaye_cart_item_key'] ) ) {
 	$cart_content  = WC()->cart->cart_contents;
 	$cart_item_key = sanitize_text_field( $_GET['yaye_cart_item_key'] );
 	if ( ! empty( $cart_content[ $cart_item_key ] ) && ! empty( $cart_content[ $cart_item_key ]['yaye_custom_option'][ $opt_set_id ][ $data['id'] ] ) ) {
-		$value = $cart_content[ $cart_item_key ]['yaye_custom_option'][ $opt_set_id ][ $data['id'] ]['option_value'];
+		$value = sanitize_text_field( $cart_content[ $cart_item_key ]['yaye_custom_option'][ $opt_set_id ][ $data['id'] ]['option_value'] );
 	}
 }
 
@@ -49,6 +49,6 @@ $rows = ! empty( $data['rows'] ) ? $data['rows'] : 4;
 echo '<div class="yayextra-option-field-wrap" data-option-field-id="' . esc_attr( $data['id'] ) . '" data-option-field-type="textarea">';
 Utils::get_template_part( $template_folder, 'label_field', array( 'data' => $data ) );
 echo '<div>';
-echo '<textarea placeholder="' . esc_attr( $placeholder ) . '" rows="' . esc_attr( $rows ) . '" class="yayextra-textarea ' . esc_attr( $class_names ) . '" name="option_field_data[' . esc_attr( $opt_set_id ) . '][' . esc_attr( $data['id'] ) . ']">' . wp_kses_post($value) . '</textarea>';
+echo '<textarea placeholder="' . esc_attr( $placeholder ) . '" rows="' . esc_attr( $rows ) . '" class="yayextra-textarea ' . esc_attr( $class_names ) . '" name="option_field_data[' . esc_attr( $opt_set_id ) . '][' . esc_attr( $data['id'] ) . ']"' . esc_attr( $is_required ? ' required ' : '' ) . '>' . wp_kses_post($value) . '</textarea>';
 echo '</div>';
 echo '</div>';

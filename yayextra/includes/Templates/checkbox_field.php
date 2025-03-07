@@ -111,7 +111,7 @@ if ( ! empty( $option_value_list ) ) {
 		echo '<span class=""><input id="' . esc_attr( $id_opt ) . '" class="' . esc_attr( $class_names ) . '" type="checkbox" data-addition-cost="' . esc_attr( $addition_cost ) . '" value="' . esc_attr( $opt['value'] ) . '"' . ( ! empty( $checked_results ) && in_array( $opt['value'], $checked_results, true ) ? 'checked' : '' ) . ' name="option_field_data[' . esc_attr( $opt_set_id ) . '][' . esc_attr( $data['id'] ) . '][]"></span>';
 		echo '<label class="yayextra-option-field-label" for="' . esc_attr( $id_opt ) . '">' . wp_kses_post( $label ) . '</label>';
 		if ( ! empty( $addition_description ) ) {
-			echo '<p class="yayextra-addition-des">' . wp_kses_post( $addition_description ) . '</p>';
+			echo '<p class="yayextra-addition-des">' . wp_kses_post( nl2br($addition_description) ) . '</p>';
 		}
 		echo '</div>';
 	}

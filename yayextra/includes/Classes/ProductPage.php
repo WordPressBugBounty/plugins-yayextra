@@ -114,17 +114,21 @@ class ProductPage {
 					foreach ( $opt_field_list as $opt_field ) {
 						$template_folder = YAYE_PATH . 'includes/Templates';
 						// Output field.
-						Utils::get_template_part(
-							$template_folder,
-							$opt_field['type']['value'] . '_field',
-							array(
-								'opt_set_id'          => $opt_set_data['id'],
-								'data'                => $opt_field,
-								'product_price'       => $product_price,
-								'is_edit_option_mode' => $this->is_edit_option_mode(),
-								'settings'            => $settings,
-							)
-						);
+						$option_fields_pro = ['button_multi', 'swatches_multi', 'date_picker', 'time_picker', 'file_upload', 'file_download', 'image_upload'];
+						if ( ! in_array( $opt_field['type']['value'], $option_fields_pro )) {
+							Utils::get_template_part(
+								$template_folder,
+								$opt_field['type']['value'] . '_field',
+								array(
+									'opt_set_id'          => $opt_set_data['id'],
+									'data'                => $opt_field,
+									'product_price'       => $product_price,
+									'is_edit_option_mode' => $this->is_edit_option_mode(),
+									'settings'            => $settings,
+								)
+							);
+						}
+						
 					}
 				}
 			};
@@ -200,7 +204,10 @@ class ProductPage {
 	 */
 	public function validate_option_fields( $passed, $product_id, $quantity, $variation_id = 0 ) {
 		// If all options are hiden then pass
-		$visibility_option_id_list_post =  map_deep( wp_unslash( $_POST['yaye_visibility_option_list'] ), 'sanitize_text_field' );
+		$visibility_option_id_list_post =  '';
+		if ( ! empty( $_POST['yaye_visibility_option_list'] ) ) { 
+			$visibility_option_id_list_post = sanitize_text_field( wp_unslash( $_POST['yaye_visibility_option_list'] ));
+		}
 		if( empty ( $visibility_option_id_list_post ) ) {
 			return true;
 		}
@@ -429,19 +436,19 @@ class ProductPage {
 				}
 			}
 
-			if ( ! empty( $error_notice ) ) {
+			if ( ! $passed && ! empty( $error_notice ) ) {
 				wc_add_notice( implode( ' < br > ', $error_notice ), 'error' );
 			}
+		}
 
-			if ( $passed ) {
-				if ( ! empty( $_REQUEST['yaye_cart_edit_key'] ) ) {
-					// Update cart option line.
-					$cart_edit_key = sanitize_text_field( $_REQUEST['yaye_cart_edit_key'] );
-					$this->update_cart_option_item( $cart_edit_key, $product_id, $cart_contents, $variation_id );
-				} else {
-					// Add extra product.
-					$this->add_extra_product( $product_id, $quantity );
-				}
+		if ( $passed ) {
+			if ( ! empty( $_REQUEST['yaye_cart_edit_key'] ) ) {
+				// Update cart option line.
+				$cart_edit_key = sanitize_text_field( $_REQUEST['yaye_cart_edit_key'] );
+				$this->update_cart_option_item( $cart_edit_key, $product_id, $cart_contents, $variation_id );
+			} else {
+				// Add extra product.
+				$this->add_extra_product( $product_id, $quantity );
 			}
 		}
 
@@ -704,7 +711,8 @@ class ProductPage {
 										}
 									}
 
-									$option_cost = apply_filters( 'yaye_option_cost_display_cart_checkout', Utils::get_price_from_yaycurrency( floatval( $val['option_cost'] ) ), $option_cost_org, $cost_type, $cart_item['yaye_product_price_original'], $_product->get_id());
+									$yaye_prod_price_orig  = ! empty( $cart_item['yaye_product_price_original'] ) ? $cart_item['yaye_product_price_original'] : 0;
+									$option_cost = apply_filters( 'yaye_option_cost_display_cart_checkout', Utils::get_price_from_yaycurrency( floatval( $val['option_cost'] ) ), $option_cost_org, $cost_type, $yaye_prod_price_orig, $_product->get_id());
 									$val_string  = $val['option_val'] . ' ( + ' . wc_price( $option_cost ) . ' )';
 								} else {
 									$val_string = $val['option_val'];
@@ -805,7 +813,8 @@ class ProductPage {
 										}
 									}
 
-									$option_cost = apply_filters( 'yaye_option_cost_display_orders_and_emails', Utils::get_price_from_yaycurrency( floatval( $val['option_cost'] ) ), $option_cost_org, $cost_type, $values['yaye_product_price_original'], $product_id );
+									$yaye_prod_price_orig  = ! empty( $values['yaye_product_price_original'] ) ? $values['yaye_product_price_original'] : 0;
+									$option_cost = apply_filters( 'yaye_option_cost_display_orders_and_emails', Utils::get_price_from_yaycurrency( floatval( $val['option_cost'] ) ), $option_cost_org, $cost_type, $yaye_prod_price_orig, $product_id );
 									$val_string  = $val['option_val'] . ' ( + ' . wc_price( $option_cost ) . ' )';
 								} else {
 									$val_string = $val['option_val'];

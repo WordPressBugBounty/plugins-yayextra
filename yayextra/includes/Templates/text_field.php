@@ -52,7 +52,7 @@ $text_format = ! empty( $data['textFormat'] ) ? $data['textFormat']['value'] : '
 echo '<div class="yayextra-option-field-wrap" data-option-field-id="' . esc_attr( $data['id'] ) . '" data-option-field-type="text">';
 Utils::get_template_part( $template_folder, 'label_field', array( 'data' => $data ) );
 echo '<div>';
-echo '<input type="text" placeholder="' . esc_attr( $placeholder ) . '" minlength="' . esc_attr( $minlength ) . '" maxlength="' . esc_attr( $maxlength ) . '" data-text-format="' . esc_attr( $text_format ) . '" class="yayextra-text ' . esc_attr( $class_names ) . '" name="option_field_data[' . esc_attr( $opt_set_id ) . '][' . esc_attr( $data['id'] ) . ']" value="' . esc_attr( $value ) . '"/>';
+echo '<input type="text" placeholder="' . esc_attr( $placeholder ) . '" minlength="' . esc_attr( $minlength ) . '" maxlength="' . esc_attr( $maxlength ) . '" data-text-format="' . esc_attr( $text_format ) . '" class="yayextra-text ' . esc_attr( $class_names ) . '" name="option_field_data[' . esc_attr( $opt_set_id ) . '][' . esc_attr( $data['id'] ) . ']" value="' . esc_attr( $value ) . '"' . esc_attr( $is_required ? ' required ' : '' ) . ' />';
 echo '<div class="error-message-text" style="display:none"></div>';
 echo '</div>';
 echo '</div>';

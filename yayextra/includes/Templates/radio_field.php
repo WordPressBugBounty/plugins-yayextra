@@ -96,10 +96,10 @@ if ( ! empty( $option_value_list ) ) {
 		}
 
 		echo '<div class="">';
-		echo '<span class=""><input id="' . esc_attr( $id_opt ) . '" name="option_field_data[' . esc_attr( $opt_set_id ) . '][' . esc_attr( $data['id'] ) . ']" class="' . esc_attr( $class_names ) . '" type="radio" data-addition-cost="' . esc_attr( $addition_cost ) . '" value="' . esc_attr( $opt['value'] ) . '"' . ( $is_checked ? 'checked' : '' ) . '></span>';
+		echo '<span class=""><input id="' . esc_attr( $id_opt ) . '" name="option_field_data[' . esc_attr( $opt_set_id ) . '][' . esc_attr( $data['id'] ) . ']" class="' . esc_attr( $class_names ) . '" type="radio" data-addition-cost="' . esc_attr( $addition_cost ) . '" value="' . esc_attr( $opt['value'] ) . '"' . ( $is_checked ? 'checked' : '' ) . esc_attr( $is_required ? ' required ' : '' ) . '></span>';
 		echo '<label class="yayextra-option-field-label" for="' . esc_attr( $id_opt ) . '">' . wp_kses_post( $label ) . '</label>';
 		if ( ! empty( $addition_description ) ) {
-			echo '<p class="yayextra-addition-des">' . wp_kses_post( $addition_description ) . '</p>';
+			echo '<p class="yayextra-addition-des">' . wp_kses_post( nl2br($addition_description) ) . '</p>';
 		}
 		echo '</div>';
 	}

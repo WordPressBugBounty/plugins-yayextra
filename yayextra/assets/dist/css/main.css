@@ -1345,6 +1345,20 @@ code {
   background-color: #007cba !important;
 }
 
+.yaye-image-preview {
+  border-radius: calc(var(--spacing-step) * 1);
+  height: calc(var(--spacing-step) * 7);
+  width: calc(var(--spacing-step) * 7);
+  cursor: pointer;
+  position: relative;
+}
+
+.yaye-image-preview img {
+  width: 100%;
+  height: 100%;
+  border-radius: calc(var(--spacing-step) * 1);
+}
+
 .yaye-color-preview {
   border-radius: calc(var(--spacing-step) * 1);
   height: calc(var(--spacing-step) * 7);
@@ -1463,7 +1477,9 @@ code {
 }
 .yaye-content-wrap
   .option-values-tab-wrap
-.option-values-tab-content__additional__tabs__tab-item.disabled > .option-values-tab-content__additional__tabs__tab-item--text {
+.option-values-tab-content__additional__tabs__tab-item.disabled > .option-values-tab-content__additional__tabs__tab-item--text,
+.yaye-content-wrap
+  .option-values-tab-wrap .yaye-button-upload-image .disabled {
   color: var(--gray);
   cursor: initial;
 }

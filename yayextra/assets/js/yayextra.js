@@ -753,6 +753,8 @@
     let values = [];
     if (Array.isArray(logic.value)) {
       values = logic.value.map((v) => v.value);
+    } else if ( logic.value ) {
+      values.push(logic.value.value);
     }
     const findingResult = Array.from(checkboxes).find((checkbox) =>
       values.includes($(checkbox).val())
@@ -835,6 +837,8 @@
     let values = [];
     if (Array.isArray(logic.value)) {
       values = logic.value.map((v) => v.value);
+    } else if ( logic.value ) {
+      values.push(logic.value.value);
     }
     const findingResult = Array.from(buttones).find((button) =>
       values.includes($(button).val())
@@ -917,6 +921,8 @@
     let values = [];
     if (Array.isArray(logic.value)) {
       values = logic.value.map((v) => v.value);
+    } else if ( logic.value ) {
+      values.push(logic.value.value);
     }
     const findingResult = Array.from(swatches).find((swatch) =>
       values.includes($(swatch).val())
@@ -1721,6 +1727,7 @@
 
     let totalPrice =
       (additionCostSum + parseFloat(currentPrice)) * parseInt(quantityProduct) + parseFloat(feeDiscounts.feeDiscountTotal);
+
     let totalPriceFormat = yayeNumberFormat(
       totalPrice,
       YAYE_CLIENT_DATA.wc_currency.decimals,
@@ -1744,7 +1751,18 @@
 
     let priceStringFinal = priceString.replace(stringReplace, totalPriceFormat);
 
-    $('.' + elementWrap + ' .total-price').html(priceStringFinal);
+    if ( 'yayextra-total-price' === elementWrap ) {
+      let productId = 0;
+      if ( $('button[name="add-to-cart"').length && '' != $('button[name="add-to-cart"').val() ) { // regular product
+        productId = parseInt( $('button[name="add-to-cart"').val() );
+      } else if ( $('input[name="variation_id"').length  && '' != $('input[name="variation_id"').val() ) { // variation product
+        productId = parseInt( $('input[name="variation_id"').val() );
+      }
+      // yaye_total_price_hook
+      $('.' + elementWrap + ' .total-price').html( wp.hooks.applyFilters( 'yaye_total_price_hook', priceStringFinal, totalPrice, productId ) );
+    } else {
+      $('.' + elementWrap + ' .total-price').html(priceStringFinal);
+    } 
   }
 
   function getVariationProductsMeta(){

@@ -33,7 +33,7 @@ Utils::get_template_part( $template_folder, 'label_field', array( 'data' => $dat
 $opt_set_id = $params['opt_set_id'];
 if ( ! empty( $option_value_list ) ) {
 	echo '<div class="">';
-	echo '<select id="' . esc_attr( $data['id'] ) . '" class="' . esc_attr( $class_names ) . '" name="option_field_data[' . esc_attr( $opt_set_id ) . '][' . esc_attr( $data['id'] ) . ']">';
+	echo '<select id="' . esc_attr( $data['id'] ) . '" class="' . esc_attr( $class_names ) . '" name="option_field_data[' . esc_attr( $opt_set_id ) . '][' . esc_attr( $data['id'] ) . ']"' . esc_attr( $is_required ? ' required ' : '' ) . '>';
 
 	if ( '' !== $placeholder_value ) {
 		echo '<option data-addition-cost="0" value="" >' . wp_kses_post( $placeholder_value ) . '</option>';
@@ -93,7 +93,7 @@ if ( ! empty( $option_value_list ) ) {
 			$label = $opt['value'] . ' ( + ' . wc_price( $addition_cost ) . ' )';
 
 			if ( isset($cost_type) && 'percentage' === $cost_type ) {
-				echo '<option class="option-addition-percentage-cost" data-opt-val-id="' . esc_attr( $id_opt ) . '" data-option-org-cost-token-replace="' . $addition_cost . '" data-option-org-cost="' . floatval( $opt['additionalCost']['value'] ) . '" data-addition-cost="' . esc_attr( $addition_cost ) . '" value="' . esc_attr( $opt['value'] ) . '"' . ( $is_selected ? 'selected' : '' ) . '>' . wp_kses_post( $label ) . '</option>';
+				echo '<option class="option-addition-percentage-cost" data-opt-val-id="' . esc_attr( $id_opt ) . '" data-option-org-cost-token-replace="' . esc_attr( $addition_cost ) . '" data-option-org-cost="' . floatval( $opt['additionalCost']['value'] ) . '" data-addition-cost="' . esc_attr( $addition_cost ) . '" value="' . esc_attr( $opt['value'] ) . '"' . ( $is_selected ? 'selected' : '' ) . '>' . wp_kses_post( $label ) . '</option>';
 			} else {
 				echo '<option data-addition-cost="' . esc_attr( $addition_cost ) . '" value="' . esc_attr( $opt['value'] ) . '"' . ( $is_selected ? 'selected' : '' ) . '>' . wp_kses_post( $label ) . '</option>';
 			}
@@ -109,7 +109,7 @@ if ( ! empty( $option_value_list ) ) {
 	foreach ( $option_value_list as $index => $opt ) {
 		if ( ! empty( $opt['additionalDescription'] ) && ! empty( $opt['additionalDescription']['isEnabled'] ) && ! empty( $opt['additionalDescription']['description'] ) ) {
 			$addition_description = $opt['additionalDescription']['description'];
-			echo '<p class="yayextra-addition-des yayextra-addition-des-dropdown" data-opt-id="' . esc_attr( $data['id'] ) . '" data-opt-val="' . esc_attr( $opt['value'] ) . '">' . wp_kses_post( $addition_description ) . '</p>';
+			echo '<p class="yayextra-addition-des yayextra-addition-des-dropdown" data-opt-id="' . esc_attr( $data['id'] ) . '" data-opt-val="' . esc_attr( $opt['value'] ) . '">' . wp_kses_post( nl2br($addition_description) ) . '</p>';
 		}
 	}
 	echo '</div>';

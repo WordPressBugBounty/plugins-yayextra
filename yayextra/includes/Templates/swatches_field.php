@@ -141,7 +141,7 @@ echo '</div>';
 foreach ( $option_value_list as $index => $opt ) {
 	if ( ! empty( $opt['additionalDescription'] ) && ! empty( $opt['additionalDescription']['isEnabled'] ) && ! empty( $opt['additionalDescription']['description'] ) ) {
 		$addition_description = $opt['additionalDescription']['description'];
-		echo '<p class="yayextra-addition-des yayextra-addition-des-swatches-button yayextra-addition-des-swatches" data-opt-id="' . esc_attr( $data['id'] ) . '" data-opt-val="' . esc_attr( $opt['value'] ) . '">' . wp_kses_post( $addition_description ) . '</p>';
+		echo '<p class="yayextra-addition-des yayextra-addition-des-swatches-button yayextra-addition-des-swatches" data-opt-id="' . esc_attr( $data['id'] ) . '" data-opt-val="' . esc_attr( $opt['value'] ) . '">' . wp_kses_post( nl2br($addition_description) ) . '</p>';
 	}
 }
 

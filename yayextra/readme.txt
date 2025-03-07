@@ -4,17 +4,17 @@ Donate link: https://yaycommerce.com/yayextra-woocommerce-extra-product-options/
 Tags: product addons, woocommerce product options, woocommerce product fields, product customizer, extra product options
 Requires at least: 4.0
 Requires PHP: 5.3
-Tested up to: 6.6.2
-Stable tag: 1.4.0
+Tested up to: 6.7.1
+Stable tag: 1.5.2
 License: GPL-2.0+
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
 
 == Description ==
 
-YayExtra is a WooCommerce plugin to allow you to create **extra product options** and assign them to your groups of products. 
+YayExtra is the ultimate WooCommerce plugin for adding **customizable product options** to your online shop. Whether you're selling apparel, gifts, tech gadgets, or anything in between, YayExtra gives you the flexibility to personalize your products and boost customer satisfaction. 
 
-It comes with a variety of field types including dropdown list, multiple choice list, radio buttons, checkboxes, numbers, text inputs, color swatches, and more.
+It comes with a wide range of field types, including dropdown menus, checkboxes, radio buttons, text inputs, number fields, color swatches, multiple-choice lists, and more.
 
 [DEMO](https://demo.yaycommerce.com/yayextra/product/t-shirt/) | [**YAYEXTRA PRO**](https://yaycommerce.com/yayextra-woocommerce-extra-product-options/) 💎
 
@@ -25,7 +25,7 @@ It comes with a variety of field types including dropdown list, multiple choice 
 ###⚡️ FEATURES
 
 **Powerful Custom Product Options**
-YayExtra supports a wide range of [WooCommerce product field types](https://docs.yaycommerce.com/yayextra/how-it-works/option-types) to serve your diverse use cases.
+YayExtra supports many [WooCommerce product field types](https://docs.yaycommerce.com/yayextra/how-it-works/option-types) to serve your diverse use cases:
 
 - Allow customers to input text, number, email, etc.
 - Add radio buttons to the original product
@@ -45,9 +45,9 @@ A group of product fields can be applied to all products, a group of products in
 This product options plugin allows using hooks for `before_calculate_totals` function to modify the [cart item line total](https://docs.yaycommerce.com/yayextra/developer-zone).
 
 **WooCommerce Conditional Variations**
-YayExtra allows you to create a conditional logic so you can combine it with the existing custom options. Conditional logics help show the next product field if the user has selected a specific option value. 
+YayExtra allows you to create conditional logic that can be combined with the existing custom options. Conditional logic helps show the next product field if the user has selected a specific option value. 
 
-Let's suppose that you sell car parts, so when the customer chooses to have "Accessories" then related options like "Front door items" or "Replacement kit" can be shown on the current product page. Otherwise, if the customer doesn't check the "Accessories" checkbox then those options will not show up, which keeps your product page neat and clear.
+Let's suppose that you sell car parts, so when the customer chooses to have "Accessories" then related options like "Front door items" or "Replacement kit" can be shown on the current product page. Otherwise, if the customer doesn't check the "Accessories" checkbox, then those options will not show up, which will keep your product page neat and clear.
 
 ###💎 PREMIUM-ONLY FEATURES
 
@@ -61,14 +61,18 @@ Multiple field types are built in the premium version:
 - Time picker
 - File Upload
 
-**Group Separate Products**
-Similar to "related products", you will be able to easily use an existing product as another product's swatch or option. For instance, you can add "custom stickers" product to a range of "bag" products. You can add "matched cap" to a "baseball t-shirt" or something like that.
+**Grouping and Bundling Products**
+Similar to "related products," you can easily use an existing product as a swatch or option for another product.
 
-###🔑 HOW IT WORKS
+- Assign the "Custom Stickers" product as an additional option for a range of "Bag" products.
+- Offer a "Matched Cap" as an optional add-on for a "Baseball T-Shirt" to create a coordinated set.
+- Quickly [set up product bundles](https://yaycommerce.com/best-ways-to-create-product-bundles/) and upsell opportunities to maximize sales.
+
+###🔑 ENHANCED SETTINGS
 
 Each field type comes with various elements to help you enhance the extra product options: 
 
-- Required field: Make the customer have to select an option or enter the information so it can be passed through in the order (Free)
+- Required field: Require the customer to select an option or enter the information so it can be passed through in the order (Free)
 - Placeholder: Add help text or expected value to be entered in the field (Free)
 - Set as default: Enable a specific option value to be selected upon product page load (Free)
 - Custom image: Use uploaded swatch image to show on product featured image (Premium-only)
@@ -101,6 +105,11 @@ Yes, this feature is called Linked Product in YayExtra Pro settings. You can upg
 4. Admin dashboard settings for WooCommerce extra product options
 
 == Changelog ==
+
+= Mar 7, 2025 - Version 1.5.2
+- Improved: JS processing
+- Improved: Remove draft text and add required for some fields
+- Fixed: The “All” (AND) condition in the products chose by conditions
 
 = Sep 16, 2024 – Version 1.4.0 =
 - Fixed: Issues about update total price for variation product
