@@ -71,6 +71,10 @@ class Ajax {
 		}
 
 		// private events.
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+		
 		$private_events = $this->define_private_events();
 		foreach ( $private_events as $event ) {
 			add_action( 'wp_ajax_yaye_' . $event, array( $this, $event ) );
