@@ -4,8 +4,8 @@ Donate link: https://yaycommerce.com/yayextra-woocommerce-extra-product-options/
 Tags: product addons, woocommerce product options, woocommerce product fields, product customizer, extra product options
 Requires at least: 4.0
 Requires PHP: 5.3
-Tested up to: 6.7.2
-Stable tag: 1.5.3
+Tested up to: 6.8
+Stable tag: 1.5.5
 License: GPL-2.0+
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
@@ -105,6 +105,22 @@ Yes, this feature is called Linked Product in YayExtra Pro settings. You can upg
 4. Admin dashboard settings for WooCommerce extra product options
 
 == Changelog ==
+
+= Jun 25, 2025 - Version 1.5.5 =
+- Added: Disable Past Date setting for Date Picker
+- Added: Limit setting for Checkbox option
+- Added: Show/Hide Tooltip setting for Swatches/MultiSwatches, Button/MultiButton
+- Improved: UI for File/Image Upload option
+- Improved: Apply Customize settings and missing advanced settings for Preview
+- Improved: Style basic for Date/Time Picker
+- Fixed: Show/Hide extra options value in mini cart line items
+
+= May 21, 2025 - Version 1.5.4 =
+- Added: New setting for multi swatches option to allow a maximum number of options that can be selected
+
+= Mar 26, 2025 - Version 1.5.3 =
+- Updated: Change disable weekends to disable Sunday and add disable other days option
+- Added: Authorization for Ajax hook 
 
 = Mar 26, 2025 - Version 1.5.3 =
 - Updated: Change disable weekends to disable Sunday and add disable other days option (PRO)

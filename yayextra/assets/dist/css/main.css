@@ -1303,6 +1303,10 @@ code {
 .components-base-control__label{
   text-transform: none !important;
 }
+
+.yaye-basic-input .dashicons-editor-help{
+  margin-top: -1px;
+}
 .yaye-content-wrap .advanced-settings-tab-wrap .advanced-settings-tab-content {
   width: calc(var(--spacing-step) * 56);
   display: grid;
@@ -2173,7 +2177,6 @@ body.mobile.modal-open #wpwrap {
 }
 .yaye-modal-wrap .option-set-preview-modal-content {
   display: flex;
-  align-items: center;
   padding: 10px 30px;
   flex-wrap: wrap;
   margin-top: 60px;
@@ -2242,6 +2245,24 @@ body.mobile.modal-open #wpwrap {
   border-radius: 3px;
   height: 38px;
   width: 38px;
+  outline: 2px solid;
+}
+.yaye-option-field-swatches-label.shape-circle {
+  border-radius: 50% !important;
+}
+.yaye-option-field-swatches-label.shape-oval {
+  border-radius: 50% !important;
+  background-size: 50px 38px !important;
+  width: 50px !important;
+  height: 38px !important;
+}
+.yaye-option-field-swatches-label.shape-rectangular {
+  width: 50px !important;
+  height: 38px !important;
+  background-size: 50px 38px !important;
+}
+.yaye-opt-swatches-content.direction-vertical {
+  display: inline-grid !important;
 }
 .yaye-option-field-swatches-label.checked {
   outline: 2px solid;

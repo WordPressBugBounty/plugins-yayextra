@@ -36,7 +36,7 @@
             showOption(option);
           } else {
             hideOption(option);
-            hideReferenceOption(option, referenceObject);
+            hideReferenceOption(optionSetId, option, referenceObject);
           }
   
           $.each(option.logics, function (_, logic) {
@@ -608,11 +608,10 @@
       getVisibilityOption();
     }
   }
-  function hideReferenceOption(option, referenceObject) {
+  function hideReferenceOption(optionSetId, option, referenceObject) {
     if (option?.id in referenceObject) {
       referenceObject[option.id].forEach((ref) => {
-        const el = $("[data-option-field-id='" + ref.id + "']");
-        if (el.css('display') !== 'none') hideOption(ref);
+        if (!checkLogic(optionSetId, ref)) hideOption(ref);
       });
     }
     getVisibilityOption();
@@ -1060,7 +1059,7 @@
           showReferenceOption(optionSetId, option, referenceObject);
         } else {
           hideOption(option);
-          hideReferenceOption(option, referenceObject);
+          hideReferenceOption(optionSetId, option, referenceObject);
         }
       });
     });
@@ -1080,7 +1079,7 @@
           showReferenceOption(optionSetId, option, referenceObject);
         } else {
           hideOption(option);
-          hideReferenceOption(option, referenceObject);
+          hideReferenceOption(optionSetId, option, referenceObject);
         }
       });
     });
@@ -1100,7 +1099,7 @@
           showReferenceOption(optionSetId, option, referenceObject);
         } else {
           hideOption(option);
-          hideReferenceOption(option, referenceObject);
+          hideReferenceOption(optionSetId, option, referenceObject);
         }
       });
     });
@@ -1121,7 +1120,7 @@
           showReferenceOption(optionSetId, option, referenceObject);
         } else {
           hideOption(option);
-          hideReferenceOption(option, referenceObject);
+          hideReferenceOption(optionSetId, option, referenceObject);
         }
       });
     });
@@ -1142,7 +1141,7 @@
           showReferenceOption(optionSetId, option, referenceObject);
         } else {
           hideOption(option);
-          hideReferenceOption(option, referenceObject);
+          hideReferenceOption(optionSetId, option, referenceObject);
         }
       });
     });
@@ -1163,7 +1162,7 @@
           showReferenceOption(optionSetId, option, referenceObject);
         } else {
           hideOption(option);
-          hideReferenceOption(option, referenceObject);
+          hideReferenceOption(optionSetId, option, referenceObject);
         }
       });
     });
@@ -1184,7 +1183,7 @@
           showReferenceOption(optionSetId, option, referenceObject);
         } else {
           hideOption(option);
-          hideReferenceOption(option, referenceObject);
+          hideReferenceOption(optionSetId, option, referenceObject);
         }
       });
     });
@@ -1204,7 +1203,7 @@
           showReferenceOption(optionSetId, option, referenceObject);
         } else {
           hideOption(option);
-          hideReferenceOption(option, referenceObject);
+          hideReferenceOption(optionSetId, option, referenceObject);
         }
       });
     });
@@ -1225,7 +1224,7 @@
           showReferenceOption(optionSetId, option, referenceObject);
         } else {
           hideOption(option);
-          hideReferenceOption(option, referenceObject);
+          hideReferenceOption(optionSetId, option, referenceObject);
         }
       });
     });
@@ -1246,7 +1245,7 @@
           showReferenceOption(optionSetId, option, referenceObject);
         } else {
           hideOption(option);
-          hideReferenceOption(option, referenceObject);
+          hideReferenceOption(optionSetId, option, referenceObject);
         }
       });
     });

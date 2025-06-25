@@ -136,11 +136,14 @@ class Settings {
 				);
 			}
 
+			$option_set_id_list = $this->get_option_set_id_list();
+
 			// Localize script for react.
 			wp_localize_script(
 				YAYE_PREFIX,
 				'yaye_data',
 				array(
+					'OPTION_SET_LIST'   => CustomPostType::get_option_set_array( $option_set_id_list ),
 					'I18N'              => \YayExtra\I18n::getTranslation(),
 					'ajax_url'          => admin_url( 'admin-ajax.php' ),
 					'nonce'             => wp_create_nonce( 'yaye_nonce' ),

@@ -502,9 +502,18 @@
   color: indianred;
   margin-top: 5px;
 }
-.yayextra-hide-extra-options-values-mini-cart .variation {
+/* .yayextra-hide-extra-options-values-mini-cart .variation {
+  display: none;
+} */
+ /* yaye-option-value mini cart - start */
+.yayextra-hide-extra-options-values-mini-cart dd:has(.yaye-option-value),
+.yayextra-hide-extra-options-values-mini-cart dt:has(+ dd .yaye-option-value),
+.yayextra-hide-extra-options-values-mini-cart .variation:has(.yaye-option-value), 
+.yayextra-hide-extra-options-values-mini-cart .variation:has(.yaye-option-value) + .variation-separator { 
   display: none;
 }
+/* yaye-option-value mini cart - end */
+
 .yayextra-extra-subtotal-price:has(.total-price[data-token-replace="0"]) {
  display: none;
 }

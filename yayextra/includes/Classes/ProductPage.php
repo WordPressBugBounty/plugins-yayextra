@@ -722,18 +722,18 @@ class ProductPage {
 
 							$cart_data[] = array(
 								'name'  => $option['option_name'],
-								'value' => implode( ', ', $option_value ),
+								'value' => '<span class="yaye-option-value">' . implode( ', ', $option_value ) . '</span>',
 							);
 						} else {
 							if ( isset( $option['option_type'] ) && 'file_upload' === $option['option_type'] ) {
 								$cart_data[] = array(
 									'name'  => $option['option_name'],
-									'value' => '<a href="' . $option['option_value'] . '">' . $option['file_name'] . '</a>',
+									'value' => '<span class="yaye-option-value"><a href="' . $option['option_value'] . '">' . $option['file_name'] . '</a></span>',
 								);
 							} else {
 								$cart_data[] = array(
 									'name'  => $option['option_name'],
-									'value' => $option['option_value'],
+									'value' => '<span class="yaye-option-value">' . $option['option_value'] . '</span>',
 								);
 							}
 						}
