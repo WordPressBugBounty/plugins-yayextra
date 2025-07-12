@@ -27,15 +27,15 @@ class Database {
 		$comparation         = 'is_one_of' === $filter['comparation']['value'] ? 'IN' : 'NOT IN';
 		$array_values        = array_map(
 			function( $member ) {
-				return "'{$member['label']}'";
+				return $member['label'];
 			},
 			$filter['value']
 		);
-		$string_array_values = join( ',', $array_values );
 
 		$query = '';
-		if ( ! empty( $string_array_values ) ) {
-			$query = "{$wpdb->prefix}posts.post_title {$comparation} ({$string_array_values})";
+		if ( ! empty( $array_values ) ) {
+			$placeholders = implode( ',', array_fill( 0, count( $array_values ), '%s' ) );
+			$query = $wpdb->prepare( "{$wpdb->prefix}posts.post_title {$comparation} ({$placeholders})", $array_values );
 		}
 
 		return $query;
@@ -75,17 +75,18 @@ class Database {
 	 * @return string
 	 */
 	public static function get_product_category_query( $filter ) {
+		global $wpdb;
 		$comparation         = 'is_one_of' === $filter['comparation']['value'] ? 'IN' : 'NOT IN';
 		$array_values        = array_map(
 			function( $member ) {
-				return "'{$member['label']}'";
+				return $member['label'];
 			},
 			$filter['value']
 		);
-		$string_array_values = join( ',', $array_values );
 		$query               = '';
-		if ( ! empty( $string_array_values ) ) {
-			$query = "( term_taxonomy.taxonomy = 'product_cat' AND terms.name {$comparation} ({$string_array_values}) )";
+		if ( ! empty( $array_values ) ) {
+			$placeholders = implode( ',', array_fill( 0, count( $array_values ), '%s' ) );
+			$query = $wpdb->prepare( "( term_taxonomy.taxonomy = 'product_cat' AND terms.name {$comparation} ({$placeholders}) )", $array_values );
 		}
 
 		return $query;
@@ -103,23 +104,24 @@ class Database {
 		$comparation         = 'is_one_of' === $filter['comparation']['value'] ? 'IN' : 'NOT IN';
 		$array_values        = array_map(
 			function( $member ) {
-				return "'{$member['label']}'";
+				return $member['label'];
 			},
 			$filter['value']
 		);
-		$string_array_values = join( ',', $array_values );
 
 		$query = '';
-		if ( ! empty( $string_array_values ) ) {
+		if ( ! empty( $array_values ) ) {
+			$placeholders = implode( ',', array_fill( 0, count( $array_values ), '%s' ) );
 			$query = "( {$wpdb->prefix}posts.ID IN (
         SELECT term_relationships.object_id as id
         FROM {$wpdb->prefix}term_relationships AS term_relationships
         JOIN {$wpdb->prefix}term_taxonomy AS term_taxonomy ON term_relationships.term_taxonomy_id = term_taxonomy.term_taxonomy_id
         JOIN {$wpdb->prefix}terms AS terms ON terms.term_id = term_taxonomy.term_id				
        
-        WHERE ( term_taxonomy.taxonomy = 'product_tag' AND terms.name {$comparation} ({$string_array_values}) )
+        WHERE ( term_taxonomy.taxonomy = 'product_tag' AND terms.name {$comparation} ({$placeholders}) )
         GROUP BY term_relationships.object_id
       ))";
+			$query = $wpdb->prepare( $query, $array_values );
 		}
 
 		return $query;
@@ -133,6 +135,7 @@ class Database {
 	 * @return string
 	 */
 	public static function get_product_price_query( $filter ) {
+		global $wpdb;
 		switch ( $filter['comparation']['value'] ) {
 			case 'equal':
 				$comparation = '=';
@@ -150,7 +153,7 @@ class Database {
 				$comparation = '=';
 		}
 
-		$query = "( postmeta.meta_key = '_price' AND postmeta.meta_value {$comparation} {$filter['value']} )";
+		$query = $wpdb->prepare( "( postmeta.meta_key = '_price' AND postmeta.meta_value {$comparation} %f )", $filter['value'] );
 		return $query;
 	}
 
@@ -162,6 +165,7 @@ class Database {
 	 * @return string
 	 */
 	public static function get_product_in_stock_query( $filter ) {
+		global $wpdb;
 		switch ( $filter['comparation']['value'] ) {
 			case 'equal':
 				$comparation = '=';
@@ -192,7 +196,7 @@ class Database {
 		if ( $is_out_of_stock ) {
 			$query = "( stock_status = 'outofstock' )";
 		} else {
-			$query = "( stock_quantity {$comparation} {$filter['value']} OR ( stock_quantity IS NULL AND stock_status = 'instock' ) )";
+			$query = $wpdb->prepare( "( stock_quantity {$comparation} %d OR ( stock_quantity IS NULL AND stock_status = 'instock' ) )", $filter['value'] );
 		}
 
 		return $query;
@@ -285,14 +289,30 @@ class Database {
 			if ( '' === $string_product_filter_one_by_one ) {
 				$search_product_type_where = 'FALSE';
 			} else {
-				$search_product_type_where = "( {$wpdb->prefix}posts.ID IN ({$string_product_filter_one_by_one}) )";
+				// Sanitize the product IDs array
+				$product_ids = array_map( 'intval', $product_filter_one_by_one );
+				$product_ids = array_filter( $product_ids ); // Remove any non-numeric values
+				if ( ! empty( $product_ids ) ) {
+					$placeholders = implode( ',', array_fill( 0, count( $product_ids ), '%d' ) );
+					$search_product_type_where = $wpdb->prepare( "( {$wpdb->prefix}posts.ID IN ({$placeholders}) )", $product_ids );
+				} else {
+					$search_product_type_where = 'FALSE';
+				}
 			}
 		} elseif ( 'unassigned' === $product_type && '' !== $string_product_filter_one_by_one ) {
-			$search_product_type_where = "( {$wpdb->prefix}posts.ID NOT IN ({$string_product_filter_one_by_one}) )";
+			// Sanitize the product IDs array
+			$product_ids = array_map( 'intval', $product_filter_one_by_one );
+			$product_ids = array_filter( $product_ids ); // Remove any non-numeric values
+			if ( ! empty( $product_ids ) ) {
+				$placeholders = implode( ',', array_fill( 0, count( $product_ids ), '%d' ) );
+				$search_product_type_where = $wpdb->prepare( "( {$wpdb->prefix}posts.ID NOT IN ({$placeholders}) )", $product_ids );
+			} else {
+				$search_product_type_where = 'TRUE';
+			}
 		}
 
 		if ( ! empty( $product_name ) ) {
-			$search_product_name_where = "( {$wpdb->prefix}posts.post_title LIKE '%{$product_name}%' )";
+			$search_product_name_where = $wpdb->prepare( "( {$wpdb->prefix}posts.post_title LIKE %s )", '%' . $wpdb->esc_like( $product_name ) . '%' );
 		};
 
 		if ( ! empty( $category_id ) ) {

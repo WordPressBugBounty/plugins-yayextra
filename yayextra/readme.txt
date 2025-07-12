@@ -5,7 +5,7 @@ Tags: product addons, woocommerce product options, woocommerce product fields, p
 Requires at least: 4.0
 Requires PHP: 5.3
 Tested up to: 6.8
-Stable tag: 1.5.5
+Stable tag: 1.5.6
 License: GPL-2.0+
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
@@ -105,6 +105,10 @@ Yes, this feature is called Linked Product in YayExtra Pro settings. You can upg
 4. Admin dashboard settings for WooCommerce extra product options
 
 == Changelog ==
+
+= Jul 12, 2025 - Version 1.5.6 =
+- Improved: Product query
+- Fixed: SQL Injection for product query
 
 = Jun 25, 2025 - Version 1.5.5 =
 - Added: Disable Past Date setting for Date Picker
