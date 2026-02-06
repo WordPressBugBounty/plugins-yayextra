@@ -99,9 +99,9 @@ class ProductPage {
 	public function add_options_field() {
 		global $product;
 		$current_prod_id         = $product->get_id();
-		$product_price           = Utils::get_price_fixed_from_yaycurrency( $current_prod_id, $product->get_price('original'));
+		$product_price           = Utils::get_price_fixed_from_currency_plugin( $current_prod_id, $product->get_price('original'));
 		// For YayExtra pro version.
-		// $product_regular_price   = Utils::get_price_fixed_from_yaycurrency( $current_prod_id, $product->get_regular_price('original')); 
+		// $product_regular_price   = Utils::get_price_fixed_from_currency_plugin( $current_prod_id, $product->get_regular_price('original')); 
 		$settings                = Utils::get_settings();
 
 		$option_set_of_product = $this->get_option_set_of_product( $current_prod_id, $settings );
@@ -469,9 +469,9 @@ class ProductPage {
 
 				if ( !empty( $variation_id ) ) {
 					$product_variation = wc_get_product( $variation_id );
-					$product_price = Utils::get_price_fixed_from_yaycurrency( $variation_id, $product_variation->get_price( 'original' ), true); 
+					$product_price = Utils::get_price_fixed_from_currency_plugin( $variation_id, $product_variation->get_price( 'original' ), true); 
 				} else {
-					$product_price = Utils::get_price_fixed_from_yaycurrency( $product_id, $product->get_price( 'original' ), true); 
+					$product_price = Utils::get_price_fixed_from_currency_plugin( $product_id, $product->get_price( 'original' ), true); 
 				}
 
 				$option_field_data = Utils::sanitize_array( $_POST['option_field_data'] );
@@ -543,9 +543,9 @@ class ProductPage {
 
 					if('variable' === $product->get_type() && !empty($variation_id)) {
 						$product_variation = wc_get_product( $variation_id );
-						$product_price     = Utils::get_price_fixed_from_yaycurrency( $variation_id, $product_variation->get_price( 'original' ), true); 
+						$product_price     = Utils::get_price_fixed_from_currency_plugin( $variation_id, $product_variation->get_price( 'original' ), true); 
 					} else {
-						$product_price = Utils::get_price_fixed_from_yaycurrency( $product_id, $product->get_price( 'original' ), true); 
+						$product_price = Utils::get_price_fixed_from_currency_plugin( $product_id, $product->get_price( 'original' ), true); 
 					}
 
 					$option_field_data = Utils::sanitize_array( $_POST['option_field_data'] );
@@ -595,12 +595,12 @@ class ProductPage {
 					// Calculate total option cost for Session
 					if('variable' === $product->get_type() && !empty($variation_id)) {
 						$product_variation = wc_get_product( $variation_id );
-						$product_price_original = Utils::get_price_fixed_from_yaycurrency( $variation_id, $product_variation->get_price( 'original' ), true );
+						$product_price_original = Utils::get_price_fixed_from_currency_plugin( $variation_id, $product_variation->get_price( 'original' ), true );
 						$total_option_cost = Utils::cal_total_option_cost_on_cart_item_static( $cart_item_data['yaye_custom_option'], $product_price_original );
 
 						$cart_item_data['yaye_product_price_original'] = $product_variation->get_price( 'original' );
 					} else {
-						$product_price_original = Utils::get_price_fixed_from_yaycurrency( $product_id, $product->get_price( 'original' ), true );
+						$product_price_original = Utils::get_price_fixed_from_currency_plugin( $product_id, $product->get_price( 'original' ), true );
 						$total_option_cost = Utils::cal_total_option_cost_on_cart_item_static( $cart_item_data['yaye_custom_option'], $product_price_original );
 
 						$cart_item_data['yaye_product_price_original'] = $product->get_price( 'original' );
@@ -633,8 +633,8 @@ class ProductPage {
 
 		foreach ( $cart_object->cart_contents as $cart_value ) {
 			if( !empty($cart_value['data']) ) {
-				$cost_total         = Utils::get_price_fixed_from_yaycurrency( $cart_value['product_id'], floatval( $cart_value['data']->get_price( 'original' ) ), true);
-				$cost_regular_total = Utils::get_price_fixed_from_yaycurrency( $cart_value['product_id'], floatval( $cart_value['data']->get_regular_price( 'original' ) ), true); 
+				$cost_total         = Utils::get_price_fixed_from_currency_plugin( $cart_value['product_id'], floatval( $cart_value['data']->get_price( 'original' ) ), true);
+				$cost_regular_total = Utils::get_price_fixed_from_currency_plugin( $cart_value['product_id'], floatval( $cart_value['data']->get_regular_price( 'original' ) ), true); 
 				
 				if ( ! empty( $cart_value['yaye_custom_option'] ) ) {
 					foreach ( $cart_value['yaye_custom_option'] as $option_set_id => $custom_option ) {
@@ -659,8 +659,8 @@ class ProductPage {
 					10
 				);
 	
-				$cost_total         = apply_filters('yaye_cart_line_total', Utils::get_price_from_yaycurrency( $cost_total ), $cart_value);
-				$cost_regular_total = apply_filters('yaye_cart_line_regular_total', Utils::get_price_from_yaycurrency( $cost_regular_total ), $cart_value);
+				$cost_total         = apply_filters('yaye_cart_line_total', Utils::get_price_from_currency_plugin( $cost_total ), $cart_value);
+				$cost_regular_total = apply_filters('yaye_cart_line_regular_total', Utils::get_price_from_currency_plugin( $cost_regular_total ), $cart_value);
 
 				$cart_value['data']->set_price( $cost_total );
 				$cart_value['data']->set_regular_price( $cost_regular_total );
@@ -712,7 +712,7 @@ class ProductPage {
 									}
 
 									$yaye_prod_price_orig  = ! empty( $cart_item['yaye_product_price_original'] ) ? $cart_item['yaye_product_price_original'] : 0;
-									$option_cost = apply_filters( 'yaye_option_cost_display_cart_checkout', Utils::get_price_from_yaycurrency( floatval( $val['option_cost'] ) ), $option_cost_org, $cost_type, $yaye_prod_price_orig, $_product->get_id());
+									$option_cost = apply_filters( 'yaye_option_cost_display_cart_checkout', Utils::get_price_from_currency_plugin( floatval( $val['option_cost'] ) ), $option_cost_org, $cost_type, $yaye_prod_price_orig, $_product->get_id());
 									$val_string  = $val['option_val'] . ' ( + ' . wc_price( $option_cost ) . ' )';
 								} else {
 									$val_string = $val['option_val'];
@@ -814,7 +814,7 @@ class ProductPage {
 									}
 
 									$yaye_prod_price_orig  = ! empty( $values['yaye_product_price_original'] ) ? $values['yaye_product_price_original'] : 0;
-									$option_cost = apply_filters( 'yaye_option_cost_display_orders_and_emails', Utils::get_price_from_yaycurrency( floatval( $val['option_cost'] ) ), $option_cost_org, $cost_type, $yaye_prod_price_orig, $product_id );
+									$option_cost = apply_filters( 'yaye_option_cost_display_orders_and_emails', Utils::get_price_from_currency_plugin( floatval( $val['option_cost'] ) ), $option_cost_org, $cost_type, $yaye_prod_price_orig, $product_id );
 									$val_string  = $val['option_val'] . ' ( + ' . wc_price( $option_cost ) . ' )';
 								} else {
 									$val_string = $val['option_val'];

@@ -81,7 +81,7 @@ if ( ! empty( $option_value_list ) ) {
 		if ( ! empty( $opt['additionalCost'] ) && ! empty( $opt['additionalCost']['isEnabled'] ) ) {
 			$cost_type = $opt['additionalCost']['costType']['value'];
 			if ( 'fixed' === $cost_type ) {
-				$addition_cost = Utils::get_price_from_yaycurrency( floatval( $opt['additionalCost']['value'] ) );
+				$addition_cost = Utils::get_price_from_currency_plugin( floatval( $opt['additionalCost']['value'] ) );
 			} else {
 				if ( isset( $params['product_price'] ) && is_numeric( $params['product_price'] ) ) {
 					$addition_cost = floatval( $opt['additionalCost']['value'] ) * floatval( $params['product_price'] ) / 100;

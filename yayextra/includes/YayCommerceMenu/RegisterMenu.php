@@ -73,37 +73,59 @@ class RegisterMenu {
 	}
 
 	public function get_submenus() {
-		return array(
-			// 'yaycommerce'     => array(
-			// 	'parent'             => 'yaycommerce',
-			// 	'name'               => __( 'Dashboard', 'yaycommerce' ),
-			// 	'capability'         => 'manage_options',
-			// 	'render_callback'    => false,
-			// 	'load_data_callback' => false,
-			// 	'position'           => 0,
-			// ),
-			'yaycommerce-help'          => array(
-				'parent'             => 'yaycommerce',
-				'name'               => __( 'Help', 'yaycommerce' ),
-				'capability'         => 'manage_options',
-				'render_callback'    => false,
-				'load_data_callback' => false,
-			),
-			'yaycommerce-licenses'      => array(
+		$submenus['yaycommerce-help'] = array(
+			'parent'             => 'yaycommerce',
+			'name'               => __( 'Help', 'yaycommerce' ),
+			'capability'         => 'manage_options',
+			'render_callback'    => false,
+			'load_data_callback' => false,
+		);
+
+		/**
+		 * Temporarily until all Yay plugins has the same code
+		 */
+		if ( function_exists( 'YAYDP\\load_plugin' ) && class_exists( '\YAYDP\License\License_Handler' ) ) {
+			$licensing_plugins_yay_pricing = \YAYDP\License\License_Handler::get_licensing_plugins();
+		}
+
+		if ( function_exists( 'YayMail\\plugin_init' ) && class_exists( '\YayMail\License\LicenseHandler' ) ) {
+			$licensing_plugins_yay_mail = \YayMail\License\LicenseHandler::get_licensing_plugins();
+		}
+		
+		if ( function_exists( 'Yay_Swatches\\init' ) && class_exists( '\Yay_Swatches\License\LicenseHandler' ) ) {
+			$licensing_plugins_yay_swatches = \Yay_Swatches\License\LicenseHandler::get_licensing_plugins();
+		}
+
+		if ( function_exists( 'YaySMTP\\init' ) && class_exists( '\YaySMTP\License\LicenseHandler' ) ) {
+			$licensing_plugins_yay_smtp = \YaySMTP\License\LicenseHandler::get_licensing_plugins();
+		}
+
+		if ( function_exists( 'Yay_Currency\\plugin_init' ) && class_exists( '\Yay_Currency\License\LicenseHandler' ) ) {
+			$licensing_plugins_yay_currency = \Yay_Currency\License\LicenseHandler::get_licensing_plugins();
+		}
+		/** -------- */
+
+		$yay_licensing_plugins = apply_filters( 'yaycommerce_licensing_plugins', [] );
+
+		if ( ! empty( $licensing_plugins_yay_mail ) || ! empty( $licensing_plugins_yay_pricing ) || ! empty( $licensing_plugins_yay_swatches ) || ! empty( $licensing_plugins_yay_smtp ) || ! empty( $licensing_plugins_yay_currency ) || ! empty( $yay_licensing_plugins ) ) {
+			$submenus['yaycommerce-licenses'] = array(
 				'parent'             => 'yaycommerce',
 				'name'               => __( 'Licenses', 'yaycommerce' ),
 				'capability'         => 'manage_options',
 				'render_callback'    => array( '\YayExtra\YayCommerceMenu\LicensesMenu', 'render' ),
 				'load_data_callback' => array( '\YayExtra\YayCommerceMenu\LicensesMenu', 'load_data' ),
-			),
-			'yaycommerce-other-plugins' => array(
-				'parent'             => 'yaycommerce',
-				'name'               => __( 'Other plugins', 'yaycommerce' ),
-				'capability'         => 'manage_options',
-				'render_callback'    => array( '\YayExtra\YayCommerceMenu\OtherPluginsMenu', 'render' ),
-				'load_data_callback' => array( '\YayExtra\YayCommerceMenu\OtherPluginsMenu', 'load_data' ),
-			),
+			);
+		}
+
+		$submenus['yaycommerce-other-plugins'] = array(
+			'parent'             => 'yaycommerce',
+			'name'               => __( 'Other plugins', 'yaycommerce' ),
+			'capability'         => 'manage_options',
+			'render_callback'    => array( '\YayExtra\YayCommerceMenu\OtherPluginsMenu', 'render' ),
+			'load_data_callback' => array( '\YayExtra\YayCommerceMenu\OtherPluginsMenu', 'load_data' ),
 		);
+
+		return $submenus;
 	}
 
 	public function add_submenus() {

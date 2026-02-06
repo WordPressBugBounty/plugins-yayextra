@@ -411,7 +411,7 @@ class Utils {
 	 *
 	 * @return array
 	 */
-	public static function get_price_from_yaycurrency( $price ) {
+	public static function get_price_from_currency_plugin( $price ) {
 		if ( function_exists( 'Yay_Currency\\plugin_init' ) ) {
 			if (class_exists('Yay_Currency\Helpers\YayCurrencyHelper')) {
 				if ( method_exists( 'Yay_Currency\Helpers\YayCurrencyHelper', 'calculate_price_by_currency' ) && 
@@ -428,6 +428,11 @@ class Utils {
 				}
 			}
 		}
+		// check exist XCurrency class
+		elseif ( class_exists('XCurrency') && function_exists('x_currency_exchange') ) {
+			return x_currency_exchange( $price );
+		}
+
 		return $price;
 	}
 
@@ -493,7 +498,7 @@ class Utils {
 	 *
 	 * @return array
 	 */
-	public static function get_price_fixed_from_yaycurrency( $product_id, $product_price, $force_original = false ) {
+	public static function get_price_fixed_from_currency_plugin( $product_id, $product_price, $force_original = false ) {
 		if ( function_exists( 'Yay_Currency\\plugin_init' ) &&
 			 class_exists( 'Yay_Currency\Helpers\YayCurrencyHelper' ) &&
 			 method_exists( 'Yay_Currency\Helpers\YayCurrencyHelper', 'detect_current_currency' ) 
@@ -501,7 +506,7 @@ class Utils {
 			$apply_currency = YayCurrencyHelper::detect_current_currency();
 			if ( ! empty( $apply_currency ) ) {
 				$product       = wc_get_product( $product_id );
-				$product_price = self::get_price_from_yaycurrency( $product_price );
+				$product_price = self::get_price_from_currency_plugin( $product_price );
 				if ( method_exists( 'Yay_Currency\Helpers\FixedPriceHelper', 'get_price_fixed_by_apply_currency' ) ) {
 					$product_price = FixedPriceHelper::get_price_fixed_by_apply_currency( $product, $product_price, $apply_currency );
 				}
@@ -518,6 +523,13 @@ class Utils {
 
 				return $product_price;
 			}
+		}
+		// check exist XCurrency class
+		elseif ( class_exists('XCurrency') && function_exists('x_currency_exchange') ) {
+			if ( $force_original ) {
+				return $product_price;
+			}
+			return x_currency_exchange( $product_price );
 		}
 
 		return $product_price;

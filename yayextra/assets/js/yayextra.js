@@ -463,7 +463,7 @@
     const optionNumberFields = $('.yayextra-option-field-wrap input[type="number"]');
     if (optionNumberFields.length > 0) {
       $.each(optionNumberFields, function (_, el) {
-        $(el).on('keyup', function () {
+        $(el).on('input change', function () {
           getTotalCost();
         });
       });
