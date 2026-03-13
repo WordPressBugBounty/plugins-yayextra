@@ -1,6 +1,8 @@
 <?php
 namespace YayExtra\Helper;
 
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Main class of plugin
  *
@@ -401,6 +403,8 @@ class Database {
 	public function get_product_match_option_set_list( $filters = null, $apply = null ) {
 		global $wpdb;
 
+		$filters = $this->expand_category_conditions( $filters );
+
 		$this->filters = $filters;
 		$this->apply   = $apply;
 
@@ -410,5 +414,56 @@ class Database {
 		remove_filter( 'posts_clauses', array( $this, 'posts_clauses' ), 10 );
 
 		return $result_query_all;
+	}
+
+	/**
+	 * Expand product_category conditions to include children categories automatically.
+	 *
+	 * @param array $filters
+	 * @return array
+	 */
+	public function expand_category_conditions( $filters ) {
+		if ( empty( $filters ) || ! is_array( $filters ) ) {
+			return $filters;
+		}
+
+		foreach ( $filters as &$cond ) {
+
+			if (
+				isset( $cond['type']['value'] ) &&
+				$cond['type']['value'] === 'prod_category' &&
+				! empty( $cond['value'] )
+			) {
+				$selected_ids = array_map(
+					'intval',
+					wp_list_pluck( $cond['value'], 'value' )
+				);
+
+				$all_cat_ids = [];
+
+				foreach ( $selected_ids as $cid ) {
+
+					$children = get_term_children( $cid, 'product_cat' );
+
+					if ( is_array( $children ) ) {
+						$all_cat_ids = array_merge( $all_cat_ids, $children );
+					}
+
+					$all_cat_ids[] = $cid;
+				}
+
+				$all_cat_ids = array_unique( array_map( 'intval', $all_cat_ids ) );
+
+				$cond['value'] = array_map( function ( $id ) {
+					$term = get_term( $id );
+					return [
+						'value' => $id,
+						'label' => $term && ! is_wp_error( $term ) ? $term->name : '',
+					];
+				}, $all_cat_ids );
+			}
+		}
+
+		return $filters;
 	}
 }

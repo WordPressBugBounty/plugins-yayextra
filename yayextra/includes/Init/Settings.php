@@ -6,7 +6,8 @@ use YayExtra\Init\Ajax;
 use YayExtra\Init\CustomPostType;
 use YayExtra\Classes\ProductPage;
 use YayExtra\Helper\Utils;
-
+use YayExtra\Utils\SingletonTrait;
+use YayExtra\Register\ScriptName;
 defined( 'ABSPATH' ) || exit;
 /**
  * Init some settings when plugin is loaded
@@ -15,30 +16,8 @@ defined( 'ABSPATH' ) || exit;
  */
 class Settings {
 
-	/**
-	 * Single instance of class
-	 *
-	 * @var Settings
-	 */
-	protected static $_instance = null;
+	use SingletonTrait;
 
-	/**
-	 * Function ensure only one instance created
-	 *
-	 * @return Settings
-	 */
-	public static function get_instance() {
-		if ( is_null( self::$_instance ) ) {
-			self::$_instance = new self();
-		}
-		return self::$_instance;
-	}
-
-	/**
-	 * Constructor
-	 *
-	 * @return void
-	 */
 	private function __construct() {
 		if ( ! function_exists( 'WC' ) ) {
 			return;
@@ -47,13 +26,13 @@ class Settings {
 		#support HPOS
 		add_action(
 			'before_woocommerce_init',
-			function() {
+			function () {
 				if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
 					\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', YAYE_PLUGIN_FILE, true );
 				}
 			}
 		);
-
+		add_filter( 'admin_body_class', array( $this, 'admin_body_class' ) );
 		add_action( 'admin_menu', array( $this, 'admin_menu' ), YAYE_MENU_PRIORITY );
 		add_filter( 'plugin_action_links_' . YAYE_BASENAME, array( $this, 'plugin_action_links' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
@@ -67,6 +46,12 @@ class Settings {
 
 	}
 
+	public function admin_body_class( $classes ) {
+		if ( strpos( $classes, 'yay-ui' ) === false ) {
+			$classes .= ' yay-ui';
+		}
+		return $classes;
+	}
 	/**
 	 * Call back for admin_menu action
 	 *
@@ -114,11 +99,6 @@ class Settings {
 
 		$current_screen = get_current_screen();
 		if ( 'yaycommerce_page_yayextra' === $current_screen->id ) {
-
-			// Enqueue react bundle.
-			wp_enqueue_script( YAYE_PREFIX, YAYE_URL . 'assets/dist/js/main.bundle.js', array( 'wp-blocks', 'wp-i18n', 'wp-element', 'wp-editor', 'wp-components', 'wc-components' ), YAYE_VERSION, true );
-			wp_enqueue_style( YAYE_PREFIX, YAYE_URL . 'assets/dist/css/main.css', array( 'wp-components', 'wc-components' ), YAYE_VERSION );
-
 			// Enqueue script for wp.media .
 			wp_enqueue_media();
 
@@ -138,16 +118,20 @@ class Settings {
 
 			$option_set_id_list = $this->get_option_set_id_list();
 
+			wp_enqueue_script( ScriptName::PAGE_SETTINGS );
+			wp_enqueue_style( ScriptName::STYLE_SETTINGS );
+			wp_enqueue_style( 'yayextra-css', YAYE_URL . 'assets/css/yayextra.css', array(), YAYE_VERSION );
+
 			// Localize script for react.
 			wp_localize_script(
-				YAYE_PREFIX,
+				ScriptName::PAGE_SETTINGS, //YAYE_PREFIX,
 				'yaye_data',
 				array(
 					'OPTION_SET_LIST'   => CustomPostType::get_option_set_array( $option_set_id_list ),
 					'I18N'              => \YayExtra\I18n::getTranslation(),
 					'ajax_url'          => admin_url( 'admin-ajax.php' ),
 					'nonce'             => wp_create_nonce( 'yaye_nonce' ),
-					'image_url'         => YAYE_URL . '/assets/dist/images/',
+					'plugin_url'        => YAYE_URL,
 					'site_url'          => YAYE_SITE_URL,
 					'default_image_url' => \wc_placeholder_img_src(),
 					'date_format'       => get_option( 'date_format' ),
@@ -155,8 +139,15 @@ class Settings {
 					'user_roles'        => $user_roles,
 					'mine_types'        => Utils::get_mime_types(),
 					'size_allow'        => size_format( wp_max_upload_size() ),
+					'rest_url'          => esc_url_raw( rest_url() ),
+					'rest_nonce'        => wp_create_nonce( 'wp_rest' ),
+					'rest_base'         => 'yayextra/v1',
+					'settings'          => get_option( 'yaye_settings' ),
+					'reviewed'          => get_option( 'yaye_reviewed_flag' ),
+					'currency'  		=> html_entity_decode( get_woocommerce_currency_symbol() ),
 				)
 			);
+
 		}
 	}
 
@@ -263,6 +254,11 @@ class Settings {
 						'label' => '400',
 						'value' => 400,
 					),
+					'subtotal_price_font_size'   => '16',
+					'subtotal_price_font_weight' => array(
+						'label' => '400',
+						'value' => 400,
+					),
 					// 'total_price_color'       => '#6d6d6d',
 				),
 				// 'text'     => array(
@@ -325,14 +321,14 @@ class Settings {
 				'swatches' => array(
 					'width'                    => '38',
 					'height'                   => '38',
-					'border_width'             => '0',
-					'border_color'             => '#43454b',
+					'border_width'             => '2',
+					'border_color'             => '#f5f5f5',
 					'border_style'             => array(
 						'label' => 'Solid',
 						'value' => 'solid',
 					),
 					'selected_border_width'    => '2',
-					'selected_border_color'    => '#43454b',
+					'selected_border_color'    => '#333333',
 					'selected_border_style'    => array(
 						'label' => 'Solid',
 						'value' => 'solid',
@@ -341,8 +337,9 @@ class Settings {
 						'label' => 'Bottom',
 						'value' => 'bottom',
 					),
-					'tooltip_background_color' => '#555',
+					'tooltip_background_color' => '##333333',
 					'tooltip_text_color'       => '#fff',
+					'corner_radius'            => '3',
 				),
 				'button'   => array(
 					'border_width'              => '1',
@@ -351,13 +348,13 @@ class Settings {
 						'label' => 'Solid',
 						'value' => 'solid',
 					),
-					'border_color'              => '#bcbcbc',
+					'border_color'              => '#e4e4e7',
 					'background_color'          => '#fff',
-					'text_color'                => '#6d6d6d',
+					'text_color'                => '##333333',
 					// 'hover_styling'             => false,
-					// 'hover_border_color'        => '#333333',
-					// 'hover_background_color'    => '#fff',
-					// 'hover_text_color'          => '#6d6d6d',
+					'hover_border_color'        => '#333333',
+					'hover_background_color'    => '#fff',
+					'hover_text_color'          => '#333333',
 					'selected_border_color'     => '#333333',
 					'selected_background_color' => '#333333',
 					'selected_text_color'       => '#fff',
@@ -365,7 +362,7 @@ class Settings {
 						'label' => 'Bottom',
 						'value' => 'bottom',
 					),
-					'tooltip_background_color'  => '#555',
+					'tooltip_background_color'  => '#333333',
 					'tooltip_text_color'        => '#fff',
 				),
 				'custom'   => array(
@@ -396,5 +393,4 @@ class Settings {
 		update_option( 'yaye_settings', $settings );
 
 	}
-
 }

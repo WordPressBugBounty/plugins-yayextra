@@ -4,23 +4,44 @@ Donate link: https://yaycommerce.com/yayextra-woocommerce-extra-product-options/
 Tags: product addons, woocommerce product options, woocommerce product fields, product customizer, extra product options
 Requires at least: 4.0
 Requires PHP: 5.3
-Tested up to: 6.8
-Stable tag: 1.5.6.1
+Tested up to: 6.9
+Stable tag: 2.0.0
 License: GPL-2.0+
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
 
 == Description ==
 
-YayExtra is the ultimate WooCommerce plugin for adding **customizable product options** to your online shop. Whether you're selling apparel, gifts, tech gadgets, or anything in between, YayExtra gives you the flexibility to personalize your products and boost customer satisfaction. 
+YayExtra – Product Options for WooCommerce lets you add customizable options and extra fields to your products.
 
-It comes with a wide range of field types, including dropdown menus, checkboxes, radio buttons, text inputs, number fields, color swatches, multiple-choice lists, and more.
+Perfect for stores that sell personalized, configurable, or add-on products.
 
-[DEMO](https://demo.yaycommerce.com/yayextra/product/t-shirt/) | [**YAYEXTRA PRO**](https://yaycommerce.com/yayextra-woocommerce-extra-product-options/) 💎
+**What you can do with YayExtra:**
+
+- **Add custom product options** to any WooCommerce product
+- Offer **personalization fields** (name, message, notes, etc.)
+- Create product add-ons from **existing products**
+- **Collect extra information** from customers before checkout
+- Improve product pages and increase order value
+
+👉 Check it out: [**YayExtra - Woo Product Options Pro**](https://yaycommerce.com/yayextra-woocommerce-extra-product-options/) 👀
+
+**Works great for selling:**
+
+- Custom apparel
+- Personalized gifts
+- Configurable products
+- Service add-ons
+- Print-on-demand items
+- Value-added services
+
+Build better product pages. Offer more choices. Sell more with YayExtra.
+
+📌 [Quick Demo](https://demo.yaycommerce.com/yayextra/product/t-shirt/) | [Admin Test Drive](https://demo.yaycommerce.com/try-yayextra)
 
 [youtube https://youtu.be/qytEac2_Yr0]
 
-[Documentation](https://docs.yaycommerce.com/yayextra/getting-started/introduction) | [Free vs Pro](https://docs.yaycommerce.com/yayextra/why-upgrade)
+Why Upgrade? Check it here: [Free vs Pro](https://docs.yaycommerce.com/yayextra/why-upgrade)
 
 ###⚡️ FEATURES
 
@@ -45,7 +66,7 @@ A group of product fields can be applied to all products, a group of products in
 This product options plugin allows using hooks for `before_calculate_totals` function to modify the [cart item line total](https://docs.yaycommerce.com/yayextra/developer-zone).
 
 **WooCommerce Conditional Variations**
-YayExtra allows you to create conditional logic that can be combined with the existing custom options. Conditional logic helps show the next product field if the user has selected a specific option value. 
+YayExtra allows you to create conditional logic that can be combined with the existing custom options. Conditional logic shows the next product fields if the user selects a specific option value. 
 
 Let's suppose that you sell car parts, so when the customer chooses to have "Accessories" then related options like "Front door items" or "Replacement kit" can be shown on the current product page. Otherwise, if the customer doesn't check the "Accessories" checkbox, then those options will not show up, which will keep your product page neat and clear.
 
@@ -105,6 +126,18 @@ Yes, this feature is called Linked Product in YayExtra Pro settings. You can upg
 4. Admin dashboard settings for WooCommerce extra product options
 
 == Changelog ==
+
+= Mar 13, 2026 - Version 2.0.0 =
+- Updated: Admin UI/UX
+- Added: Swatch and Button style settings in Customize [Pro version only]
+- Added: Typography settings for Subtotal price in Customize
+- Added: “All products” option for Product selection
+- Added: Limit selections for Button (Multi) & Checkbox types [Pro version only]
+- Added: Mime type selection for File Upload [Pro version only]
+- Added: Description field for types without Option values [Pro version only]
+- Added: hooks for total_price_text and subtotal_text
+- Added: display link and stock status for Linked Product [Pro version only]
+- Improved: WC tested up to 10.6.1
 
 = Oct 24, 2025 - Version 1.5.6.1 =
 - Removed: License menu

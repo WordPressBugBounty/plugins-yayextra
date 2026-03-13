@@ -54,55 +54,109 @@ class CustomPostType {
 	}
 
 	/**
-	 * Get list option set with params or get all without params.
+	 * Get all option sets.
+	 *
+	 * @param int $option_set_id Option set id.
+	 * @param string $search Search keyword.
+	 *
+	 * @return array
+	 */
+	protected static function get_all_option_sets( $option_set_id = 0, $search = '' ) {
+		$args = array(
+			'posts_per_page' => -1,
+			'post_type'      => 'yaye_option_set',
+			'post_status'    => 'publish',
+			'order'          => 'DESC',
+			'orderby'        => array(
+				'date' => 'DESC',
+				'ID'   => 'DESC',
+			),
+		);
+
+		if ( ! empty( $option_set_id ) ) {
+			$args['p'] = $option_set_id;
+		} else {
+			$args['meta_query'] = array(
+				array(
+					'key'     => '_yaye_name',
+					'value'   => $search,
+					'compare' => 'LIKE',
+				),
+			);
+		}
+
+		$option_sets = get_posts( $args );
+		return $option_sets;
+	}
+
+	/**
+	 * Get paginated option sets.
+	 *
+	 * @param int $limit Limit of option sets.
+	 * @param int $page Page number.
+	 * @param int $option_set_id Option set id.
+	 * @param string $search Search keyword.
+	 *
+	 * @return array
+	 */
+	protected static function get_paginated_option_sets( $limit = 10, $page = 1, $option_set_id = 0, $search = '' ) {
+		$args = array(
+			'posts_per_page' => $limit,
+			'paged'          => $page,
+			'post_type'      => 'yaye_option_set',
+			'post_status'    => 'publish',
+			'order'          => 'DESC',
+			'orderby'        => array(
+				'date' => 'DESC',
+				'ID'   => 'DESC',
+			),
+		);
+
+		if ( ! empty( $option_set_id ) ) {
+			$args['p'] = $option_set_id;
+		} else {
+			$args['meta_query'] = array(
+				array(
+					'key'     => '_yaye_name',
+					'value'   => $search,
+					'compare' => 'LIKE',
+				),
+			);
+		}
+
+		$option_sets = get_posts( $args );
+		return $option_sets;
+	}
+
+
+	/**
+	 * Get list option set with pagination or get all without pagination.
 	 *
 	 * @param array   $params filter information.
-	 * @param boolean $force_all  Allow get all option sets.
+	 * @param boolean $force_all Allow get all option sets.
 	 *
 	 * @return array
 	 */
 	public static function get_list_option_set( $params = array(), $force_all = false ) {
-		global $wpdb;
-
-		$search = ! empty( $params['search'] ) ? $params['search'] : ''; // Option set name
-		$option_set_id = ! empty( $params['option_set_id'] ) && is_numeric( $params['option_set_id'] ) ? (int) $params['option_set_id'] : 0; // Option set ID
-		$limit = ! empty( $params['page_size'] ) && is_numeric( $params['page_size'] ) ? (int) $params['page_size'] : 10;
-		$page = ! empty( $params['current'] ) && is_numeric( $params['current'] ) ? (int) $params['current'] : 1;
-
-		// Build query components
-		$base_where = "p.post_type = 'yaye_option_set' AND p.post_status = 'publish'";
-		
-		// Handle search by ID
-		if ( ! empty( $option_set_id ) ) {
-			$join_clause = '';
-			$search_where = " AND p.ID = %d";
-			$search_params = array( $option_set_id );
-		} else {
-			// Handle search by name (existing functionality)
-			$join_clause = ! empty( $search ) ? " INNER JOIN {$wpdb->prefix}postmeta pm ON p.ID = pm.post_id" : '';
-			$search_where = ! empty( $search ) ? " AND pm.meta_key = '_yaye_name' AND pm.meta_value LIKE %s" : '';
-			$search_params = ! empty( $search ) ? array( '%' . $wpdb->esc_like( $search ) . '%' ) : array();
-		}
+		$search        = ! empty( $params['search'] ) ? $params['search'] : '';
+		$option_set_id = ! empty( $params['option_set_id'] ) && is_numeric( $params['option_set_id'] ) ? (int) $params['option_set_id'] : 0;
+		$limit         = ! empty( $params['page_size'] ) && is_numeric( $params['page_size'] ) ? (int) $params['page_size'] : 10;
+		$page          = ! empty( $params['current'] ) && is_numeric( $params['current'] ) ? (int) $params['current'] : 1;
 
 		// Get total count
-		$count_query = "SELECT COUNT(DISTINCT p.ID) FROM {$wpdb->prefix}posts p{$join_clause} WHERE {$base_where}{$search_where}";
-		$total_items = ! empty( $search_params ) ? $wpdb->get_var( $wpdb->prepare( $count_query, $search_params ) ) : $wpdb->get_var( $count_query );
+		$option_sets = self::get_all_option_sets();
+		$total_items = count( $option_sets );
 
-		// Handle force_all case
 		if ( $force_all ) {
-			$all_query = "SELECT DISTINCT p.* FROM {$wpdb->prefix}posts p{$join_clause} WHERE {$base_where}{$search_where} ORDER BY p.post_date DESC";
-			return ! empty( $search_params ) ? $wpdb->get_results( $wpdb->prepare( $all_query, $search_params ) ) : $wpdb->get_results( $all_query );
+			return $option_sets;
 		}
 
-		// Get paginated results
-		$offset = ( $page - 1 ) * $limit;
-		$query = "SELECT DISTINCT p.* FROM {$wpdb->prefix}posts p{$join_clause} WHERE {$base_where}{$search_where} ORDER BY p.post_date DESC LIMIT %d OFFSET %d";
-		$final_params = array_merge( $search_params, array( $limit, $offset ) );
-		$query_result = $wpdb->get_results( $wpdb->prepare( $query, $final_params ) );
-		// Build option set list
+		// Get paginated data
+		$option_sets_paginated = self::get_paginated_option_sets( $limit, $page, $option_set_id, $search );
+
 		$option_set_list = array();
-		if ( ! empty( $query_result ) ) {
-			foreach ( $query_result as $post ) {
+		if ( ! empty( $option_sets_paginated ) ) {
+			foreach ( $option_sets_paginated as $post ) {
 				$option_set_list[] = self::build_option_set_data( $post->ID );
 			}
 		}
@@ -150,7 +204,9 @@ class CustomPostType {
 	 * @return array
 	 */
 	public static function get_option_set( $option_set_id ) {
+
 		return self::build_option_set_data( $option_set_id, true );
+		
 	}
 
 	/**
@@ -232,14 +288,14 @@ class CustomPostType {
 
 			update_post_meta( $insert_id, '_yaye_name', 'Sample Option Set' );
 			update_post_meta( $insert_id, '_yaye_description', 'Sample description' );
-			update_post_meta( $insert_id, '_yaye_status', 0 );
+			update_post_meta( $insert_id, '_yaye_status', 1 );
 			update_post_meta( $insert_id, '_yaye_options', array() );
 			update_post_meta( $insert_id, '_yaye_actions', array() );
 			update_post_meta(
 				$insert_id,
 				'_yaye_products',
 				array(
-					'product_filter_type'          => 1, // 1 : one by one (default), 2 : by conditions,
+					'product_filter_type'          => 3, // 1 : one by one, 2 : by conditions, 3 : all products,
 					'product_filter_one_by_one'    => array(),
 					'product_filter_by_conditions' => array(
 						'match_type' => array(
@@ -317,7 +373,8 @@ class CustomPostType {
 				}
 			}
 
-			update_post_meta( $insert_id, '_yaye_name', $option_set_org['name'] );
+			$clone_name = $option_set_org['name'] . '_Copy';
+			update_post_meta( $insert_id, '_yaye_name', $clone_name );
 			update_post_meta( $insert_id, '_yaye_description', $option_set_org['description'] );
 			update_post_meta( $insert_id, '_yaye_status', $option_set_org['status'] );
 			update_post_meta( $insert_id, '_yaye_options', $option_list );

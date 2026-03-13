@@ -95,15 +95,15 @@
   background-color: #555;
   color: #fff;
   text-align: center;
-  padding: 8px 21px;
-  border-radius: 3px;
+  padding: 6px 10px;
+  border-radius: 4px;
   z-index: 10;
   opacity: 0;
   transition: all 0.3s;
   max-width: 250px;
   box-sizing: border-box;
-  font-size: 15px;
-  line-height: 20px;
+  font-size: 14px;
+  line-height: 1.4;
 }
 
 .yayextra-tooltip-bottom {
@@ -118,6 +118,13 @@
   left: 50%;
   transform: translateX(-50%);
   margin-bottom: 11px;
+}
+
+.yayextra-opt-button .yayextra-tooltip-top {
+  margin-bottom: 15px;
+}
+.yayextra-opt-button .yayextra-tooltip-bottom {
+  margin-bottom: 15px;
 }
 
 .yayextra-opt-button .yayextra-tooltip-left {

@@ -120,11 +120,12 @@ class ProductPage {
 								$template_folder,
 								$opt_field['type']['value'] . '_field',
 								array(
-									'opt_set_id'          => $opt_set_data['id'],
-									'data'                => $opt_field,
-									'product_price'       => $product_price,
-									'is_edit_option_mode' => $this->is_edit_option_mode(),
-									'settings'            => $settings,
+									'opt_set_id'          	 => $opt_set_data['id'],
+									'data'                	 => $opt_field,
+									'product_price'       	 => $product_price,
+									'product_price_original' => $product->get_price( 'original' ),
+									'is_edit_option_mode' 	 => $this->is_edit_option_mode(),
+									'settings'            	 => $settings,
 								)
 							);
 						}
@@ -136,15 +137,17 @@ class ProductPage {
 			wp_nonce_field( 'yayextra-opt-field-data-check-nonce', 'yayextra-opt-field-data-nonce' );
 
 			if ( isset( $settings['general'] ) && true === $settings['general']['show_extra_subtotal'] ) {
+				$subtotal_text = apply_filters( 'yaye_subtotal_text', esc_html__( 'Extra subtotal:', 'yayextra' ) );
 				echo '<div class="yayextra-extra-subtotal-price">';
-				echo '<span class="total-price-title">' . esc_html__( 'Extra subtotal:', 'yayextra' ) . '</span>';
+				echo '<span class="total-price-title">' . esc_html( $subtotal_text ) . '</span>';
 				echo '<span class="total-price" data-token-replace="0" data-total-price="0">' . wp_kses_post( Utils::get_formatted_price_from_yaycurrency( 0 ) ) . '</span>';
 				echo '</div>';
 			}
 
 			if ( isset( $settings['general'] ) && true === $settings['general']['show_total_price'] ) {
+				$total_price_text = apply_filters( 'yaye_total_price_text', esc_html__( 'Total price:', 'yayextra' ) );
 				echo '<div class="yayextra-total-price">';
-				echo '<span class="total-price-title">' . esc_html__( 'Total price:', 'yayextra' ) . '</span>';
+				echo '<span class="total-price-title">' . esc_html( $total_price_text ) . '</span>';
 				echo '<span class="total-price" data-token-replace="' . esc_attr( $product_price ) . '" data-total-price="' . esc_attr( $product_price ) . '">' . wp_kses_post( Utils::get_formatted_price_from_yaycurrency( $product_price ) ) . '</span>';
 				echo '</div>';
 			}
@@ -161,6 +164,11 @@ class ProductPage {
 		if ( isset( $settings['general'] ) && !empty($settings['general']['update_product_price']) && true === $settings['general']['update_product_price'] ) { 
 			// For YayExtra pro version.
 		}
+
+		// Store original total options price, fee, linked product price for later 3rd plugin
+		echo '<input type="hidden" class="yaye-total-options-original" data-total-options-price-original="0" />';
+		echo '<input type="hidden" class="yaye-total-fee-original" data-total-fee-original="0" />';
+		echo '<input type="hidden" class="yaye-product-price-original" data-product-price-original="' . esc_attr( $product->get_price( 'original' ) ) . '" data-product-regular-price-original="' . esc_attr( $product->get_regular_price( 'original' ) ) . '"/>';
 	}
 
 	/**
@@ -633,8 +641,9 @@ class ProductPage {
 
 		foreach ( $cart_object->cart_contents as $cart_value ) {
 			if( !empty($cart_value['data']) ) {
-				$cost_total         = Utils::get_price_fixed_from_currency_plugin( $cart_value['product_id'], floatval( $cart_value['data']->get_price( 'original' ) ), true);
-				$cost_regular_total = Utils::get_price_fixed_from_currency_plugin( $cart_value['product_id'], floatval( $cart_value['data']->get_regular_price( 'original' ) ), true); 
+				$product = wc_get_product( $cart_value['data']->get_id() );
+				$cost_total         = Utils::get_price_fixed_from_currency_plugin( $cart_value['product_id'], floatval( $product->get_price( 'original' ) ), true);
+				$cost_regular_total = Utils::get_price_fixed_from_currency_plugin( $cart_value['product_id'], floatval( $product->get_regular_price( 'original' ) ), true); 
 				
 				if ( ! empty( $cart_value['yaye_custom_option'] ) ) {
 					foreach ( $cart_value['yaye_custom_option'] as $option_set_id => $custom_option ) {
@@ -659,8 +668,14 @@ class ProductPage {
 					10
 				);
 	
-				$cost_total         = apply_filters('yaye_cart_line_total', Utils::get_price_from_currency_plugin( $cost_total ), $cart_value);
-				$cost_regular_total = apply_filters('yaye_cart_line_regular_total', Utils::get_price_from_currency_plugin( $cost_regular_total ), $cart_value);
+				
+				if ( function_exists( 'Yay_Currency\\plugin_init' )) {
+					$cost_total         = apply_filters('yaye_cart_line_total', $cost_total, $cart_value);
+					$cost_regular_total = apply_filters('yaye_cart_line_regular_total', $cost_regular_total, $cart_value);
+				} else {
+					$cost_total         = apply_filters('yaye_cart_line_total', Utils::get_price_from_currency_plugin( $cost_total ), $cart_value);
+					$cost_regular_total = apply_filters('yaye_cart_line_regular_total', Utils::get_price_from_currency_plugin( $cost_regular_total ), $cart_value);
+				}
 
 				$cart_value['data']->set_price( $cost_total );
 				$cart_value['data']->set_regular_price( $cost_regular_total );
@@ -743,7 +758,7 @@ class ProductPage {
 		}
 
 		// Add edit option field link with product has applied opiton field.
-		if ( is_cart() && ! empty( $product_permalink ) ) {
+		if ( is_cart() && ! empty( $product_permalink ) && ! wp_is_block_theme() ) {
 			$current_prod_id = $_product->get_parent_id();
 			if ( empty( $current_prod_id ) ) {
 				$current_prod_id = $_product->get_id();
@@ -759,8 +774,9 @@ class ProductPage {
 					$product_permalink
 				);
 
+				$edit_option_text = apply_filters( 'yaye_edit_option_text', esc_html__( 'Edit option field', 'yayextra' ) );
 				$cart_data[] = array(
-					'name'  => '<a href="' . $edit_link . '" class="yayextra-option-edit-link">' . esc_html__( 'Edit option field', 'yayextra' ) . '</a>',
+					'name'  => '<a href="' . $edit_link . '" class="yayextra-option-edit-link">' . $edit_option_text . '</a>',
 					'value' => '',
 				);
 			}
@@ -1146,11 +1162,11 @@ class ProductPage {
 			if ( 'checkbox' === $option_type || 'button_multi' === $option_type || 'swatches_multi' === $option_type ) {
 				$opt_val_temp = array();
 				foreach ( $option_value as $opt_val ) {
-					array_push( $opt_val_temp, $opt_val['value'] );
+					array_push( $opt_val_temp, trim($opt_val['value']) );
 				}
 				$option_value = $opt_val_temp;
 			} elseif ( 'radio' === $option_type || 'button' === $option_type || 'dropdown' === $option_type || 'swatches' === $option_type ) {
-				$opt_val_temp = ! empty( $option_value['value'] ) ? $option_value['value'] : $option_value[0]['value'];
+				$opt_val_temp = ! empty( $option_value['value'] ) ? trim($option_value['value']) : trim($option_value[0]['value']);
 				$option_value = $opt_val_temp;
 			}
 
@@ -1217,14 +1233,14 @@ class ProductPage {
 					if ( is_array( $option['option_value'] ) && is_array( $option_value ) ) {
 						if ( 'is_one_of' === $comparation ) {
 							foreach ( $option['option_value'] as $opt_cart_val ) {
-								if ( in_array( $opt_cart_val['option_val'], $option_value, true ) ) {
+								if ( in_array( trim($opt_cart_val['option_val']), $option_value, true ) ) {
 									return true;
 								};
 							}
 							return false;
 						} elseif ( 'is_not_one_of' === $comparation ) {
 							foreach ( $option['option_value'] as $opt_cart_val ) {
-								if ( in_array( $opt_cart_val['option_val'], $option_value, true ) ) {
+								if ( in_array( trim($opt_cart_val['option_val']), $option_value, true ) ) {
 									return false;
 								};
 							}
@@ -1360,7 +1376,7 @@ class ProductPage {
 	 * @param string $cart_item_key The cart item key.
 	 */
 	public function add_link_edit_option_field_in_minicart( $cart_item_quantity_product_price_span, $cart_item, $cart_item_key ) {
-		if ( is_cart() ) return $cart_item_quantity_product_price_span;
+		if ( is_cart() && ! wp_is_block_theme() ) return $cart_item_quantity_product_price_span;
 		
 		$_product          = apply_filters( 'woocommerce_cart_item_product', $cart_item['data'], $cart_item, $cart_item_key );
 		$product_permalink = null;
@@ -1383,7 +1399,9 @@ class ProductPage {
 					),
 					$product_permalink
 				);
-				echo '<p><a href="' . esc_attr( $edit_link ) . '" class="yayextra-option-edit-link-minicart">' . esc_html__( 'Edit option field', 'yayextra' ) . '</a></p>';
+
+				$edit_option_text = apply_filters( 'yaye_edit_option_text', esc_html__( 'Edit option field', 'yayextra' ) );
+				echo '<p><a href="' . esc_attr( $edit_link ) . '" class="yayextra-option-edit-link-minicart">' . esc_html( $edit_option_text ) . '</a></p>';
 			}
 		}
 
@@ -1586,12 +1604,22 @@ class ProductPage {
 			
 				$css .= '}';
 
-				$css .= '.yayextra-total-price .total-price, .yayextra-extra-subtotal-price .total-price {';
+				$css .= '.yayextra-total-price .total-price {';
 				if ( ! empty( $general_setts['total_price_font_size'] ) && '0px' !== $general_setts['total_price_font_size'] ) {
 					$css .= 'font-size: ' . $general_setts['total_price_font_size'] . 'px !important;';
 				}
 				if ( ! empty( $general_setts['total_price_font_weight'] ) ) {
 					$css .= 'font-weight: ' . $general_setts['total_price_font_weight']['value'] . ' !important;';
+				}
+
+				$css .= '}';
+
+				$css .= '.yayextra-extra-subtotal-price .total-price {';
+				if ( ! empty( $general_setts['subtotal_price_font_size'] ) && '0px' !== $general_setts['subtotal_price_font_size'] ) {
+					$css .= 'font-size: ' . $general_setts['subtotal_price_font_size'] . 'px !important;';
+				}
+				if ( ! empty( $general_setts['subtotal_price_font_weight'] ) ) {
+					$css .= 'font-weight: ' . $general_setts['subtotal_price_font_weight']['value'] . ' !important;';
 				}
 
 				$css .= '}';
@@ -1705,6 +1733,8 @@ class ProductPage {
 					array_push( $prod_apply_list, (int) $prod->id );
 				}
 			}
+		} elseif ( 3 === $prod_filter_type ) { // Choose all products.
+			$prod_apply_list = 'all';
 		}
 
 		return $prod_apply_list;
@@ -2034,7 +2064,13 @@ class ProductPage {
 					$prod_apply_list = $this->get_product_applies( $opt_set_data );
 
 					if ( ! empty( $prod_apply_list ) ) {
-						if ( in_array( $current_prod_id, $prod_apply_list, true ) ) {
+						if ( is_array( $prod_apply_list ) && in_array( $current_prod_id, $prod_apply_list, true ) ) {
+							if ( isset( $settings['general'] ) && 'first_applicable' === $settings['general']['applied_option_sets']['value'] ) {
+								return array( $opt_set_data );
+							} else {
+								array_push( $result, $opt_set_data );
+							}
+						} else if ( 'all' === $prod_apply_list ) { // Choose all products.
 							if ( isset( $settings['general'] ) && 'first_applicable' === $settings['general']['applied_option_sets']['value'] ) {
 								return array( $opt_set_data );
 							} else {

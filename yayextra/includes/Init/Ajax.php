@@ -4,6 +4,7 @@ namespace YayExtra\Init;
 use YayExtra\Helper\Utils;
 use YayExtra\Init\CustomPostType;
 use YayExtra\Classes\ProductPage;
+defined( 'ABSPATH' ) || exit;
 /**
  * Ajax class
  */
@@ -54,6 +55,7 @@ class Ajax {
 			'save_settings',
 			'get_settings',
 			'update_option_set_products_one_by_one',
+			'update_reviewed_flag',
 		);
 	}
 
@@ -115,6 +117,233 @@ class Ajax {
 	}
 
 	/**
+	 * Add missing UUIDs to optionValues inside Option Set.
+	 */
+	private function migrate_option_value_id($option_set) {
+
+		$has_changed = false;
+
+		if (empty($option_set['options']) || !is_array($option_set['options'])) {
+			return array(
+				'data'        => $option_set,
+				'has_changed' => false,
+			);
+		}
+
+		foreach ($option_set['options'] as &$option) {
+
+			if (empty($option['optionValues']) || !is_array($option['optionValues'])) {
+				continue;
+			}
+
+			$first = $option['optionValues'][0] ?? null;
+
+			// if id is not empty -> skip
+			if (!empty($first['id'])) {
+				continue;
+			}
+
+			// if id is empty -> migrate for all items
+			foreach ($option['optionValues'] as &$valueItem) {
+				if (empty($valueItem['id'])) {
+					$valueItem['id'] = wp_generate_uuid4();
+					$has_changed = true;
+				}
+			}
+		}
+
+		return array(
+			'data'        => $option_set,
+			'has_changed' => $has_changed,
+		);
+	}
+
+/**
+ * Migrate old logic value data to include id (id in optionValue).
+ */
+private function migrate_option_set_logic_value( $option_set ) {
+	$has_changed = false;
+
+	if ( empty( $option_set['options'] ) || ! is_array( $option_set['options'] ) ) {
+		return array( 'data' => $option_set, 'has_changed' => false );
+	}
+
+	/**
+	 * Helper: always return array of items
+	 */
+	$normalize_value = function( $value ) {
+		if ( empty( $value ) ) {
+			return array();
+		}
+		// If already array of objects → return
+		if ( is_array( $value ) && isset( $value[0] ) && is_array( $value[0] ) ) {
+			return $value;
+		}
+		// Convert single object → array
+		return array( $value );
+	};
+
+	/**
+	 * MIGRATE LOGICS
+	 */
+	$force_array_types = array( 'checkbox', 'button_multi', 'swatches_multi' );
+	foreach ( $option_set['options'] as &$option ) {
+
+		if ( empty( $option['logics'] ) ) {
+			continue;
+		}
+
+		foreach ( $option['logics'] as &$logic ) {
+
+			// If already has ID → skip
+			if ( isset( $logic['value']['id'] ) && $logic['value']['id'] !== '' ) {
+				continue;
+			}
+
+			if ( empty( $logic['option']['id'] ) ) {
+				continue;
+			}
+
+			$target_option_id = $logic['option']['id'];
+
+			// Find corresponding option
+			$target_option = null;
+			foreach ( $option_set['options'] as $opt ) {
+				if ( $opt['id'] === $target_option_id ) {
+					$target_option = $opt;
+					break;
+				}
+			}
+			if ( ! $target_option || empty( $target_option['optionValues'] ) ) {
+				continue;
+			}
+
+			// Normalize value to array
+			$original_value = $logic['value'];
+			$value_list     = $normalize_value( $original_value );
+
+			$mapped_list = array();
+
+			foreach ( $value_list as $item ) {
+				$current_value = $item['value'] ?? null;
+				if ( ! $current_value ) {
+					$mapped_list[] = $item;
+					continue;
+				}
+
+				// Match in optionValues
+				$found = false;
+				foreach ( $target_option['optionValues'] as $ov ) {
+					if ( $ov['value'] === $current_value ) {
+						$mapped_list[] = array(
+							'id'    => $ov['id'],
+							'value' => $ov['value'],
+							'label' => $item['label'] ?? $ov['value'],
+						);
+						$has_changed = true;
+						$found       = true;
+						break;
+					}
+				}
+
+				if ( ! $found ) {
+					// fallback
+					$mapped_list[] = $item;
+				}
+			}
+
+			// Restore single or array
+			$option_type = $logic['option']['type']['value'] ?? null;
+			if ( in_array( $option_type, $force_array_types, true ) ) {
+				$logic['value'] = $mapped_list;
+			} else {
+				$logic['value'] = ( count( $mapped_list ) === 1 ) ? $mapped_list[0] : $mapped_list;
+			}
+		}
+	}
+
+	/**
+	 * MIGRATE ACTION CONDITIONS
+	 */
+	if ( ! empty( $option_set['actions'] ) ) {
+		foreach ( $option_set['actions'] as &$action ) {
+
+			if ( empty( $action['conditions'] ) ) {
+				continue;
+			}
+
+			foreach ( $action['conditions'] as &$condition ) {
+
+				if ( isset( $condition['value']['id'] ) && $condition['value']['id'] !== '' ) {
+					continue;
+				}
+
+				$target_option_id = $condition['optionId']['id'] ?? null;
+				if ( ! $target_option_id ) {
+					continue;
+				}
+
+				// Find corresponding option
+				$target_option = null;
+				foreach ( $option_set['options'] as $opt ) {
+					if ( $opt['id'] === $target_option_id ) {
+						$target_option = $opt;
+						break;
+					}
+				}
+				if ( ! $target_option ) {
+					continue;
+				}
+
+				$original_value = $condition['value'];
+				$value_list     = $normalize_value( $original_value );
+
+				$mapped_list = array();
+
+				foreach ( $value_list as $item ) {
+					$current_value = $item['value'] ?? null;
+
+					if ( ! $current_value ) {
+						$mapped_list[] = $item;
+						continue;
+					}
+
+					$found = false;
+					foreach ( $target_option['optionValues'] as $ov ) {
+						if ( $ov['value'] === $current_value ) {
+							$mapped_list[] = array(
+								'id'    => $ov['id'],
+								'value' => $ov['value'],
+								'label' => $item['label'] ?? $ov['value'],
+							);
+							$has_changed = true;
+							$found       = true;
+							break;
+						}
+					}
+
+					if ( ! $found ) {
+						$mapped_list[] = $item;
+					}
+				}
+
+				$cond_type = $condition['type']['value'] ?? null;
+				if ( in_array( $cond_type, $force_array_types, true ) ) {
+					$condition['value'] = $mapped_list;
+				} else {
+					$condition['value'] = ( count( $mapped_list ) === 1 ) ? $mapped_list[0] : $mapped_list;
+				}
+			}
+		}
+	}
+
+	return array(
+		'data'        => $option_set,
+		'has_changed' => $has_changed,
+	);
+}
+
+	/**
 	 * Ajax get option set by id.
 	 *
 	 * @throws \Exception Exception when check nonce.
@@ -129,7 +358,24 @@ class Ajax {
 			}
 			$id         = sanitize_text_field( wp_unslash( isset( $_POST['id'] ) ? $_POST['id'] : null ) );
 			$option_set = CustomPostType::get_option_set( $id );
+			//migrate option set data
+			$migrated_option_value_id = $this->migrate_option_value_id( $option_set );
+			$option_set = $migrated_option_value_id['data'];
 
+			if ( $migrated_option_value_id['has_changed'] ) {
+				update_post_meta( $id, '_yaye_options', $option_set['options'] );
+			}
+
+			$migrated_logics_actions = $this->migrate_option_set_logic_value( $option_set );
+			$option_set = $migrated_logics_actions['data'];
+
+			if ( $migrated_logics_actions['has_changed'] ) {
+				update_post_meta( $id, '_yaye_options', $option_set['options'] );
+				update_post_meta( $id, '_yaye_actions', $option_set['actions'] );
+			}
+			
+			
+			//get products
 			$filters = get_post_meta( $id, '_yaye_products', true );
 
 			if ( 1 === $filters['product_filter_type'] ) {
@@ -270,6 +516,7 @@ class Ajax {
 					continue;
 				}
 
+				$data = array_reverse( $data );
 				foreach ( $data as $option_set ) {
 					/**
 				 * Create option set from data
@@ -584,6 +831,18 @@ class Ajax {
 			update_post_meta( $decoded_object_data['optionSetID'], '_yaye_products', $yaye_product_post_meta[0] );
 			wp_send_json_success( 'success', 200 );
 
+		} catch ( \Exception $ex ) {
+			wp_send_json_error( array( 'msg' => $ex->getMessage() ) );
+		} catch ( \Error $err ) {
+			wp_send_json_error( array( 'msg' => $err->getMessage() ) );
+		}
+	}
+
+	public function update_reviewed_flag() {
+		try {
+			Utils::check_nonce();
+			update_option( 'yaye_reviewed_flag', true );
+			wp_send_json_success( 'success', 200 );
 		} catch ( \Exception $ex ) {
 			wp_send_json_error( array( 'msg' => $ex->getMessage() ) );
 		} catch ( \Error $err ) {

@@ -3,18 +3,20 @@
  * Plugin Name: YayExtra Lite - WooCommerce Extra Product Options
  * Plugin URI: https://yaycommerce.com/yayextra-woocommerce-extra-product-options
  * Description: Offer extra options like personal engraving, print-on-demand items, gifts, custom canvas prints, and personalized products.
- * Version: 1.5.6.1
+ * Version: 2.0.0
  * Author: YayCommerce
  * Author URI: https://yaycommerce.com
  * Text Domain: yayextra
  * WC requires at least: 3.0.0
- * WC tested up to: 9.7.1
+ * WC tested up to: 10.6.1
  * Domain Path: /i18n/languages/
  */
 
 namespace YayExtra;
 
 use YayExtra\Init\Settings;
+// use YayExtra\Integrations;
+use YayExtra\Register\RegisterFacade;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -47,12 +49,13 @@ if ( ! defined( 'YAYE_BASENAME' ) ) {
 }
 
 if ( ! defined( 'YAYE_VERSION' ) ) {
-	define( 'YAYE_VERSION', '1.5.6.1' );
+	define( 'YAYE_VERSION', '2.0.0' );
 }
 
 if ( ! defined( 'YAYE_SITE_URL' ) ) {
 	define( 'YAYE_SITE_URL', site_url() );
 }
+
 
 require __DIR__ . '/autoloader.php';
 
@@ -66,6 +69,10 @@ if ( ! function_exists( 'YayExtra\\plugins_loaded' ) ) {
 		\YayExtra\YayCommerceMenu\RegisterMenu::get_instance();
 		I18n::getInstance();
 		Settings::get_instance();
+		// Integrations::get_instance();
+		// Register Facade
+		RegisterFacade::get_instance();
+
 		add_action( 'admin_notices', 'YayExtra\\required_woocommerce_notice' );
 	}
 }

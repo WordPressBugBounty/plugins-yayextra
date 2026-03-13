@@ -81,25 +81,28 @@ if ( ! empty( $option_value_list ) ) {
 		$id_opt = $data['id'] . (string) $index;
 
 		$addition_cost = 0;
+		$addition_cost_original = 0;
 		if ( ! empty( $opt['additionalCost'] ) && ! empty( $opt['additionalCost']['isEnabled'] ) ) {
 			$cost_type = $opt['additionalCost']['costType']['value'];
 			if ( 'fixed' === $cost_type ) {
 				$addition_cost = Utils::get_price_from_currency_plugin( floatval( $opt['additionalCost']['value'] ) );
+				$addition_cost_original = floatval( $opt['additionalCost']['value'] );
 			} else {
 				if ( isset( $params['product_price'] ) && is_numeric( $params['product_price'] ) ) {
 					$addition_cost = floatval( $opt['additionalCost']['value'] ) * floatval( $params['product_price'] ) / 100;
+					$addition_cost_original = floatval( $opt['additionalCost']['value'] ) * floatval( $params['product_price_original'] ) / 100;
 				}
 			}
 		}
 
 		if ( ! empty( $general_settings['show_additional_price'] ) && ! empty( $addition_cost ) ) {
 			if ( isset($cost_type) && 'percentage' === $cost_type ) {
-				$label = '<span class="option-addition-percentage-cost" data-opt-val-id="' . esc_attr( $id_opt ) . '" data-option-org-cost-token-replace="' . $addition_cost . '" data-option-org-cost="' . floatval( $opt['additionalCost']['value'] ) . '">' . $opt['value'] . ' ( + ' . wc_price( $addition_cost ) . ' ) </span>';
+				$label = '<span class="option-addition-percentage-cost" data-opt-val-id="' . esc_attr( $id_opt ) . '" data-option-org-cost-token-replace="' . esc_attr($addition_cost) . '" data-option-org-val="' . floatval( esc_attr( $opt['additionalCost']['value'] ) ) . '">' . esc_attr( $opt['value'] ) . ' ( + ' . wc_price( esc_attr($addition_cost) ) . ' ) </span>';
 			} else {
-				$label = $opt['value'] . ' ( + ' . wc_price( $addition_cost ) . ' )';
+				$label = esc_attr( $opt['value'] ) . ' ( + ' . wc_price( esc_attr( $addition_cost ) ) . ' )';
 			}
 		} else {
-			$label = $opt['value'];
+			$label = esc_attr( $opt['value'] );
 		}
 
 		$addition_description = '';
@@ -108,7 +111,7 @@ if ( ! empty( $option_value_list ) ) {
 		}
 
 		echo '<div class="">';
-		echo '<span class=""><input id="' . esc_attr( $id_opt ) . '" class="' . esc_attr( $class_names ) . '" type="checkbox" data-addition-cost="' . esc_attr( $addition_cost ) . '" value="' . esc_attr( $opt['value'] ) . '"' . ( ! empty( $checked_results ) && in_array( $opt['value'], $checked_results, true ) ? 'checked' : '' ) . ' name="option_field_data[' . esc_attr( $opt_set_id ) . '][' . esc_attr( $data['id'] ) . '][]"></span>';
+		echo '<span class=""><input id="' . esc_attr( $id_opt ) . '" class="' . esc_attr( $class_names ) . '" type="checkbox" data-option-org-cost="' . esc_attr( $addition_cost_original ) . '" data-addition-cost="' . esc_attr( $addition_cost ) . '" value="' . esc_attr( $opt['value'] ) . '"' . ( ! empty( $checked_results ) && in_array( $opt['value'], $checked_results, true ) ? 'checked' : '' ) . ' name="option_field_data[' . esc_attr( $opt_set_id ) . '][' . esc_attr( $data['id'] ) . '][]"></span>';
 		echo '<label class="yayextra-option-field-label" for="' . esc_attr( $id_opt ) . '">' . wp_kses_post( $label ) . '</label>';
 		if ( ! empty( $addition_description ) ) {
 			echo '<p class="yayextra-addition-des">' . wp_kses_post( nl2br($addition_description) ) . '</p>';

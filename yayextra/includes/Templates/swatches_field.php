@@ -101,29 +101,32 @@ if ( ! empty( $option_value_list ) ) {
 	foreach ( $option_value_list as $index => $opt ) {
 		$id_opt        = $data['id'] . (string) $index;
 		$addition_cost = 0;
+		$addition_cost_original = 0;
 		if ( ! empty( $opt['additionalCost'] ) && ! empty( $opt['additionalCost']['isEnabled'] ) ) {
 			$cost_type = $opt['additionalCost']['costType']['value'];
 			if ( 'fixed' === $cost_type ) {
 				$addition_cost = Utils::get_price_from_currency_plugin( floatval( $opt['additionalCost']['value'] ) );
+				$addition_cost_original = floatval( $opt['additionalCost']['value'] );
 			} else {
 				if ( isset( $params['product_price'] ) && is_numeric( $params['product_price'] ) ) {
 					$addition_cost = floatval( $opt['additionalCost']['value'] ) * floatval( $params['product_price'] ) / 100;
+					$addition_cost_original = floatval( $opt['additionalCost']['value'] ) * floatval( $params['product_price_original'] ) / 100;
 				}
 			}
 		}
 
 		if ( ! empty( $general_settings['show_additional_price'] ) && ! empty( $addition_cost ) ) {
 			if ( isset($cost_type) && 'percentage' === $cost_type ) {
-				$tooltip = '<strong class="option-addition-percentage-cost" data-opt-val-id="' . esc_attr( $id_opt ) . '" data-option-org-cost-token-replace="' . $addition_cost . '" data-option-org-cost="' . floatval( $opt['additionalCost']['value'] ) . '">' . $opt['value'] . ' ( + ' . wc_price( $addition_cost ) . ' )</strong>';
+				$tooltip = '<strong class="option-addition-percentage-cost" data-opt-val-id="' . esc_attr( $id_opt ) . '" data-option-org-cost-token-replace="' . esc_attr( $addition_cost ) . '" data-option-org-val="' . floatval( esc_attr( $opt['additionalCost']['value'] ) ) . '">' . esc_attr( $opt['value'] ) . ' ( + ' . wc_price( esc_attr( $addition_cost ) ) . ' )</strong>';
 			} else {
-				$tooltip = '<strong>' . $opt['value'] . ' ( + ' . wc_price( $addition_cost ) . ' )</strong>';
+				$tooltip = '<strong>' . esc_attr( $opt['value'] ) . ' ( + ' . wc_price( esc_attr( $addition_cost ) ) . ' )</strong>';
 			}
 		} else {
-			$tooltip = '<strong>' . $opt['value'] . '</strong>';
+			$tooltip = '<strong>' . esc_attr( $opt['value'] ) . '</strong>';
 		}
 
 		echo '<div class="yayextra-opt-swatches yayextra-tooltip">';
-		  echo '<input id="' . esc_attr( $id_opt ) . '" name="option_field_data[' . esc_attr( $opt_set_id ) . '][' . esc_attr( $data['id'] ) . '][]" type="checkbox" data-optset-id="' . esc_attr( $opt_set_id ) . '" data-opt-id="' . esc_attr( $data['id'] ) . '" data-opt-img="' . esc_attr( $opt['imageUrl'] ) . '" data-product-img="' . esc_attr( $product_image[0] ) . '" data-product-id="' . esc_attr( $product_id ) . '" data-addition-cost="' . esc_attr( $addition_cost ) . '" value="' . esc_attr( $opt['value'] ) . '"' . ( ! empty( $checked_results ) && in_array( $opt['value'], $checked_results, true ) ? 'checked' : '' ) . ' style="display:none">';
+		  echo '<input id="' . esc_attr( $id_opt ) . '" name="option_field_data[' . esc_attr( $opt_set_id ) . '][' . esc_attr( $data['id'] ) . '][]" type="checkbox" data-optset-id="' . esc_attr( $opt_set_id ) . '" data-opt-id="' . esc_attr( $data['id'] ) . '" data-opt-img="' . esc_attr( $opt['imageUrl'] ) . '" data-product-img="' . esc_attr( $product_image[0] ) . '" data-product-id="' . esc_attr( $product_id ) . '" data-option-org-cost="' . esc_attr( $addition_cost_original ) . '" data-addition-cost="' . esc_attr( $addition_cost ) . '" value="' . esc_attr( $opt['value'] ) . '"' . ( ! empty( $checked_results ) && in_array( $opt['value'], $checked_results, true ) ? 'checked' : '' ) . ' style="display:none">';
 		if ( 'image' === $opt['swatchesType'] && ! empty( $opt['imageUrl'] ) ) {
 			echo '<div class="yayextra-option-field-swatches-label yayextra-tooltip-wrap yayextra-option-field-swatches-label-image ' . esc_attr( $class_swatches_shape ) . ' ' . esc_attr( $class_names ) . '" style="background-image: url(' . esc_attr( $opt['imageUrl'] ) . ')"></div>';
 		} else {

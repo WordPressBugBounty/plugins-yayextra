@@ -36,9 +36,9 @@ if ( ! empty( $option_value_list ) ) {
 	echo '<select id="' . esc_attr( $data['id'] ) . '" class="' . esc_attr( $class_names ) . '" name="option_field_data[' . esc_attr( $opt_set_id ) . '][' . esc_attr( $data['id'] ) . ']"' . esc_attr( $is_required ? ' required ' : '' ) . '>';
 
 	if ( '' !== $placeholder_value ) {
-		echo '<option data-addition-cost="0" value="" >' . wp_kses_post( $placeholder_value ) . '</option>';
+		echo '<option data-addition-cost="0" data-option-org-cost="0" value="" >' . wp_kses_post( $placeholder_value ) . '</option>';
 	} else {
-		echo '<option data-addition-cost="0" value="" >' . esc_html__( 'Select your option', 'yayextra' ) . '</option>';
+		echo '<option data-addition-cost="0" data-option-org-cost="0" value="" >' . esc_html__( 'Select your option', 'yayextra' ) . '</option>';
 	}
 
 	foreach ( $option_value_list as $index => $opt ) {
@@ -78,29 +78,32 @@ if ( ! empty( $option_value_list ) ) {
 		}
 
 		$addition_cost = 0;
+		$addition_cost_original = 0;
 		if ( ! empty( $opt['additionalCost'] ) && ! empty( $opt['additionalCost']['isEnabled'] ) ) {
 			$cost_type = $opt['additionalCost']['costType']['value'];
 			if ( 'fixed' === $cost_type ) {
 				$addition_cost = Utils::get_price_from_currency_plugin( floatval( $opt['additionalCost']['value'] ) );
+				$addition_cost_original = floatval( $opt['additionalCost']['value'] );
 			} else {
 				if ( isset( $params['product_price'] ) && is_numeric( $params['product_price'] ) ) {
 					$addition_cost = floatval( $opt['additionalCost']['value'] ) * floatval( $params['product_price'] ) / 100;
+					$addition_cost_original = floatval( $opt['additionalCost']['value'] ) * floatval( $params['product_price_original'] ) / 100;
 				}
 			}
 		}
 
 		if ( ! empty( $general_settings['show_additional_price'] ) && ! empty( $addition_cost ) ) {
-			$label = $opt['value'] . ' ( + ' . wc_price( $addition_cost ) . ' )';
+			$label = $opt['value'] . ' ( + ' . wc_price( esc_attr( $addition_cost ) ) . ' )';
 
 			if ( isset($cost_type) && 'percentage' === $cost_type ) {
-				echo '<option class="option-addition-percentage-cost" data-opt-val-id="' . esc_attr( $id_opt ) . '" data-option-org-cost-token-replace="' . esc_attr( $addition_cost ) . '" data-option-org-cost="' . floatval( $opt['additionalCost']['value'] ) . '" data-addition-cost="' . esc_attr( $addition_cost ) . '" value="' . esc_attr( $opt['value'] ) . '"' . ( $is_selected ? 'selected' : '' ) . '>' . wp_kses_post( $label ) . '</option>';
+				echo '<option class="option-addition-percentage-cost" data-opt-val-id="' . esc_attr( $id_opt ) . '" data-option-org-cost-token-replace="' . esc_attr( $addition_cost ) . '" data-option-org-val="' . floatval( esc_attr( $opt['additionalCost']['value'] ) ) . '" data-option-org-cost="' . floatval( esc_attr( $addition_cost_original ) ) . '" data-addition-cost="' . esc_attr( $addition_cost ) . '" value="' . esc_attr( $opt['value'] ) . '"' . ( $is_selected ? 'selected' : '' ) . '>' . wp_kses_post( $label ) . '</option>';
 			} else {
-				echo '<option data-addition-cost="' . esc_attr( $addition_cost ) . '" value="' . esc_attr( $opt['value'] ) . '"' . ( $is_selected ? 'selected' : '' ) . '>' . wp_kses_post( $label ) . '</option>';
+				echo '<option data-option-org-cost="' . floatval( esc_attr( $addition_cost_original ) ) . '" data-addition-cost="' . esc_attr( $addition_cost ) . '" value="' . esc_attr( $opt['value'] ) . '"' . ( $is_selected ? 'selected' : '' ) . '>' . wp_kses_post( $label ) . '</option>';
 			}
 			
 		} else {
 			$label = $opt['value'];
-			echo '<option data-addition-cost="' . esc_attr( $addition_cost ) . '" value="' . esc_attr( $opt['value'] ) . '"' . ( $is_selected ? 'selected' : '' ) . '>' . wp_kses_post( $label ) . '</option>';
+			echo '<option data-option-org-cost="' . floatval( esc_attr( $addition_cost_original ) ) . '" data-addition-cost="' . esc_attr( $addition_cost ) . '" value="' . esc_attr( $opt['value'] ) . '"' . ( $is_selected ? 'selected' : '' ) . '>' . wp_kses_post( $label ) . '</option>';
 		}
 	}
 	echo '</select>';

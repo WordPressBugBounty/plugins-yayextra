@@ -432,25 +432,11 @@ class Utils {
 		elseif ( class_exists('XCurrency') && function_exists('x_currency_exchange') ) {
 			return x_currency_exchange( $price );
 		}
-
-		return $price;
-	}
-
-	/**
-	 * Convert price by YayCurrency cookie.
-	 *
-	 * @param float $price Price value.
-	 *
-	 * @return array
-	 */
-	public static function get_price_from_yaycurrency_cookie( $price ) {
-		if ( function_exists( 'Yay_Currency\\plugin_init' ) ) {
-			if (class_exists('Yay_Currency\Helpers\YayCurrencyHelper')) {
-				if ( method_exists( 'Yay_Currency\Helpers\YayCurrencyHelper', 'calculate_price_by_currency_cookie' ) ) {
-					return YayCurrencyHelper::calculate_price_by_currency_cookie( $price, false );
-				}
-			}
+		// PBOC multicurrency 
+		elseif ( function_exists('wcpbc_the_zone') && wcpbc_the_zone()) { 
+			return wcpbc_the_zone()->get_exchange_rate_price( $price );
 		}
+
 		return $price;
 	}
 
@@ -503,6 +489,7 @@ class Utils {
 			 class_exists( 'Yay_Currency\Helpers\YayCurrencyHelper' ) &&
 			 method_exists( 'Yay_Currency\Helpers\YayCurrencyHelper', 'detect_current_currency' ) 
 		) {
+			$original_price = $product_price;
 			$apply_currency = YayCurrencyHelper::detect_current_currency();
 			if ( ! empty( $apply_currency ) ) {
 				$product       = wc_get_product( $product_id );
@@ -516,7 +503,8 @@ class Utils {
 					if ( method_exists( 'Yay_Currency\Helpers\YayCurrencyHelper', 'disable_fallback_option_in_checkout_page' ) && 	
 						 YayCurrencyHelper::disable_fallback_option_in_checkout_page( $apply_currency ) ) 
 					{
-						return wc_get_product( $product_id )->get_price( 'original' );
+						// return wc_get_product( $product_id )->get_price( 'original' );
+						return $original_price;
 					}
 					return self::get_reverse_price_from_yaycurrency( $product_price );
 				}
@@ -530,6 +518,13 @@ class Utils {
 				return $product_price;
 			}
 			return x_currency_exchange( $product_price );
+		}
+		// PBOC multicurrency 
+		elseif ( function_exists('wcpbc_the_zone') && wcpbc_the_zone()) { 
+			if ( $force_original ) {
+				return $product_price;
+			}
+			return wcpbc_the_zone()->get_exchange_rate_price( $product_price );
 		}
 
 		return $product_price;
@@ -741,11 +736,11 @@ class Utils {
 	 */
 	public static function gen_uuid() {
 		return sprintf( '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
-			mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ),
-			mt_rand( 0, 0xffff ),
-			mt_rand( 0, 0x0fff ) | 0x4000,
-			mt_rand( 0, 0x3fff ) | 0x8000,
-			mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff )
+			wp_rand( 0, 0xffff ), wp_rand( 0, 0xffff ),
+			wp_rand( 0, 0xffff ),
+			wp_rand( 0, 0x0fff ) | 0x4000,
+			wp_rand( 0, 0x3fff ) | 0x8000,
+			wp_rand( 0, 0xffff ), wp_rand( 0, 0xffff ), wp_rand( 0, 0xffff )
 		);
 	}
 
