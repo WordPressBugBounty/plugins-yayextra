@@ -5,7 +5,7 @@ Tags: product addons, woocommerce product options, woocommerce product fields, p
 Requires at least: 4.0
 Requires PHP: 5.3
 Tested up to: 6.9
-Stable tag: 2.0.0
+Stable tag: 2.0.1
 License: GPL-2.0+
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
@@ -70,6 +70,9 @@ YayExtra allows you to create conditional logic that can be combined with the ex
 
 Let's suppose that you sell car parts, so when the customer chooses to have "Accessories" then related options like "Front door items" or "Replacement kit" can be shown on the current product page. Otherwise, if the customer doesn't check the "Accessories" checkbox, then those options will not show up, which will keep your product page neat and clear.
 
+💡 **Want to sell more with every order?** Meet [YayBoost - Sales Booster for WooCommerce](https://yaycommerce.com/yayboost-sales-booster-for-woocommerce/) 🎉 
+It adds powerful upsell and cross-sell features to your WooCommerce store: free shipping nudge, product recommendations, order bumps, and post-purchase offers that convert. [Try free version here ↗](https://wordpress.org/plugins/yayboost-sales-booster-for-woocommerce/)
+
 ###💎 PREMIUM-ONLY FEATURES
 
 **Advanced Product Addons**
@@ -126,6 +129,10 @@ Yes, this feature is called Linked Product in YayExtra Pro settings. You can upg
 4. Admin dashboard settings for WooCommerce extra product options
 
 == Changelog ==
+
+= Mar 16, 2026 - Version 2.0.1 =
+- Fixed: Swatch border styling
+- Fixed: Button preview
 
 = Mar 13, 2026 - Version 2.0.0 =
 - Updated: Admin UI/UX

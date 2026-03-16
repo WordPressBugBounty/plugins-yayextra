@@ -23,6 +23,8 @@
   border: 1px solid;
   padding: 10px;
   cursor: pointer;
+  border-radius: 5px;
+  border-color: #e4e4e7;
 }
 .yayextra-option-field-label.yayextra-option-button-label.checked {
   background-color: #333333;
@@ -58,6 +60,7 @@
   height: 38px;
   width: 38px;
   outline: 2px solid;
+  outline-color: #f5f5f5;
 }
 .yayextra-option-field-swatches-label-image {
   background-repeat: no-repeat;
@@ -66,6 +69,7 @@
 .yayextra-option-field-swatches-label.checked {
   outline: 2px solid;
   outline-offset: 1px;
+  outline-color: #333333;
 }
 .yayextra-option-field-swatches-label.shape-circle {
   border-radius: 50% !important;
