@@ -3,7 +3,7 @@
  * Plugin Name: YayExtra Lite - WooCommerce Extra Product Options
  * Plugin URI: https://yaycommerce.com/yayextra-woocommerce-extra-product-options
  * Description: Offer extra options like personal engraving, print-on-demand items, gifts, custom canvas prints, and personalized products.
- * Version: 2.0.1
+ * Version: 2.0.2
  * Author: YayCommerce
  * Author URI: https://yaycommerce.com
  * Text Domain: yayextra
@@ -49,7 +49,7 @@ if ( ! defined( 'YAYE_BASENAME' ) ) {
 }
 
 if ( ! defined( 'YAYE_VERSION' ) ) {
-	define( 'YAYE_VERSION', '2.0.1' );
+	define( 'YAYE_VERSION', '2.0.2' );
 }
 
 if ( ! defined( 'YAYE_SITE_URL' ) ) {

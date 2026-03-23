@@ -776,7 +776,7 @@ class ProductPage {
 
 				$edit_option_text = apply_filters( 'yaye_edit_option_text', esc_html__( 'Edit option field', 'yayextra' ) );
 				$cart_data[] = array(
-					'name'  => '<a href="' . $edit_link . '" class="yayextra-option-edit-link">' . $edit_option_text . '</a>',
+					'name'  => '<a href="' . esc_url( $edit_link ) . '" class="yayextra-option-edit-link">' . esc_html( $edit_option_text ) . '</a>',
 					'value' => '',
 				);
 			}
