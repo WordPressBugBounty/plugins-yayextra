@@ -207,7 +207,7 @@ class Database {
 	public function parse_filters_to_query( $filter ) {
 		$query = ' FALSE';
 		if ( 'prod_name' === $filter['type']['value'] ) {
-			$query = self::get_product_id_query( $filter );
+			$query = self::get_product_name_query( $filter );
 		}
 		if ( 'prod_category' === $filter['type']['value'] ) {
 			$query = self::get_product_category_query( $filter );
@@ -336,12 +336,22 @@ class Database {
 		return $search_where;
 	}
 
+	/**
+	 * WHERE fragment for product listing queries (shared by posts_clauses and count).
+	 *
+	 * @return string
+	 */
+	private function get_products_sql_where() {
+		global $wpdb;
+		return " AND {$wpdb->prefix}posts.post_type IN ('product') AND {$wpdb->prefix}posts.post_status = 'publish' AND {$this->get_where_clause()} AND {$this->get_search_query()}";
+	}
+
 	public function posts_clauses( $args, $wp_query ) {
 		global $wpdb;
 
 		$args['fields']  = "{$wpdb->prefix}posts.ID as id, wc_product_meta_lookup.stock_quantity, wc_product_meta_lookup.stock_status";
 		$args['join']    = $this->get_join_clause();
-		$args['where']   = " AND {$wpdb->prefix}posts.post_type IN ('product') AND {$wpdb->prefix}posts.post_status = 'publish' AND {$this->get_where_clause()} AND {$this->get_search_query()}";
+		$args['where']   = $this->get_products_sql_where();
 		$args['groupby'] = "{$wpdb->prefix}posts.ID";
 		$args['orderby'] = 'post_title';
 		$args['limits']  = '';
@@ -371,11 +381,9 @@ class Database {
 		$this->limit   = $limit;
 		$this->offset  = $offset;
 
-		add_filter( 'posts_clauses', array( $this, 'posts_clauses' ), 10, 2 );
-		$query            = new \WP_Query();
-		$result_query_all = $query->query( array() );
-		remove_filter( 'posts_clauses', array( $this, 'posts_clauses' ), 10 );
-		$total_items = count( $result_query_all );
+		// Get total count
+		$countQuery = $wpdb->prepare("SELECT COUNT(*) FROM {$wpdb->prefix}posts WHERE TRUE {$this->get_products_sql_where()}");
+		$total_items = (int) $wpdb->get_var( $countQuery );
 
 		$this->get_all = false;
 		add_filter( 'posts_clauses', array( $this, 'posts_clauses' ), 10, 2 );

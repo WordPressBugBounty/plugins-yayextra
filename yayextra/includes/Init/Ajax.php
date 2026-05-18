@@ -56,6 +56,7 @@ class Ajax {
 			'get_settings',
 			'update_option_set_products_one_by_one',
 			'update_reviewed_flag',
+			'sync_assigned_products',
 		);
 	}
 
@@ -804,22 +805,6 @@ private function migrate_option_set_logic_value( $option_set ) {
 			$yaye_product_post_meta          = get_post_meta( $decoded_object_data['optionSetID'], '_yaye_products' );
 			$array_product_filter_one_by_one = $yaye_product_post_meta[0]['product_filter_one_by_one'];
 
-			// Remove the assigned product if it doesn't exist
-			$allow_check_products_is_exist = apply_filters( 'yayextra_allow_check_products_is_exist', false );
-			if ( $allow_check_products_is_exist ) {
-				foreach ( $array_product_filter_one_by_one as $idx => $prod_id ) {
-					$product = wc_get_product( $prod_id );
-					if ( $product ) {
-						$product_status = $product->get_status();
-						if ( 'publish' !== $product_status ) {
-							unset( $array_product_filter_one_by_one[ $idx ] );
-						}
-					} else {
-						unset( $array_product_filter_one_by_one[ $idx ] );
-					}
-				}				
-			}
-			
 			if ( 'assign' === $decoded_object_data['type'] ) {
 				$merged_array = array_merge( $decoded_object_data['productIdCheckedList'], $array_product_filter_one_by_one );
 				$yaye_product_post_meta[0]['product_filter_one_by_one'] = $merged_array;
@@ -843,6 +828,45 @@ private function migrate_option_set_logic_value( $option_set ) {
 			Utils::check_nonce();
 			update_option( 'yaye_reviewed_flag', true );
 			wp_send_json_success( 'success', 200 );
+		} catch ( \Exception $ex ) {
+			wp_send_json_error( array( 'msg' => $ex->getMessage() ) );
+		} catch ( \Error $err ) {
+			wp_send_json_error( array( 'msg' => $err->getMessage() ) );
+		}
+	}
+
+	public function sync_assigned_products() {
+		try {
+			$nonce = isset( $_POST['nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['nonce'] ) ) : '';
+			if ( ! wp_verify_nonce( $nonce, 'yaye_nonce' ) ) {
+				throw new \Exception( __( 'Nonce is invalid', 'yayextra' ) );
+			}
+
+			$option_set_id = isset( $_POST['option_set_id'] ) ? intval( $_POST['option_set_id'] ) : 0;
+			if ( ! $option_set_id ) {
+				throw new \Exception( __( 'Invalid option set ID', 'yayextra' ) );
+			}
+
+			$yaye_products = get_post_meta( $option_set_id, '_yaye_products', true );
+			$original      = ! empty( $yaye_products['product_filter_one_by_one'] ) ? $yaye_products['product_filter_one_by_one'] : array();
+
+			$filtered = array();
+			foreach ( $original as $prod_id ) {
+				$product = wc_get_product( $prod_id );
+				if ( $product ) {
+					if ( 'publish' === $product->get_status() ) {
+						$filtered[] = $prod_id;
+					}
+				}
+			}
+			$removed = count( $original ) - count( $filtered );
+
+			if ( $removed > 0 ) {
+				$yaye_products['product_filter_one_by_one'] = $filtered;
+				update_post_meta( $option_set_id, '_yaye_products', $yaye_products );
+			}
+
+			wp_send_json_success( array( 'removed' => $removed, 'product_filter_one_by_one' => $filtered ), 200 );
 		} catch ( \Exception $ex ) {
 			wp_send_json_error( array( 'msg' => $ex->getMessage() ) );
 		} catch ( \Error $err ) {

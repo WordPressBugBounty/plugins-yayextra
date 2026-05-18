@@ -33,7 +33,7 @@ class Utils {
 	 */
 	public static function sanitize_array( $value ) {
 		if ( is_array( $value ) ) {
-			return array_map( 'self::sanitize_array', $value );
+			return array_map( [ self::class, 'sanitize_array' ], $value );
 		} else {
 			return sanitize_text_field( wp_unslash( $value ));
 		}

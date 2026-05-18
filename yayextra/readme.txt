@@ -4,11 +4,10 @@ Donate link: https://yaycommerce.com/yayextra-woocommerce-extra-product-options/
 Tags: product addons, woocommerce product options, woocommerce product fields, product customizer, extra product options
 Requires at least: 6.2
 Requires PHP: 7.2
-Tested up to: 6.9
-Stable tag: 2.0.2
+Tested up to: 7.0
+Stable tag: 2.0.3
 License: GPL-2.0+
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
-
 
 == Description ==
 
@@ -129,6 +128,12 @@ Yes, this feature is called Linked Product in YayExtra Pro settings. You can upg
 4. Admin dashboard settings for WooCommerce extra product options
 
 == Changelog ==
+
+= May 18, 2026 - Version 2.0.3 =
+- Added: The ability to refresh Assigned products
+- Updated: Compatible with WP 7.0
+- Fixed: Admin role
+- Fixed: Choose products by product name
 
 = Mar 23, 2026 - Version 2.0.2 =
 - Fixed: Cart edit link text no longer escaped

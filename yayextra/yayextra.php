@@ -3,12 +3,12 @@
  * Plugin Name: YayExtra Lite - WooCommerce Extra Product Options
  * Plugin URI: https://yaycommerce.com/yayextra-woocommerce-extra-product-options
  * Description: Offer extra options like personal engraving, print-on-demand items, gifts, custom canvas prints, and personalized products.
- * Version: 2.0.2
+ * Version: 2.0.3
  * Author: YayCommerce
  * Author URI: https://yaycommerce.com
  * Text Domain: yayextra
  * WC requires at least: 3.0.0
- * WC tested up to: 10.6.1
+ * WC tested up to: 10.6.0
  * Domain Path: /i18n/languages/
  */
 
@@ -49,7 +49,7 @@ if ( ! defined( 'YAYE_BASENAME' ) ) {
 }
 
 if ( ! defined( 'YAYE_VERSION' ) ) {
-	define( 'YAYE_VERSION', '2.0.2' );
+	define( 'YAYE_VERSION', '2.0.3' );
 }
 
 if ( ! defined( 'YAYE_SITE_URL' ) ) {
@@ -58,6 +58,15 @@ if ( ! defined( 'YAYE_SITE_URL' ) ) {
 
 
 require __DIR__ . '/autoloader.php';
+require_once __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . '/YayextraPluginAdapter.php';
+
+add_action( 'plugins_loaded', function() {
+    \YayExtraScoped\YayCommerce\AdminShell\AdminShell::boot();
+    \YayExtraScoped\YayCommerce\AdminShell\AdminShell::register_plugin(
+        new \YayextraPluginAdapter()
+    );
+}, 5 );
 
 /**
  * Callback for plugins_loaded action
@@ -66,7 +75,6 @@ require __DIR__ . '/autoloader.php';
  */
 if ( ! function_exists( 'YayExtra\\plugins_loaded' ) ) {
 	function plugins_loaded() {
-		\YayExtra\YayCommerceMenu\RegisterMenu::get_instance();
 		I18n::getInstance();
 		Settings::get_instance();
 		// Integrations::get_instance();

@@ -33,8 +33,6 @@ class Settings {
 			}
 		);
 		add_filter( 'admin_body_class', array( $this, 'admin_body_class' ) );
-		add_action( 'admin_menu', array( $this, 'admin_menu' ), YAYE_MENU_PRIORITY );
-		add_filter( 'plugin_action_links_' . YAYE_BASENAME, array( $this, 'plugin_action_links' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'frontend_enqueue_scripts' ) );
 
@@ -51,43 +49,6 @@ class Settings {
 			$classes .= ' yay-ui';
 		}
 		return $classes;
-	}
-	/**
-	 * Call back for admin_menu action
-	 *
-	 * @return void
-	 */
-	public function admin_menu() {
-		add_submenu_page( 'yaycommerce', __( 'YayExtra', 'yayextra' ), __( 'YayExtra', 'yayextra' ), 'manage_options', 'yayextra', array( $this, 'add_submenu_callback' ), 0 );
-	}
-
-	/**
-	 * Generate plugin action link in plugin page.
-	 *
-	 * @param array $links Link.
-	 *
-	 * @return array
-	 */
-	public function plugin_action_links( $links ) {
-		$action_links   = array(
-			'settings' => '<a href="' . admin_url( 'admin.php?page=yayextra' ) . '" aria-label="' . esc_attr__( 'YayExtra', 'yayextra' ) . '">' . esc_html__( 'Settings', 'yayextra' ) . '</a>',
-		);
-		$upgrade_link[] = '<a target="_blank" href="https://yaycommerce.com/yayextra-woocommerce-extra-product-options/" style="color: #43B854; font-weight: bold">' . __( 'Go Pro', 'yayextra' ) . '</a>';
-		return array_merge( $action_links, $links, $upgrade_link );
-	}
-
-	/**
-	 * Call back for add_submenu_page
-	 *
-	 * @return void
-	 */
-	public function add_submenu_callback() {
-		?> 
-		<script>
-			document.querySelector("#wpbody-content").innerHTML = "";
-		</script>
-		<div id="yayextra-section"></div>
-		<?php
 	}
 
 	/**
@@ -226,7 +187,10 @@ class Settings {
 	 * @return void
 	 */
 	public function init_option_settings() {
-		$settings  = get_option( 'yaye_settings' );
+		$settings = get_option( 'yaye_settings' );
+		if ( ! is_array( $settings ) ) {
+			$settings = array();
+		}
 		$init_data = array(
 			'general'     => array(
 				'show_for_roles'        => array(),
