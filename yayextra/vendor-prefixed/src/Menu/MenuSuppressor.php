@@ -2,6 +2,7 @@
 
 namespace YayExtraScoped\YayCommerce\AdminShell\Menu;
 
+use YayExtraScoped\YayCommerce\AdminShell\Support\AdminContext;
 /**
  * Strategy (a) — removes legacy per-plugin top-level menu slugs before
  * the shared YayCommerce menu is registered.
@@ -36,11 +37,12 @@ class MenuSuppressor
         $this->slugs_to_suppress = $slugs ?? [];
     }
     /**
-     * Register hooks. Runs on admin_menu priority 5 (before standard priority 10).
+     * Register hooks. Runs on admin_menu / network_admin_menu priority 5
+     * (before standard priority 10).
      */
     public function init(): void
     {
-        add_action('admin_menu', [$this, 'suppress_legacy_menus'], 5);
+        AdminContext::bind_menu([$this, 'suppress_legacy_menus'], 5);
     }
     /**
      * Remove any legacy top-level menus from the slug list.

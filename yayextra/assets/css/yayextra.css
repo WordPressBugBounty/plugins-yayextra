@@ -402,9 +402,22 @@
 }
 
 .yayextra-option-edit-link-minicart,
-.woocommerce-mini-cart .yayextra-option-edit-link
-{
+.woocommerce-mini-cart .yayextra-option-edit-link,
+.wc-block-components-product-details .yayextra-option-edit-link {
   text-decoration: underline;
+}
+.wc-block-components-product-details .yayextra-option-edit-link {
+  display: block;
+  margin-top: 4px;
+  font-size: 0.85em;
+}
+/* Hide empty name span before edit link in block cart/mini cart */
+.wc-block-components-product-details__name:empty {
+  display: none;
+}
+/* Hide separator after edit link item */
+.wc-block-components-product-details__name:empty + .yayextra-option-edit-link + span[aria-hidden] {
+  display: none;
 }
 .yayextra-product-extra-opt .product-remove .remove,
 .yayextra-product-extra-opt .remove_from_cart_button {
@@ -528,3 +541,821 @@
 .yayextra-extra-subtotal-price:has(.total-price[data-token-replace="0"]) {
  display: none;
 }
+
+.yayextra-description {
+  margin-top: 6px;
+  margin-bottom: 7px;
+}
+
+/* Steps wizard — storefront layout aligned with Expo */
+.yayextra-steps-container {
+  margin: 16px 0;
+}
+
+.yayextra-steps-trigger-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.yayextra-steps-trigger-wrap .yayextra-steps-trigger {
+  width: fit-content !important;
+  max-width: 100%;
+  display: inline-flex;
+}
+
+.yayextra-steps-status {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 10px;
+}
+
+.yayextra-steps-status__dots {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.yayextra-steps-status__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.22;
+  transition: opacity 0.15s ease;
+}
+
+.yayextra-steps-status__dot.is-complete {
+  opacity: 1;
+}
+
+.yayextra-steps-status__dot.is-current {
+  opacity: 1;
+  outline: 1.5px solid currentColor;
+  outline-offset: 2px;
+}
+
+.yayextra-steps-status__text {
+  font-size: 13px;
+  line-height: 1.3;
+  opacity: 0.75;
+}
+
+.yayextra-steps-status.is-finished .yayextra-steps-status__text {
+  opacity: 1;
+  font-weight: 600;
+}
+
+.yayextra-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 16px;
+  background: #fff;
+  border: 1px solid #c9cccf;
+  border-radius: 8px;
+}
+
+.yayextra-steps-overlay .yayextra-steps {
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+}
+
+.yayextra-steps-progress {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.yayextra-steps-count {
+  margin-left: 8px;
+  font-size: 13px;
+  opacity: 0.75;
+}
+
+.yayextra-step-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.25;
+  transition: opacity 0.15s ease;
+}
+
+.yayextra-step-dot.is-active {
+  opacity: 1;
+}
+
+.yayextra-step-panel[hidden],
+.yayextra-steps-nav button[hidden] {
+  display: none !important;
+}
+
+.yayextra-step-heading {
+  margin: 0 0 8px;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.yayextra-steps-review[hidden] {
+  display: none !important;
+}
+
+.yayextra-steps-summary__row {
+  line-height: 1.4;
+  margin-bottom: 4px;
+  font-size: 13px;
+}
+
+.yayextra-steps-summary__name {
+  font-weight: 600;
+}
+
+.yayextra-steps-summary__value {
+  opacity: 0.85;
+}
+
+.yayextra-steps-nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 12px;
+}
+
+.yayextra-steps-nav .yayextra-steps-btn {
+  flex: 0 0 auto;
+  width: 100px;
+  margin: 0;
+  padding: 10px;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.2;
+  border-width: 1px !important;
+  border-style: solid !important;
+}
+
+.yayextra-steps-nav .yayextra-step-back.wp-element-button {
+  background: transparent !important;
+  background-color: transparent !important;
+  color: var(--wp--preset--color--contrast, currentColor) !important;
+  border-color: currentColor !important;
+  box-shadow: none !important;
+}
+
+.yayextra-steps-nav .yayextra-step-next.wp-element-button,
+.yayextra-steps-nav .yayextra-step-done.wp-element-button {
+  border-color: transparent !important;
+}
+
+.yayextra-steps-nav .yayextra-step-back.wp-element-button:hover:not(:disabled) {
+  opacity: 0.8;
+}
+
+.yayextra-steps-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+body.yayextra-steps-lock {
+  overflow: hidden;
+}
+
+.yayextra-steps-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+.yayextra-steps-overlay.is-open {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.yayextra-steps-overlay__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.yayextra-steps-overlay__panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  overflow: hidden;
+}
+
+.yayextra-steps-overlay__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  padding: 12px 16px;
+  border-bottom: 1px solid #eee;
+  background: #fff;
+}
+
+.yayextra-steps-overlay__title {
+  font-weight: 600;
+}
+
+.yayextra-steps-overlay__close {
+  border: none;
+  background: transparent;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.yayextra-steps-overlay__body {
+  padding: 16px;
+  overflow: auto;
+  flex: 1;
+  min-height: 0;
+}
+
+.yayextra-steps-overlay--modal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.yayextra-steps-overlay--modal .yayextra-steps-overlay__panel {
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  border-radius: 8px;
+}
+
+.yayextra-steps-overlay--sidebar .yayextra-steps-overlay__panel {
+  position: absolute;
+  top: var(--wp-admin--admin-bar--height, 0px);
+  bottom: 0;
+  height: auto;
+  width: min(420px, 90vw);
+  transition: transform 0.25s ease;
+}
+
+.yayextra-steps-overlay--sidebar.yayextra-steps-overlay--right .yayextra-steps-overlay__panel {
+  right: 0;
+  transform: translateX(100%);
+}
+
+.yayextra-steps-overlay--sidebar.yayextra-steps-overlay--left .yayextra-steps-overlay__panel {
+  left: 0;
+  transform: translateX(-100%);
+}
+
+.yayextra-steps-overlay--sidebar.is-open .yayextra-steps-overlay__panel {
+  transform: translateX(0);
+}
+
+.yayextra-images-container {
+  display: grid;
+  width: 100%;
+}
+
+.yayextra-images-container.layout-grid {
+  display: grid;
+  align-items: start;
+}
+
+.yayextra-images-container.layout-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.yayextra-images__item {
+  min-width: 0;
+}
+
+.yayextra-images__image {
+  display: block;
+  object-fit: contain;
+  object-position: center;
+}
+
+.yayextra-heading {
+  margin: 0 0 0.35em;
+  line-height: 1.3;
+}
+
+.yayextra-divider {
+  width: 100%;
+}
+
+.yayextra-divider__line {
+  box-sizing: border-box;
+}
+
+.yayextra-spacing {
+  width: 100%;
+}
+
+.yayextra-spacing__block {
+  width: 100%;
+}
+
+.yayextra-paragraph {
+  margin: 0 0 0.35em;
+  line-height: 1.5;
+}
+
+.yayextra-product-list {
+  width: 100%;
+}
+
+.yayextra-product-list-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.yayextra-product-list-container.layout-grid {
+  display: grid;
+}
+
+.yayextra-product-list-container.layout-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.yayextra-product-list__item {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 8px;
+  border: 1px solid #e3e3e3;
+  border-radius: 8px;
+  text-decoration: none;
+  color: inherit;
+  transition: background-color 0.15s ease;
+}
+
+.yayextra-product-list__item:hover {
+  background-color: #f6f6f7;
+}
+
+.yayextra-product-list__item--image-only {
+  width: fit-content;
+  align-self: flex-start;
+}
+
+.layout-grid .yayextra-product-list__item--image-only {
+  justify-self: start;
+}
+
+.yayextra-product-list__image {
+  width: 100%;
+  max-width: 120px;
+  object-fit: cover;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.layout-grid .yayextra-product-list__image {
+  max-width: 100%;
+}
+
+.yayextra-product-list__info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.yayextra-product-list__name {
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.yayextra-product-list__price {
+  font-weight: 500;
+}
+
+.yayextra-product-list__empty {
+  color: #6d7175;
+  font-style: italic;
+}
+
+.yayextra-html {
+  width: 100%;
+}
+
+.yayextra-html__content {
+  line-height: 1.5;
+}
+
+.yayextra-html__content img {
+  max-width: 100%;
+  height: auto;
+}
+
+.yayextra-html__content a {
+  color: #2563eb;
+  text-decoration: underline;
+}
+
+.yayextra-html__content a:hover {
+  color: #1d4ed8;
+}
+
+.yayextra-html__content ul {
+  list-style-type: disc;
+  list-style-position: outside;
+  margin: 0.75em 0;
+  padding-left: 1.5em;
+}
+
+.yayextra-html__content ol {
+  list-style-type: decimal;
+  list-style-position: outside;
+  margin: 0.75em 0;
+  padding-left: 1.5em;
+}
+
+.yayextra-html__content li {
+  display: list-item;
+  margin: 0.2em 0;
+}
+
+.yayextra-html-editor:empty:before {
+  color: #9ca3af;
+  content: attr(data-placeholder);
+  pointer-events: none;
+}
+
+.yayextra-html-editor h1 {
+  font-size: 2em;
+  font-weight: bold;
+  margin: 0.67em 0;
+}
+
+.yayextra-html-editor h2 {
+  font-size: 1.5em;
+  font-weight: bold;
+  margin: 0.75em 0;
+}
+
+.yayextra-html-editor h3 {
+  font-size: 1.17em;
+  font-weight: bold;
+  margin: 0.83em 0;
+}
+
+.yayextra-html-editor h4,
+.yayextra-html-editor h5,
+.yayextra-html-editor h6 {
+  font-weight: bold;
+  margin: 1em 0;
+}
+
+.yayextra-html-editor p {
+  margin: 0.75em 0;
+}
+
+.yayextra-html-editor a {
+  color: #2563eb;
+  text-decoration: underline;
+}
+
+.yayextra-html-editor a:hover {
+  color: #1d4ed8;
+}
+
+.yayextra-html-editor ul {
+  list-style-type: disc;
+  list-style-position: outside;
+  margin: 0.75em 0;
+  padding-left: 1.5em;
+}
+
+.yayextra-html-editor ol {
+  list-style-type: decimal;
+  list-style-position: outside;
+  margin: 0.75em 0;
+  padding-left: 1.5em;
+}
+
+.yayextra-html-editor li {
+  display: list-item;
+  margin: 0.2em 0;
+}
+
+body.yayextra-popup-open {
+  overflow: hidden;
+}
+
+.yayextra-popup {
+  display: inline-block;
+}
+
+.yayextra-popup__trigger {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.yayextra-popup__trigger--text {
+  background: none;
+  border: none;
+  padding: 0;
+  color: #2c6ecb;
+  text-decoration: underline;
+  font: inherit;
+}
+
+.yayextra-popup__trigger--text:hover {
+  color: #2c6ecb;
+  text-decoration: none;
+  background: none;
+}
+
+/* Colors come from theme via .button.alt.wp-element-button on the storefront. */
+.yayextra-popup__trigger--button {
+  text-decoration: none;
+}
+
+.yayextra-popup__overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+  padding: 16px;
+}
+
+.yayextra-popup__overlay.is-open {
+  display: flex;
+}
+
+.yayextra-popup__modal {
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  max-width: 600px;
+  width: 100%;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.yayextra-popup__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 20px 24px;
+  border-bottom: 1px solid #e1e3e5;
+}
+
+.yayextra-popup__title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #202223;
+  flex: 1;
+  line-height: 1.3;
+}
+
+.yayextra-popup__title p {
+  margin: 0;
+}
+
+.yayextra-popup__close {
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  color: #6d7175;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.yayextra-popup__close:hover {
+  color: #202223;
+}
+
+.yayextra-popup__body {
+  padding: 24px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.yayextra-popup__content {
+  color: #202223;
+  line-height: 1.6;
+}
+
+.yayextra-popup__content h1,
+.yayextra-popup__content h2,
+.yayextra-popup__content h3,
+.yayextra-popup__content h4,
+.yayextra-popup__content h5,
+.yayextra-popup__content h6 {
+  margin-top: 0;
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+.yayextra-popup__content p {
+  margin: 0 0 12px 0;
+}
+
+.yayextra-popup__content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+
+.yayextra-popup__content ul {
+  list-style-type: disc;
+  list-style-position: outside;
+  margin: 0 0 12px 0;
+  padding-left: 24px;
+}
+
+.yayextra-popup__content ol {
+  list-style-type: decimal;
+  list-style-position: outside;
+  margin: 0 0 12px 0;
+  padding-left: 24px;
+}
+
+.yayextra-popup__content li {
+  display: list-item;
+  margin: 0.2em 0;
+}
+
+.yayextra-popup__content a {
+  color: #2c6ecb;
+  text-decoration: underline;
+}
+
+.yayextra-popup__content a:hover {
+  color: #1e5ba8;
+}
+
+.yayextra-link {
+  display: inline-block;
+}
+
+.yayextra-link__trigger {
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.yayextra-link__trigger--text {
+  color: #2c6ecb;
+  text-decoration: underline;
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+}
+
+.yayextra-link__trigger--text:hover {
+  color: #1e5ba8;
+  text-decoration: none;
+}
+
+/* Colors come from theme via .button.alt.wp-element-button on the storefront. */
+.yayextra-link__trigger--button {
+  text-decoration: none;
+}
+
+/* Accordions — storefront layout aligned with Expo */
+.yayextra-accordion {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--yaye-accordion-border, #e5e7eb);
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 16px 0;
+  background: var(--yaye-accordion-bg, #ffffff);
+  color: var(--yaye-accordion-text, inherit);
+}
+
+.yayextra-accordion__item {
+  width: 100%;
+  border-bottom: 1px solid var(--yaye-accordion-border, #e5e7eb);
+}
+
+.yayextra-accordion__item:last-child {
+  border-bottom: none;
+}
+
+.yayextra-accordion__trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border: none;
+  background: transparent;
+  color: inherit;
+  padding: 16px 20px;
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+  font-weight: 600;
+  box-shadow: none;
+  outline: none;
+}
+
+.yayextra-accordion .yayextra-accordion__trigger:hover,
+.yayextra-accordion .yayextra-accordion__trigger:focus,
+.yayextra-accordion .yayextra-accordion__trigger:focus-visible,
+.yayextra-accordion .yayextra-accordion__trigger:active {
+  background: transparent !important;
+  background-color: transparent !important;
+  color: inherit !important;
+  box-shadow: none !important;
+  outline: none !important;
+  border: none !important;
+}
+
+.yayextra-accordion__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  position: relative;
+}
+
+.yayextra-accordion__icon-chevron {
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(45deg) translate(-1px, -1px);
+  transition: transform 0.2s ease;
+}
+
+.yayextra-accordion__item.is-open .yayextra-accordion__icon-chevron {
+  transform: rotate(225deg) translate(-1px, -1px);
+}
+
+.yayextra-accordion__icon-minus {
+  display: none;
+}
+
+.yayextra-accordion__item.is-open .yayextra-accordion__icon-plus {
+  display: none;
+}
+
+.yayextra-accordion__item.is-open .yayextra-accordion__icon-minus {
+  display: inline;
+}
+
+.yayextra-accordion__content {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.28s ease;
+  color: inherit;
+}
+
+.yayextra-accordion__content.is-open {
+  grid-template-rows: 1fr;
+}
+
+.yayextra-accordion__content-inner {
+  overflow: hidden;
+  min-height: 0;
+}
+
+.yayextra-accordion__content-body {
+  padding: 0 20px 16px;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity 0.22s ease, transform 0.22s ease;
+}
+
+.yayextra-accordion__content.is-open .yayextra-accordion__content-body {
+  opacity: 1;
+  transform: translateY(0);
+}
+

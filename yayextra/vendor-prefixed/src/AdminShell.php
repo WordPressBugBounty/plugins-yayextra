@@ -11,11 +11,13 @@ use YayExtraScoped\YayCommerce\AdminShell\Menu\ExternalPluginMenuAdapter;
 use YayExtraScoped\YayCommerce\AdminShell\Menu\PluginSubmenu;
 use YayExtraScoped\YayCommerce\AdminShell\Menu\MenuSuppressor;
 use YayExtraScoped\YayCommerce\AdminShell\Menu\PagesRouter;
+use YayExtraScoped\YayCommerce\AdminShell\Menu\SubmenuPositioner;
 use YayExtraScoped\YayCommerce\AdminShell\Menu\TopLevelMenu;
 use YayExtraScoped\YayCommerce\AdminShell\Pages\RecommendedPluginsPage;
 use YayExtraScoped\YayCommerce\AdminShell\Registry\AddonBridge;
 use YayExtraScoped\YayCommerce\AdminShell\Registry\LegacyBridge;
 use YayExtraScoped\YayCommerce\AdminShell\Registry\LicenseRegistry;
+use YayExtraScoped\YayCommerce\AdminShell\Support\AdminContext;
 use YayExtraScoped\YayCommerce\AdminShell\Support\Constants;
 defined('ABSPATH') || exit;
 /**
@@ -28,7 +30,7 @@ defined('ABSPATH') || exit;
 class AdminShell
 {
     /** Package version — used for cross-scope version election. */
-    const VERSION = '2.6.1';
+    const VERSION = '2.8.5';
     private static ?self $instance = null;
     private static bool $booted = \false;
     private static array $enabled_slugs = [];
@@ -64,9 +66,29 @@ class AdminShell
             $GLOBALS['yaycommerce_admin_shell_versions'] = [];
         }
         $GLOBALS['yaycommerce_admin_shell_versions'][self::$prefix] = ['version' => self::VERSION, 'registry' => $instance->registry, 'boot_cb' => [static::class, 'do_shell_registration']];
-        // Register the version election — only once (first copy to call boot sets it up)
+        // Register the version election — only once (first copy to call boot sets it up).
+        // Bound to both admin_menu and network_admin_menu so election runs in the
+        // Multisite Network Admin too; only the firing hook's election actually runs.
         if (1 === count($GLOBALS['yaycommerce_admin_shell_versions'])) {
-            add_action('admin_menu', [static::class, 'elect_version'], 8);
+            AdminContext::bind_menu([static::class, 'elect_version'], 8);
+            // bind_menu() already wired BOTH hooks here, so mark the network election
+            // as done. This is load-bearing: it stops the safety net below from adding
+            // a SECOND network binding (elect_version is NOT idempotent — a double
+            // binding would run do_shell_registration twice). Only one copy ever sees
+            // count==1, so this path wires network at most once.
+            $GLOBALS['yaycommerce_network_election_wired'] = \true;
+        }
+        // Network Admin safety net for MIXED-VERSION installs. Older copies (≤2.6.x)
+        // wire the election to admin_menu ONLY — they predate network support — and the
+        // first-boot guard above lets whichever copy loads first (often an old one, by
+        // plugin folder order) own the wiring. So network_admin_menu would never get an
+        // election binding even when a newer copy is present. This block is NOT gated by
+        // that guard: any 2.7.1+ copy wires the network election exactly once (dedicated
+        // flag), independent of load order, so Network Admin works whenever ≥1 updated
+        // plugin is active. elect_version still elects the highest version as the winner.
+        if (empty($GLOBALS['yaycommerce_network_election_wired'])) {
+            $GLOBALS['yaycommerce_network_election_wired'] = \true;
+            add_action('network_admin_menu', [static::class, 'elect_version'], 8);
         }
         // Legacy bridge — reads yaycommerce_licensing_plugins filter.
         // Runs for ALL versions (uses global WP hooks, contributes to any winning registry).
@@ -132,6 +154,10 @@ class AdminShell
         $top_menu->init();
         $router = new PagesRouter($instance->registry);
         $router->init();
+        // Order all submenus by declared position — runs once, only for the
+        // winning version, so a single authority reorders every plugin's submenu.
+        $positioner = new SubmenuPositioner();
+        $positioner->init();
     }
     /**
      * Register a plugin with the admin shell.
@@ -141,6 +167,18 @@ class AdminShell
     public static function register_plugin(PluginMenuAdapter $adapter): void
     {
         self::validate_adapter($adapter);
+        // Publish this plugin's intended submenu position into a shared,
+        // cross-scope map (keyed by menu slug). The version-elected winner reads
+        // this in SubmenuPositioner to order ALL submenus after registration.
+        // Request-scoped: not pruned (globals don't persist between requests),
+        // and stale/unknown slugs are harmless — reorder() sorts them last.
+        $menu_slug = $adapter->get_menu_slug();
+        if (!empty($menu_slug)) {
+            if (!isset($GLOBALS[SubmenuPositioner::POSITION_KEY])) {
+                $GLOBALS[SubmenuPositioner::POSITION_KEY] = [];
+            }
+            $GLOBALS[SubmenuPositioner::POSITION_KEY][$menu_slug] = $adapter->get_settings_page_position();
+        }
         // Submenu registration — per-plugin, all versions
         $submenu = new PluginSubmenu($adapter);
         $submenu->init();
@@ -282,5 +320,7 @@ class AdminShell
         self::$prefix = '';
         unset($GLOBALS['yaycommerce_admin_shell_versions']);
         unset($GLOBALS['yaycommerce_ajax_handlers_registered']);
+        unset($GLOBALS['yaycommerce_network_election_wired']);
+        unset($GLOBALS[SubmenuPositioner::POSITION_KEY]);
     }
 }

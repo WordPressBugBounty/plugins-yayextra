@@ -18,8 +18,8 @@ class YayextraPluginAdapter implements \YayExtraScoped\YayCommerce\AdminShell\Co
 		<div id="yayextra-section"></div>
 		<?php
 	}; } // Set your render callback here
-    public function get_settings_page_position(): ?int { return 201; }
-    public function get_capability(): string         { return 'manage_options'; }
+    public function get_settings_page_position(): ?int { return 80; }
+    public function get_capability(): string         { return 'manage_woocommerce'; }
     public function get_plugin_basename(): string    { return YAYE_BASENAME; }
     public function get_settings_label(): string     { return 'Settings'; }
     public function get_docs_url(): string           { return 'https://docs.yaycommerce.com/yayextra/'; }

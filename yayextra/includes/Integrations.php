@@ -1,7 +1,8 @@
 <?php
 namespace YayExtra;
 
-use YayExtra\Integrations\YayCurrency;
+// use YayExtra\Integrations\YayCurrency;
+use YayExtra\Integrations\WooCommerceNameYourPrice;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -9,6 +10,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Integrations {
 
+	/**
+	 * Instance of the Integrations class.
+	 *
+	 * @var Integrations
+	 */
 	protected static $instance = null;
 
 	/**
@@ -22,7 +28,8 @@ class Integrations {
 	}
 
 	public function __construct() {
-		new YayCurrency();
+		// new YayCurrency();
+		new WooCommerceNameYourPrice();
 	}
 }
 

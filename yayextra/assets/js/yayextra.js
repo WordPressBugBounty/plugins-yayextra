@@ -480,6 +480,17 @@
       getTotalCost();
     });
 
+    // Event product quantity plus/minus buttons
+    $(".quantity").on(
+      "click",
+      ".plus, .minus, .ct-increase, .ct-decrease, .brandy-qty-button",
+      function () {
+        setTimeout(function () {
+          getTotalCost();
+        }, 50);
+      }
+    );
+    
     // Init total cost
     getTotalCost();
 
@@ -565,6 +576,86 @@
 
     // Init set Visibility option id into hidden field
     getVisibilityOption();
+
+    // Event Image Upload field - start
+    const imageUploadEls = $(".yayextra-image-upload-label");
+    if (imageUploadEls.length > 0) {
+      $.each(imageUploadEls, function (idx, el) {
+        const inputFileId = $(this)
+          .closest(".yayextra-option-field-wrap")
+          .find('input[type="file"]')
+          .attr("id");
+        document
+          .getElementById(inputFileId)
+          .addEventListener("change", function (event) {
+            handleFileUploadSelect(inputFileId, "image");
+          });
+      });
+    }
+    // Event Image Upload field - end
+
+    // Event File Upload field - start
+    const fileUploadEls = $(".yayextra-file-upload-label");
+    if (fileUploadEls.length > 0) {
+      $.each(fileUploadEls, function (idx, el) {
+        const inputFileId = $(this)
+          .closest(".yayextra-option-field-wrap")
+          .find('input[type="file"]')
+          .attr("id");
+        document
+          .getElementById(inputFileId)
+          .addEventListener("change", function (event) {
+            handleFileUploadSelect(inputFileId, "file");
+          });
+      });
+    }
+    // Event File Upload field - end
+
+    // Popup element open / close
+    function openYayextraPopup(overlay) {
+      if (!overlay || !overlay.length) {
+        return;
+      }
+      overlay.prop("hidden", false).attr("aria-hidden", "false").addClass("is-open");
+      $("body").addClass("yayextra-popup-open");
+    }
+
+    function closeYayextraPopup(overlay) {
+      if (!overlay || !overlay.length) {
+        return;
+      }
+      overlay.prop("hidden", true).attr("aria-hidden", "true").removeClass("is-open");
+      if ($(".yayextra-popup__overlay.is-open").length === 0) {
+        $("body").removeClass("yayextra-popup-open");
+      }
+    }
+
+    $(document).on("click", "[data-yayextra-popup-open]", function (e) {
+      e.preventDefault();
+      const popupId = $(this).attr("data-yayextra-popup-open");
+      openYayextraPopup($("#" + popupId));
+    });
+
+    $(document).on("click", "[data-yayextra-popup-close]", function (e) {
+      e.preventDefault();
+      closeYayextraPopup($(this).closest(".yayextra-popup__overlay"));
+    });
+
+    $(document).on("click", ".yayextra-popup__overlay.is-open", function (e) {
+      if (e.target === this) {
+        closeYayextraPopup($(this));
+      }
+    });
+
+    $(document).on("keydown", function (e) {
+      if (e.key !== "Escape") {
+        return;
+      }
+      const openOverlay = $(".yayextra-popup__overlay.is-open").last();
+      if (openOverlay.length) {
+        closeYayextraPopup(openOverlay);
+      }
+    });
   });
 
   function showOption(option) {
@@ -1691,6 +1782,12 @@
     return s.join(dec);
   }
 
+  // Conditional logic uses .hide() on the wrap. Inactive step panels use
+  // [hidden] on an ancestor — those options must still count toward price.
+  function isOptionWrapHiddenByLogic($el) {
+    return $el.css("display") === "none";
+  }
+
   function getTotalCost() {
     let additionCostSum = 0;
     let additionCostSumOriginal = 0;
@@ -1721,7 +1818,7 @@
 
       if (optionFields.length > 0) {
         $.each(optionFields, function (idx, el) {
-          if ($(el).is(":visible")) {
+          if (!isOptionWrapHiddenByLogic($(el))) {
             // Sum value of value option field
             const optType = $(el).attr("data-option-field-type");
             if (optHasVals.includes(optType)) {
@@ -1811,10 +1908,17 @@
       "data-total-price"
     );
 
-    // Remove fee/discount total
-    //let totalPrice = (additionCostSum + parseFloat(currentPrice)) * parseInt(quantityProduct) + parseFloat(feeDiscounts.feeDiscountTotal);
     let totalPrice =
       (additionCostSum + parseFloat(currentPrice)) * parseInt(quantityProduct);
+
+     // Add fee/discount total
+     if (
+      YAYE_CLIENT_DATA.hooks.include_fee_discount_in_total_price &&
+      feeDiscounts &&
+      feeDiscounts.feeDiscountTotal
+    ) {
+      totalPrice += parseFloat(feeDiscounts.feeDiscountTotal);
+    }
 
     let totalPriceFormat = yayeNumberFormat(
       totalPrice,
@@ -1994,7 +2098,9 @@
   }
 
   function getVisibilityOption() {
-    let optionFieldList = $("form").find(".yayextra-option-field-wrap:visible");
+    let optionFieldList = $("form").find(".yayextra-option-field-wrap").filter(function () {
+      return !isOptionWrapHiddenByLogic($(this));
+    });
     let optionIdList = [];
     $.each(optionFieldList, function (_, optField) {
       const optId = $(optField).attr("data-option-field-id");

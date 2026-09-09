@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitYayExtra
+class ComposerStaticInit792e534676c74943949de49b5c21eabe
 {
     public static $prefixLengthsPsr4 = array (
         'Y' => 
@@ -36,15 +36,18 @@ class ComposerStaticInitYayExtra
         'YayCommerce\\AdminShell\\Menu\\MenuSuppressor' => __DIR__ . '/..' . '/yaycommerce/admin-shell/src/Menu/MenuSuppressor.php',
         'YayCommerce\\AdminShell\\Menu\\PagesRouter' => __DIR__ . '/..' . '/yaycommerce/admin-shell/src/Menu/PagesRouter.php',
         'YayCommerce\\AdminShell\\Menu\\PluginSubmenu' => __DIR__ . '/..' . '/yaycommerce/admin-shell/src/Menu/PluginSubmenu.php',
+        'YayCommerce\\AdminShell\\Menu\\SubmenuPositioner' => __DIR__ . '/..' . '/yaycommerce/admin-shell/src/Menu/SubmenuPositioner.php',
         'YayCommerce\\AdminShell\\Menu\\TopLevelMenu' => __DIR__ . '/..' . '/yaycommerce/admin-shell/src/Menu/TopLevelMenu.php',
         'YayCommerce\\AdminShell\\Pages\\HelpPage' => __DIR__ . '/..' . '/yaycommerce/admin-shell/src/Pages/HelpPage.php',
         'YayCommerce\\AdminShell\\Pages\\LicensesPage' => __DIR__ . '/..' . '/yaycommerce/admin-shell/src/Pages/LicensesPage.php',
         'YayCommerce\\AdminShell\\Pages\\RecommendedPluginsPage' => __DIR__ . '/..' . '/yaycommerce/admin-shell/src/Pages/RecommendedPluginsPage.php',
+        'YayCommerce\\AdminShell\\Pages\\WooCommerceRequiredPage' => __DIR__ . '/..' . '/yaycommerce/admin-shell/src/Pages/WooCommerceRequiredPage.php',
         'YayCommerce\\AdminShell\\Registry\\AddonBridge' => __DIR__ . '/..' . '/yaycommerce/admin-shell/src/Registry/AddonBridge.php',
         'YayCommerce\\AdminShell\\Registry\\AddonLicenseAdapter' => __DIR__ . '/..' . '/yaycommerce/admin-shell/src/Registry/AddonLicenseAdapter.php',
         'YayCommerce\\AdminShell\\Registry\\LegacyBridge' => __DIR__ . '/..' . '/yaycommerce/admin-shell/src/Registry/LegacyBridge.php',
         'YayCommerce\\AdminShell\\Registry\\LicenseRegistry' => __DIR__ . '/..' . '/yaycommerce/admin-shell/src/Registry/LicenseRegistry.php',
         'YayCommerce\\AdminShell\\Registry\\PluginLicenseInfo' => __DIR__ . '/..' . '/yaycommerce/admin-shell/src/Registry/PluginLicenseInfo.php',
+        'YayCommerce\\AdminShell\\Support\\AdminContext' => __DIR__ . '/..' . '/yaycommerce/admin-shell/src/Support/AdminContext.php',
         'YayCommerce\\AdminShell\\Support\\Slug' => __DIR__ . '/..' . '/yaycommerce/admin-shell/src/Support/Slug.php',
         'YayCommerce\\AdminShell\\VersionedLoader' => __DIR__ . '/..' . '/yaycommerce/admin-shell/src/VersionedLoader.php',
         'YayExtraScoped\\YayCommerce\\AdminShell\\AdminShell' => __DIR__ . '/../..' . '/vendor-prefixed/src/AdminShell.php',
@@ -61,15 +64,18 @@ class ComposerStaticInitYayExtra
         'YayExtraScoped\\YayCommerce\\AdminShell\\Menu\\MenuSuppressor' => __DIR__ . '/../..' . '/vendor-prefixed/src/Menu/MenuSuppressor.php',
         'YayExtraScoped\\YayCommerce\\AdminShell\\Menu\\PagesRouter' => __DIR__ . '/../..' . '/vendor-prefixed/src/Menu/PagesRouter.php',
         'YayExtraScoped\\YayCommerce\\AdminShell\\Menu\\PluginSubmenu' => __DIR__ . '/../..' . '/vendor-prefixed/src/Menu/PluginSubmenu.php',
+        'YayExtraScoped\\YayCommerce\\AdminShell\\Menu\\SubmenuPositioner' => __DIR__ . '/../..' . '/vendor-prefixed/src/Menu/SubmenuPositioner.php',
         'YayExtraScoped\\YayCommerce\\AdminShell\\Menu\\TopLevelMenu' => __DIR__ . '/../..' . '/vendor-prefixed/src/Menu/TopLevelMenu.php',
         'YayExtraScoped\\YayCommerce\\AdminShell\\Pages\\HelpPage' => __DIR__ . '/../..' . '/vendor-prefixed/src/Pages/HelpPage.php',
         'YayExtraScoped\\YayCommerce\\AdminShell\\Pages\\LicensesPage' => __DIR__ . '/../..' . '/vendor-prefixed/src/Pages/LicensesPage.php',
         'YayExtraScoped\\YayCommerce\\AdminShell\\Pages\\RecommendedPluginsPage' => __DIR__ . '/../..' . '/vendor-prefixed/src/Pages/RecommendedPluginsPage.php',
+        'YayExtraScoped\\YayCommerce\\AdminShell\\Pages\\WooCommerceRequiredPage' => __DIR__ . '/../..' . '/vendor-prefixed/src/Pages/WooCommerceRequiredPage.php',
         'YayExtraScoped\\YayCommerce\\AdminShell\\Registry\\AddonBridge' => __DIR__ . '/../..' . '/vendor-prefixed/src/Registry/AddonBridge.php',
         'YayExtraScoped\\YayCommerce\\AdminShell\\Registry\\AddonLicenseAdapter' => __DIR__ . '/../..' . '/vendor-prefixed/src/Registry/AddonLicenseAdapter.php',
         'YayExtraScoped\\YayCommerce\\AdminShell\\Registry\\LegacyBridge' => __DIR__ . '/../..' . '/vendor-prefixed/src/Registry/LegacyBridge.php',
         'YayExtraScoped\\YayCommerce\\AdminShell\\Registry\\LicenseRegistry' => __DIR__ . '/../..' . '/vendor-prefixed/src/Registry/LicenseRegistry.php',
         'YayExtraScoped\\YayCommerce\\AdminShell\\Registry\\PluginLicenseInfo' => __DIR__ . '/../..' . '/vendor-prefixed/src/Registry/PluginLicenseInfo.php',
+        'YayExtraScoped\\YayCommerce\\AdminShell\\Support\\AdminContext' => __DIR__ . '/../..' . '/vendor-prefixed/src/Support/AdminContext.php',
         'YayExtraScoped\\YayCommerce\\AdminShell\\Support\\Slug' => __DIR__ . '/../..' . '/vendor-prefixed/src/Support/Slug.php',
         'YayExtraScoped\\YayCommerce\\AdminShell\\VersionedLoader' => __DIR__ . '/../..' . '/vendor-prefixed/src/VersionedLoader.php',
         'YayextraPluginAdapter' => __DIR__ . '/../..' . '/YayextraPluginAdapter.php',
@@ -78,9 +84,9 @@ class ComposerStaticInitYayExtra
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitYayExtra::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitYayExtra::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInitYayExtra::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit792e534676c74943949de49b5c21eabe::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit792e534676c74943949de49b5c21eabe::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit792e534676c74943949de49b5c21eabe::$classMap;
 
         }, null, ClassLoader::class);
     }

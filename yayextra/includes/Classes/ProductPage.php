@@ -4,6 +4,7 @@ namespace YayExtra\Classes;
 
 use YayExtra\Init\CustomPostType;
 use YayExtra\Helper\Database;
+use YayExtra\Helper\OptionTree;
 use YayExtra\Helper\Utils;
 
 defined( 'ABSPATH' ) || exit;
@@ -111,26 +112,16 @@ class ProductPage {
 				if ( ! empty( $opt_set_data['options'] ) ) {
 					$opt_field_list = $opt_set_data['options'];
 
-					foreach ( $opt_field_list as $opt_field ) {
-						$template_folder = YAYE_PATH . 'includes/Templates';
-						// Output field.
-						$option_fields_pro = ['button_multi', 'swatches_multi', 'date_picker', 'time_picker', 'file_upload', 'file_download', 'image_upload'];
-						if ( ! in_array( $opt_field['type']['value'], $option_fields_pro )) {
-							Utils::get_template_part(
-								$template_folder,
-								$opt_field['type']['value'] . '_field',
-								array(
-									'opt_set_id'          	 => $opt_set_data['id'],
-									'data'                	 => $opt_field,
-									'product_price'       	 => $product_price,
-									'product_price_original' => $product->get_price( 'original' ),
-									'is_edit_option_mode' 	 => $this->is_edit_option_mode(),
-									'settings'            	 => $settings,
-								)
-							);
-						}
-						
-					}
+					echo '<div class="yayextra-option-set" data-option-set-id="' . esc_attr( $opt_set_data['id'] ) . '">';
+					$field_params = array(
+						'opt_set_id'             => $opt_set_data['id'],
+						'product_price'          => $product_price,
+						'product_price_original' => $product->get_price( 'original' ),
+						'is_edit_option_mode'    => $this->is_edit_option_mode(),
+						'settings'               => $settings,
+					);
+					$this->render_option_nodes( $opt_field_list, $field_params );
+					echo '</div>';
 				}
 			};
 
@@ -169,6 +160,165 @@ class ProductPage {
 		echo '<input type="hidden" class="yaye-total-options-original" data-total-options-price-original="0" />';
 		echo '<input type="hidden" class="yaye-total-fee-original" data-total-fee-original="0" />';
 		echo '<input type="hidden" class="yaye-product-price-original" data-product-price-original="' . esc_attr( $product->get_price( 'original' ) ) . '" data-product-regular-price-original="' . esc_attr( $product->get_regular_price( 'original' ) ) . '"/>';
+	}
+
+	/**
+	 * Render option tree nodes (leaves and steps containers).
+	 *
+	 * @param array $nodes        Option nodes.
+	 * @param array $field_params Shared template params.
+	 */
+	private function render_option_nodes( $nodes, $field_params ) {
+		if ( empty( $nodes ) || ! is_array( $nodes ) ) {
+			return;
+		}
+		foreach ( $nodes as $node ) {
+			if ( ! is_array( $node ) ) {
+				continue;
+			}
+			$kind = OptionTree::get_kind( $node );
+			if ( OptionTree::KIND_STEPS === $kind || OptionTree::KIND_ACCORDIONS === $kind ) {
+				continue;
+			}
+			if ( OptionTree::KIND_STEP === $kind || OptionTree::KIND_ACCORDION === $kind ) {
+				$children = isset( $node['children'] ) && is_array( $node['children'] ) ? $node['children'] : array();
+				$this->render_option_nodes( $children, $field_params );
+				continue;
+			}
+			$this->render_leaf_field( $node, $field_params );
+		}
+	}
+
+	/**
+	 * Render a leaf option field template.
+	 *
+	 * @param array $opt_field    Option.
+	 * @param array $field_params Shared template params.
+	 */
+	private function render_leaf_field( $opt_field, $field_params ) {
+		if ( empty( $opt_field['type']['value'] ) ) {
+			return;
+		}
+		if ( OptionTree::is_pro_only_type( $opt_field['type']['value'] ) ) {
+			return;
+		}
+		Utils::get_template_part(
+			YAYE_PATH . 'includes/Templates',
+			$opt_field['type']['value'] . '_field',
+			array_merge(
+				$field_params,
+				array(
+					'data' => $opt_field,
+				)
+			)
+		);
+	}
+
+	/**
+	 * Render a steps container (inline / modal / sidebar wizard).
+	 *
+	 * @param array $container    Steps node.
+	 * @param array $field_params Shared template params.
+	 */
+	private function render_steps_container( $container, $field_params ) {
+		$display_mode = ! empty( $container['displayMode'] ) ? $container['displayMode'] : 'default';
+		if ( ! in_array( $display_mode, array( 'default', 'modal', 'sidebar' ), true ) ) {
+			$display_mode = 'default';
+		}
+		$steps = array();
+		if ( ! empty( $container['children'] ) && is_array( $container['children'] ) ) {
+			foreach ( $container['children'] as $child ) {
+				if ( OptionTree::KIND_STEP === OptionTree::get_kind( $child ) ) {
+					$steps[] = $child;
+				}
+			}
+		}
+		if ( empty( $steps ) ) {
+			return;
+		}
+
+		$button_text = ! empty( $container['buttonText'] ) ? $container['buttonText'] : __( 'Customize', 'yayextra' );
+
+		Utils::get_template_part(
+			YAYE_PATH . 'includes/Templates',
+			'steps_container',
+			array(
+				'display_mode'         => $display_mode,
+				'sidebar_side'         => ! empty( $container['sidebarSide'] ) ? $container['sidebarSide'] : 'right',
+				'button_text'          => $button_text,
+				'back_text'            => ! empty( $container['backText'] ) ? $container['backText'] : __( 'Back', 'yayextra' ),
+				'next_text'            => ! empty( $container['nextText'] ) ? $container['nextText'] : __( 'Next', 'yayextra' ),
+				'done_text'            => ! empty( $container['doneText'] ) ? $container['doneText'] : __( 'Done', 'yayextra' ),
+				'steps'                => $steps,
+				'container_id'         => ! empty( $container['id'] ) ? $container['id'] : '',
+				'title'                => ! empty( $container['name'] ) ? $container['name'] : $button_text,
+				'step_total'           => count( $steps ),
+				'is_overlay'           => 'default' !== $display_mode,
+				'render_step_children' => function ( $children ) use ( $field_params ) {
+					$this->render_option_nodes( $children, $field_params );
+				},
+			)
+		);
+	}
+
+	/**
+	 * Render an accordions container.
+	 *
+	 * @param array $container    Accordions node.
+	 * @param array $field_params Shared template params.
+	 */
+	private function render_accordions_container( $container, $field_params ) {
+		$items = array();
+		if ( ! empty( $container['children'] ) && is_array( $container['children'] ) ) {
+			foreach ( $container['children'] as $child ) {
+				if ( OptionTree::KIND_ACCORDION === OptionTree::get_kind( $child ) ) {
+					$items[] = $child;
+				}
+			}
+		}
+		if ( empty( $items ) ) {
+			return;
+		}
+
+		$exclusive = true;
+		if ( array_key_exists( 'accordionExclusive', $container ) && ( false === $container['accordionExclusive'] || 'false' === $container['accordionExclusive'] || 0 === $container['accordionExclusive'] || '0' === $container['accordionExclusive'] ) ) {
+			$exclusive = false;
+		}
+
+		$icon = ! empty( $container['accordionIcon'] ) ? $container['accordionIcon'] : 'chevron';
+		if ( ! in_array( $icon, array( 'chevron', 'plus_minus' ), true ) ) {
+			$icon = 'chevron';
+		}
+
+		$border     = sanitize_hex_color( isset( $container['accordionBorderColor'] ) ? $container['accordionBorderColor'] : '' );
+		$background = sanitize_hex_color( isset( $container['accordionBackground'] ) ? $container['accordionBackground'] : '' );
+		$text       = sanitize_hex_color( isset( $container['accordionTextColor'] ) ? $container['accordionTextColor'] : '' );
+		if ( ! $border ) {
+			$border = '#e5e7eb';
+		}
+		if ( ! $background ) {
+			$background = '#ffffff';
+		}
+		if ( ! $text ) {
+			$text = '#111827';
+		}
+
+		Utils::get_template_part(
+			YAYE_PATH . 'includes/Templates',
+			'accordions_container',
+			array(
+				'items'                     => $items,
+				'container_id'              => ! empty( $container['id'] ) ? $container['id'] : '',
+				'exclusive'                 => $exclusive,
+				'icon'                      => $icon,
+				'border_color'              => $border,
+				'background'                => $background,
+				'text_color'                => $text,
+				'render_accordion_children' => function ( $children ) use ( $field_params ) {
+					$this->render_option_nodes( $children, $field_params );
+				},
+			)
+		);
 	}
 
 	/**
@@ -556,7 +706,7 @@ class ProductPage {
 						$product_price = Utils::get_price_fixed_from_currency_plugin( $product_id, $product->get_price( 'original' ), true); 
 					}
 
-					$option_field_data = Utils::sanitize_array( $_POST['option_field_data'] );
+					$option_field_data = map_deep( wp_unslash( $_POST['option_field_data'] ), array( Utils::class, 'sanitize_text_field_preserve_spaces' ) );
 
 					foreach ( $option_field_data as $option_set_id => $option ) {
 						if ( ! empty( $option ) ) {
@@ -641,7 +791,7 @@ class ProductPage {
 
 		foreach ( $cart_object->cart_contents as $cart_value ) {
 			if( !empty($cart_value['data']) ) {
-				$product = wc_get_product( $cart_value['data']->get_id() );
+				$product            = apply_filters( 'yaye_cart_item_product', wc_get_product( $cart_value['data']->get_id() ), $cart_value );
 				$cost_total         = Utils::get_price_fixed_from_currency_plugin( $cart_value['product_id'], floatval( $product->get_price( 'original' ) ), true);
 				$cost_regular_total = Utils::get_price_fixed_from_currency_plugin( $cart_value['product_id'], floatval( $product->get_regular_price( 'original' ) ), true); 
 				
@@ -757,8 +907,10 @@ class ProductPage {
 			}
 		}
 
-		// Add edit option field link with product has applied opiton field.
-		if ( is_cart() && ! empty( $product_permalink ) && ! wp_is_block_theme() ) {
+		// Add edit option field link (cart page, mini cart drawer, but not checkout).
+		// Skip classic mini cart: that template already prints the link via woocommerce_widget_cart_item_quantity.
+		$is_classic_minicart = did_action( 'woocommerce_before_mini_cart' ) > did_action( 'woocommerce_after_mini_cart' );
+		if ( ! is_checkout() && ! empty( $product_permalink ) && ! $is_classic_minicart ) {
 			$current_prod_id = $_product->get_parent_id();
 			if ( empty( $current_prod_id ) ) {
 				$current_prod_id = $_product->get_id();
@@ -776,8 +928,8 @@ class ProductPage {
 
 				$edit_option_text = apply_filters( 'yaye_edit_option_text', esc_html__( 'Edit option field', 'yayextra' ) );
 				$cart_data[] = array(
-					'name'  => '<a href="' . esc_url( $edit_link ) . '" class="yayextra-option-edit-link">' . esc_html( $edit_option_text ) . '</a>',
-					'value' => '',
+					'name'  => '',
+					'value' => '<a href="' . esc_url( $edit_link ) . '" class="yayextra-option-edit-link">' . esc_html( $edit_option_text ) . '</a>',
 				);
 			}
 		}
@@ -1067,17 +1219,32 @@ class ProductPage {
 		}
 
 		$apply_tax_for_fee_hook = apply_filters( 'yayextra_tax_for_fee_apply', true );
-        if ( ! empty( $fee_discount_arr ) ) {
-            foreach ( $fee_discount_arr as $name => $fee_discount ) {
-                $tax_cus       = $fee_discount['tax'];
-                $tax_class_cus = $fee_discount['tax_class'];
-                if ( true === $apply_tax_for_fee_hook ) {
-                    $cart->add_fee( $name, $fee_discount['cost'],  $tax_cus, $tax_class_cus );
-                } else {
-                    $cart->add_fee( $name, $fee_discount['cost'] );
-                }
-            }
-        }
+		if ( ! empty( $fee_discount_arr ) ) {
+			foreach ( $fee_discount_arr as $name => $fee_discount ) {
+				if ( true === $apply_tax_for_fee_hook ) {
+					$cart->add_fee( $name, $fee_discount['cost'], $fee_discount['tax'], $fee_discount['tax_class'] );
+				} else {
+					// Explicit false
+					$cart->add_fee( $name, $fee_discount['cost'], false, '' );
+				}
+			}
+
+			// Mandatory to disable tax along with fee reversals (discounts).
+			if ( true !== $apply_tax_for_fee_hook ) {
+				$yaye_fee_names = array_keys( $fee_discount_arr );
+				add_filter(
+					'woocommerce_cart_totals_get_fees_from_cart_taxes',
+					function ( $taxes, $fee ) use ( $yaye_fee_names ) {
+						if ( isset( $fee->object->name ) && in_array( $fee->object->name, $yaye_fee_names, true ) ) {
+							return array();
+						}
+						return $taxes;
+					},
+					10,
+					2
+				);
+			}
+		}
 	}
 
 	/**
@@ -1376,7 +1543,7 @@ class ProductPage {
 	 * @param string $cart_item_key The cart item key.
 	 */
 	public function add_link_edit_option_field_in_minicart( $cart_item_quantity_product_price_span, $cart_item, $cart_item_key ) {
-		if ( is_cart() && ! wp_is_block_theme() ) return $cart_item_quantity_product_price_span;
+		if ( is_cart() ) return $cart_item_quantity_product_price_span;
 		
 		$_product          = apply_filters( 'woocommerce_cart_item_product', $cart_item['data'], $cart_item, $cart_item_key );
 		$product_permalink = null;
@@ -1577,7 +1744,38 @@ class ProductPage {
 	 * @param object $item The item.
 	 */
 	public function handle_order_item_thumbnail( $image, $item ) {
-		// For YayExtra pro version.
+		$item_metas = $item->get_formatted_meta_data();
+		if ( ! empty( $item_metas ) ) {
+			foreach ( $item_metas as $meta ) {
+				$option_title = $meta->key;
+				$value_pieces = explode( '(', $meta->value );
+				$option_value = trim( $value_pieces[0] );
+
+				$opt_sets = CustomPostType::get_list_option_set( array(), true ); // get all.
+
+				if ( ! empty( $opt_sets ) ) {
+					foreach ( $opt_sets as $opt_set ) {
+						$opt_set_id   = (int) $opt_set->ID;
+						$opt_set_data = CustomPostType::get_option_set( $opt_set_id );
+
+						if ( 1 === (int) $opt_set_data['status'] ) {
+							if ( ! empty( $opt_set_data['options'] ) ) {
+								$opt_field_list = OptionTree::flatten_leaves( $opt_set_data['options'] );
+								foreach ( $opt_field_list as $opt_field ) {
+									if ( trim($option_title) === trim($opt_field['name']) && ( 'swatches' === $opt_field['type']['value'] || 'swatches_multi' === $opt_field['type']['value'] ) && ! empty( $opt_field['isChangeImage'] ) && ! empty( $opt_field['optionValues'] ) && is_array( $opt_field['optionValues'] ) ) {
+										foreach ( $opt_field['optionValues'] as $option_val ) {
+											if ( 'image' === $option_val['swatchesType'] && trim($option_value) === trim($option_val['value']) ) {
+												$image = '<img src="' . $option_val['imageUrl'] . '" alt="' . $option_val['value'] . '" width="32" height="32" class="attachment-32x32 size-32x32" loading="lazy"/>';
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
 		return $image;
 	}
 
@@ -1902,7 +2100,7 @@ class ProductPage {
 
 		$product_names = array();
 		/* translators: %s: product title */
-		$product_names[] = ( $product_quantity > 1 ? absint( $product_quantity ) . ' &times; ' : '' ) . sprintf( _x( '&ldquo;%s&rdquo;', 'Item name in quotes', 'woocommerce' ), strip_tags( get_the_title( $product_id ) ) );
+		$product_names[] = ( $product_quantity > 1 ? absint( $product_quantity ) . ' &times; ' : '' ) . sprintf( _x( '&ldquo;%s&rdquo;', 'Item name in quotes', 'woocommerce' ), wp_strip_all_tags( get_the_title( $product_id ) ) );
 		/* translators: %s: product quantity */
 		$added_text = sprintf( esc_html( _n( '%s has been updated.', '%s have been updated.', $product_quantity, 'yayextra' ) ), wc_format_list_of_items( array_filter( $product_names ) ) );
 		wc_add_notice( $added_text, 'success' );
@@ -2033,7 +2231,7 @@ class ProductPage {
 			foreach ( $opt_sets as $opt_set_data ) {
 				if ( ! empty( $opt_set_data['options'] ) ) {
 					$opt_field_list = $opt_set_data['options'];
-					foreach ( $opt_field_list as $opt_field ) {
+					foreach ( OptionTree::flatten_leaves( $opt_field_list ) as $opt_field ) {
 						$option_id                                   = $opt_field['id'];
 						$result[ $opt_set_data['id'] ][ $option_id ] = $opt_field;
 					}

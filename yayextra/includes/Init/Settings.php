@@ -129,6 +129,8 @@ class Settings {
 
 			// Enqueue script for yayextra process in front end.
 			wp_enqueue_script( YAYE_PREFIX, YAYE_URL . 'assets/js/yayextra.js', array( 'jquery', 'jquery-ui-datepicker', 'yayextra-jquery-datetime-picker' ), YAYE_VERSION, true );
+			wp_enqueue_script( 'yayextra-steps', YAYE_URL . 'assets/js/yayextra-steps.js', array( 'jquery', YAYE_PREFIX ), YAYE_VERSION, true );
+			wp_enqueue_script( 'yayextra-accordions', YAYE_URL . 'assets/js/yayextra-accordions.js', array( 'jquery', YAYE_PREFIX ), YAYE_VERSION, true );
 
 			wp_enqueue_media();
 
@@ -141,7 +143,7 @@ class Settings {
 				YAYE_PREFIX,
 				'YAYE_CLIENT_DATA',
 				array(
-					'OPTION_SET_LIST'  => CustomPostType::get_option_set_array( $option_set_id_list ),
+					'OPTION_SET_LIST'  => \YayExtra\Helper\OptionTree::flatten_sets_for_script( CustomPostType::get_option_set_array( $option_set_id_list ) ),
 					'price_html'       => $price_html,
 					'date_format'      => get_option( 'date_format' ),
 					'time_format'      => get_option( 'time_format' ),
@@ -154,6 +156,9 @@ class Settings {
 						'decimals'           => wc_get_price_decimals(),
 					),
 					'settings'         => get_option( 'yaye_settings' ),
+					'hooks'                                 => array(
+						'include_fee_discount_in_total_price' => apply_filters( 'yaye_include_fee_discount_in_total_price', false ),
+					),
 				)
 			);
 		}

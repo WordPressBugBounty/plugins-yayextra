@@ -5,7 +5,7 @@ Tags: product addons, woocommerce product options, woocommerce product fields, p
 Requires at least: 6.2
 Requires PHP: 7.2
 Tested up to: 7.1
-Stable tag: 2.0.3
+Stable tag: 2.1.0
 License: GPL-2.0+
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
@@ -134,6 +134,20 @@ Yes, this feature is called Linked Product in YayExtra Pro settings. You can upg
 13. Settings to control the price display and export/import your options
 
 == Changelog ==
+
+= Sep 9, 2026 - Version 2.1.0 =
+- Added: Steps/Accordions layout (Pro)
+- Added: Popup Element (Pro)
+- Added: Product list Element (Pro)
+- Added: Link Element (Pro)
+- Added: Images Element
+- Added: Heading Element
+- Added: Divider Element
+- Added: Spacing Element
+- Added: Paragraph Element
+- Added: HTML Element
+- Added: Search in the option type selector to quickly find a field
+- Updated: Grouped option types into categories (Input, Choice List, Swatch, Static)
 
 = May 18, 2026 - Version 2.0.3 =
 - Added: The ability to refresh Assigned products

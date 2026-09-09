@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: YayExtra Lite - WooCommerce Extra Product Options\n"
-"POT-Creation-Date: 2024-01-16 08:23+0700\n"
-"PO-Revision-Date: 2024-01-16 08:23+0700\n"
+"POT-Creation-Date: 2026-06-04 00:00+0700\n"
+"PO-Revision-Date: 2026-06-04 00:00+0700\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -21,155 +21,1718 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.min.js\n"
 
-#: includes/Classes/ProductPage.php:156
+#: includes/Classes/ProductPage.php:140 includes/I18n.php:165
 msgid "Extra subtotal:"
 msgstr ""
 
-#: includes/Classes/ProductPage.php:163
+#: includes/Classes/ProductPage.php:148 includes/I18n.php:348
 msgid "Total price:"
 msgstr ""
 
-#: includes/Classes/ProductPage.php:239 includes/Classes/ProductPage.php:244
-#: includes/Classes/ProductPage.php:251 includes/Classes/ProductPage.php:262
-#: includes/Classes/ProductPage.php:294
+#: includes/Classes/ProductPage.php:240 includes/Classes/ProductPage.php:251
+#: includes/Classes/ProductPage.php:283
 msgid " is a required field."
 msgstr ""
 
-#: includes/Classes/ProductPage.php:302 includes/Classes/ProductPage.php:328
+#: includes/Classes/ProductPage.php:291 includes/Classes/ProductPage.php:317
 msgid " is invalid email format"
 msgstr ""
 
-#: includes/Classes/ProductPage.php:308 includes/Classes/ProductPage.php:334
+#: includes/Classes/ProductPage.php:297 includes/Classes/ProductPage.php:323
 msgid " is invalid url format"
 msgstr ""
 
-#: includes/Classes/ProductPage.php:314 includes/Classes/ProductPage.php:340
+#: includes/Classes/ProductPage.php:303 includes/Classes/ProductPage.php:329
 msgid " is invalid string format"
 msgstr ""
 
-#: includes/Classes/ProductPage.php:368 includes/Classes/ProductPage.php:418
-msgid "View cart"
+#. translators: &quot;%1$s&quot;: option value.
+#: includes/Classes/ProductPage.php:360 includes/Classes/ProductPage.php:410
+#, php-format
+msgid ""
+"You cannot add that amount of &quot;%1$s&quot; to the cart &mdash; we "
+"have %2$d in stock and you already have %3$d in your "
+"cart."
 msgstr ""
 
 #. translators: &quot;%1$s&quot;: option value.
-#: includes/Classes/ProductPage.php:371 includes/Classes/ProductPage.php:421
+#: includes/Classes/ProductPage.php:378 includes/Classes/ProductPage.php:427
 #, php-format
 msgid ""
-"You cannot add that amount of &quot;%1$s&quot; to the cart &mdash; we have "
-"%2$d in stock and you already have %3$d in your cart."
+"You cannot add that amount of &quot;%1$s&quot; to the cart because there "
+"is not enough stock ( %2$d remaining ) . "
 msgstr ""
 
-#. translators: &quot;%1$s&quot;: option value.
-#: includes/Classes/ProductPage.php:389 includes/Classes/ProductPage.php:438
-#, php-format
-msgid ""
-"You cannot add that amount of &quot;%1$s&quot; to the cart because there is "
-"not enough stock ( %2$d remaining ) . "
-msgstr ""
-
-#: includes/Classes/ProductPage.php:565 includes/Classes/ProductPage.php:683
-msgid "Upload File successful"
-msgstr ""
-
-#: includes/Classes/ProductPage.php:836 includes/Classes/ProductPage.php:1537
+#: includes/Classes/ProductPage.php:777 includes/Classes/ProductPage.php:1403
 msgid "Edit option field"
 msgstr ""
 
-#. translators: %1$s: option value.
-#: includes/Classes/ProductPage.php:1061
-#, php-format
-msgid ""
-"Sorry, we do not have enough \"%1$s\" in stock to fulfill your order (%2$s "
-"available). We apologize for any inconvenience caused."
-msgstr ""
-
-#: includes/Classes/ProductPage.php:1409
+#: includes/Classes/ProductPage.php:1368
 msgid "Update cart"
 msgstr ""
 
-#. translators: %s: product title
-#: includes/Classes/ProductPage.php:2324
-#, php-format
-msgctxt "Item name in quotes"
-msgid "&ldquo;%s&rdquo;"
-msgstr ""
-
 #. translators: %s: product quantity
-#: includes/Classes/ProductPage.php:2326
+#: includes/Classes/ProductPage.php:1907
 #, php-format
 msgid "%s has been updated."
 msgid_plural "%s have been updated."
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/Helper/Utils.php:23 includes/Init/Ajax.php:90
-#: includes/Init/Ajax.php:127 includes/Init/Ajax.php:195
-#: includes/Init/Ajax.php:222 includes/Init/Ajax.php:303
-#: includes/Init/Ajax.php:327 includes/Init/Ajax.php:350
-#: includes/Init/Ajax.php:378 includes/Init/Ajax.php:449
-#: includes/Init/Ajax.php:486 includes/Init/Ajax.php:510
-#: includes/Init/Ajax.php:660 includes/YayCommerceMenu/OtherPluginsMenu.php:292
-#: includes/YayCommerceMenu/OtherPluginsMenu.php:341
-#: includes/YayCommerceMenu/OtherPluginsMenu.php:389
+#: includes/Helper/Utils.php:23 includes/Init/Ajax.php:98
+#: includes/Init/Ajax.php:358 includes/Init/Ajax.php:444
+#: includes/Init/Ajax.php:471 includes/Init/Ajax.php:553
+#: includes/Init/Ajax.php:577 includes/Init/Ajax.php:600
+#: includes/Init/Ajax.php:628 includes/Init/Ajax.php:698
+#: includes/Init/Ajax.php:738 includes/Init/Ajax.php:786
+#: includes/Init/Ajax.php:842
 msgid "Nonce is invalid"
 msgstr ""
 
-#: includes/I18n.php:35
-msgid "Choose color"
-msgstr ""
-
-#: includes/I18n.php:36
-msgid "Oops! Something went wrong!"
-msgstr ""
-
-#: includes/I18n.php:37
-msgid "An option value have to set as default."
-msgstr ""
-
-#: includes/I18n.php:38 includes/I18n.php:45
-msgid "Upload Image"
-msgstr ""
-
-#: includes/I18n.php:39 includes/I18n.php:46
-msgid "Save changes"
-msgstr ""
-
-#: includes/I18n.php:42
+#: includes/I18n.php:46
 msgid "Show option sets for roles"
 msgstr ""
 
-#: includes/I18n.php:43
-msgid ""
-"Choose specific roles to show option sets. If have no role, option sets are "
-"always shown."
+#: includes/I18n.php:47
+msgid "30-day Money Back Guarantee"
 msgstr ""
 
-#: includes/I18n.php:44
+#: includes/I18n.php:48
+msgid "ACTIVE"
+msgstr ""
+
+#: includes/I18n.php:49
+msgid "Access option sets for import or export data within the system."
+msgstr ""
+
+#: includes/I18n.php:50
+msgid "Action Set"
+msgstr ""
+
+#: includes/I18n.php:51
+msgid "Action set"
+msgstr ""
+
+#: includes/I18n.php:52
+msgid "Actions"
+msgstr ""
+
+#: includes/I18n.php:53
+msgid "Active"
+msgstr ""
+
+#: includes/I18n.php:54
+msgid "Add Action"
+msgstr ""
+
+#: includes/I18n.php:55
+msgid "Add Condition"
+msgstr ""
+
+#: includes/I18n.php:56
+msgid "Add Filter"
+msgstr ""
+
+#: includes/I18n.php:57
+msgid "Add Logic Condition"
+msgstr ""
+
+#: includes/I18n.php:58
+msgid "Add New Action"
+msgstr ""
+
+#: includes/I18n.php:59
+msgid "Add New Option"
+msgstr ""
+
+#: includes/I18n.php:60 includes/Init/CustomPostType.php:27
+msgid "Add New Option Set"
+msgstr ""
+
+#: includes/I18n.php:61
+msgid "Add Option Value"
+msgstr ""
+
+#: includes/I18n.php:62
+msgid "Add filter"
+msgstr ""
+
+#: includes/I18n.php:63
+msgid "Additional Cost"
+msgstr ""
+
+#: includes/I18n.php:64
+msgid "Additional Description"
+msgstr ""
+
+#: includes/I18n.php:65
+msgid "Additional information"
+msgstr ""
+
+#: includes/I18n.php:66
+msgid "Additional value"
+msgstr ""
+
+#: includes/I18n.php:67
+msgid "Advanced option types"
+msgstr ""
+
+#: includes/I18n.php:68
+msgid "Advanced settings"
+msgstr ""
+
+#: includes/I18n.php:69
+msgid "Advanced settings for color & image swatches"
+msgstr ""
+
+#: includes/I18n.php:70
+msgid "All"
+msgstr ""
+
+#: includes/I18n.php:71
+msgid "All products"
+msgstr ""
+
+#: includes/I18n.php:72
+msgid "Allow change product image"
+msgstr ""
+
+#: includes/I18n.php:73
+msgid "Allow zooming on swatches"
+msgstr ""
+
+#: includes/I18n.php:74
+msgid "Applied option sets"
+msgstr ""
+
+#: includes/I18n.php:75
+msgid "Are you sure you want to delete this conditional logic?"
+msgstr ""
+
+#: includes/I18n.php:76
+msgid "Are you sure you want to delete this option value?"
+msgstr ""
+
+#: includes/I18n.php:77
+msgid "Are you sure you want to delete this option?"
+msgstr ""
+
+#: includes/I18n.php:78
+msgid "Are you sure you want to delete this sub action?"
+msgstr ""
+
+#: includes/I18n.php:79
+msgid "Are you sure you want to export option sets?"
+msgstr ""
+
+#: includes/I18n.php:80
+msgid "Assigned"
+msgstr ""
+
+#: includes/I18n.php:81
+msgid "Background"
+msgstr ""
+
+#: includes/I18n.php:82
+msgid "Background colors"
+msgstr ""
+
+#: includes/I18n.php:83
+msgid "Basic option types"
+msgstr ""
+
+#: includes/I18n.php:84
+msgid "Be the first to review \"T-Shirt\""
+msgstr ""
+
+#: includes/I18n.php:85
+msgid "Border"
+msgstr ""
+
+#: includes/I18n.php:86
+msgid "Border color"
+msgstr ""
+
+#: includes/I18n.php:87
+msgid "Border colors"
+msgstr ""
+
+#: includes/I18n.php:88
+msgid "Border radius is required"
+msgstr ""
+
+#: includes/I18n.php:89
+msgid "Border weight"
+msgstr ""
+
+#: includes/I18n.php:90
+msgid "Border width is required"
+msgstr ""
+
+#: includes/I18n.php:91
+msgid "Bottom"
+msgstr ""
+
+#: includes/I18n.php:92
+msgid "Brand"
+msgstr ""
+
+#: includes/I18n.php:93
+msgid "Button"
+msgstr ""
+
+#: includes/I18n.php:94
+msgid "Button (Multi select)"
+msgstr ""
+
+#: includes/I18n.php:95
+msgid "Calendar date picker"
+msgstr ""
+
+#: includes/I18n.php:96
+msgid "Cancel"
+msgstr ""
+
+#: includes/I18n.php:97
+msgid "Case option"
+msgstr ""
+
+#: includes/I18n.php:98
+msgid "Categories"
+msgstr ""
+
+#: includes/I18n.php:99
+msgid "Category"
+msgstr ""
+
+#: includes/I18n.php:100
+msgid "Change product images"
+msgstr ""
+
+#: includes/I18n.php:101
+msgid "Chat Now"
+msgstr ""
+
+#: includes/I18n.php:102
+msgid "Chat with support"
+msgstr ""
+
+#: includes/I18n.php:103
+msgid "Check our comparison table to see what each plan offers."
+msgstr ""
+
+#: includes/I18n.php:104
+msgid "Checkbox"
+msgstr ""
+
+#: includes/I18n.php:105
+msgid "Choose by conditions"
+msgstr ""
+
+#: includes/I18n.php:106
+msgid "Choose one by one"
+msgstr ""
+
+#: includes/I18n.php:107
+msgid "Choose one or more user roles to assign within the system."
+msgstr ""
+
+#: includes/I18n.php:108
+msgid "Choose products where this option set will be shown."
+msgstr ""
+
+#: includes/I18n.php:109
+msgid "Circle"
+msgstr ""
+
+#: includes/I18n.php:110
+msgid "Class name"
+msgstr ""
+
+#: includes/I18n.php:111
+msgid "Class names are used for custom css purpose."
+msgstr ""
+
+#: includes/I18n.php:112
+msgid "Clothing"
+msgstr ""
+
+#: includes/I18n.php:113
+msgid "Color"
+msgstr ""
+
+#: includes/I18n.php:114
+msgid "Color active"
+msgstr ""
+
+#: includes/I18n.php:115
+msgid "Color hover"
+msgstr ""
+
+#: includes/I18n.php:116
+msgid "Color normal"
+msgstr ""
+
+#: includes/I18n.php:117
+msgid "Color:"
+msgstr ""
+
+#: includes/I18n.php:118
+msgid "Compare Plans and Features"
+msgstr ""
+
+#: includes/I18n.php:119
+msgid "Conditional logic"
+msgstr ""
+
+#: includes/I18n.php:120
+msgid "Conditional logics"
+msgstr ""
+
+#: includes/I18n.php:121
+msgid "Config Option Set"
+msgstr ""
+
+#: includes/I18n.php:122
+msgid "Confirm delete"
+msgstr ""
+
+#: includes/I18n.php:123
+msgid "Confirm duplicate"
+msgstr ""
+
+#: includes/I18n.php:124
+msgid "Corner radius"
+msgstr ""
+
+#: includes/I18n.php:125
+msgid "Create actions with conditions."
+msgstr ""
+
+#: includes/I18n.php:126
+msgid "Create and config your own options."
+msgstr ""
+
+#: includes/I18n.php:127
+msgid "Custom CSS"
+msgstr ""
+
+#: includes/I18n.php:128
+msgid "Custom format"
+msgstr ""
+
+#: includes/I18n.php:129
+msgid "Customer reviews"
+msgstr ""
+
+#: includes/I18n.php:130
+msgid "Customize"
+msgstr ""
+
+#: includes/I18n.php:131
+msgid "Customize and preview styling"
+msgstr ""
+
+#: includes/I18n.php:132
+msgid "Delete Option Set"
+msgstr ""
+
+#: includes/I18n.php:133
+msgid "Delete action"
+msgstr ""
+
+#: includes/I18n.php:134
+msgid "Delete action set"
+msgstr ""
+
+#: includes/I18n.php:135
+msgid "Delete conditional"
+msgstr ""
+
+#: includes/I18n.php:136
+msgid "Delete multiple option sets"
+msgstr ""
+
+#: includes/I18n.php:137
+msgid "Delete option set"
+msgstr ""
+
+#: includes/I18n.php:138
+msgid "Delete option value"
+msgstr ""
+
+#: includes/I18n.php:139
+msgid "Deleting..."
+msgstr ""
+
+#: includes/I18n.php:140
+msgid "Description"
+msgstr ""
+
+#: includes/I18n.php:141
+msgid "Dimensions"
+msgstr ""
+
+#: includes/I18n.php:142
+msgid "Disable a maximum number of days from today."
+msgstr ""
+
+#: includes/I18n.php:143
+msgid "Disable dates from today"
+msgstr ""
+
+#: includes/I18n.php:144
+msgid "Disable other days"
+msgstr ""
+
+#: includes/I18n.php:145
+msgid "Disable past date"
+msgstr ""
+
+#: includes/I18n.php:146
+msgid "Do you want to continue?"
+msgstr ""
+
+#: includes/I18n.php:147
+msgid "Documentation"
+msgstr ""
+
+#: includes/I18n.php:148
+msgid "Drag and drop to reorder is available in Pro version"
+msgstr ""
+
+#: includes/I18n.php:149
+msgid "Dropdown list"
+msgstr ""
+
+#: includes/I18n.php:150
+msgid "Duplicate Option Set"
+msgstr ""
+
+#: includes/I18n.php:151
+msgid "Duplicate action set"
+msgstr ""
+
+#: includes/I18n.php:152
+msgid "Duplicate multiple option sets"
+msgstr ""
+
+#: includes/I18n.php:153
+msgid "Duplicate option"
+msgstr ""
+
+#: includes/I18n.php:154
+msgid "Duplicating..."
+msgstr ""
+
+#: includes/I18n.php:155
+msgid "Email"
+msgstr ""
+
+#: includes/I18n.php:156
+msgid "Email/URL"
+msgstr ""
+
+#: includes/I18n.php:157
+msgid "Enable additional cost"
+msgstr ""
+
+#: includes/I18n.php:158
+msgid "Enable additional description"
+msgstr ""
+
+#: includes/I18n.php:159
+msgid "Enable linked product"
+msgstr ""
+
+#: includes/I18n.php:160
+msgid "Enable manage stock"
+msgstr ""
+
+#: includes/I18n.php:161
+msgid "Enable to display additional options on the page."
+msgstr ""
+
+#: includes/I18n.php:162
+msgid "Export"
+msgstr ""
+
+#: includes/I18n.php:163
+msgid "Export option sets"
+msgstr ""
+
+#: includes/I18n.php:164
+msgid "Export option sets to a JSON file."
+msgstr ""
+
+#: includes/I18n.php:166
+msgid "Failed to refresh assigned products"
+msgstr ""
+
+#: includes/I18n.php:167
+msgid "Features"
+msgstr ""
+
+#: includes/I18n.php:168
+msgid "Fee or discount name"
+msgstr ""
+
+#: includes/I18n.php:169
+msgid "File upload"
+msgstr ""
+
+#: includes/I18n.php:170
+msgid "Fixed price"
+msgstr ""
+
+#: includes/I18n.php:171
+msgid "Font size"
+msgstr ""
+
+#: includes/I18n.php:172
+msgid "Font weight"
+msgstr ""
+
+#: includes/I18n.php:173
+msgid "Foyzo Marketplace, UK"
+msgstr ""
+
+#: includes/I18n.php:174
+msgid "Friday"
+msgstr ""
+
+#: includes/I18n.php:175
+msgid "Full options for pricing type (extra fee/ discount)"
+msgstr ""
+
+#: includes/I18n.php:176
+msgid "General"
+msgstr ""
+
+#: includes/I18n.php:177
+msgid "Get YayExtra Pro"
+msgstr ""
+
+#: includes/I18n.php:178
+msgid "Get all features when you upgrade to YayExtra Pro."
+msgstr ""
+
+#: includes/I18n.php:179
+msgid "Go Pro"
+msgstr ""
+
+#: includes/I18n.php:180
 msgid "Hide option sets for roles"
 msgstr ""
 
-#: includes/Init/Ajax.php:202
+#: includes/I18n.php:181
+msgid "Home"
+msgstr ""
+
+#: includes/I18n.php:182
+msgid "Horizontal"
+msgstr ""
+
+#: includes/I18n.php:183
+msgid "INACTIVE"
+msgstr ""
+
+#: includes/I18n.php:184
+msgid "If"
+msgstr ""
+
+#: includes/I18n.php:185
+msgid "Import"
+msgstr ""
+
+#: includes/I18n.php:186
+msgid "Import option sets"
+msgstr ""
+
+#: includes/I18n.php:187
+msgid "Import option sets by uploading your JSON file."
+msgstr ""
+
+#: includes/I18n.php:188
+msgid "Importing..."
+msgstr ""
+
+#: includes/I18n.php:189
+msgid "Inactive"
+msgstr ""
+
+#: includes/I18n.php:190
+msgid "Insert image"
+msgstr ""
+
+#: includes/I18n.php:191
+msgid "Is required"
+msgstr ""
+
+#: includes/I18n.php:192
+msgid "Kamen Hadziyski"
+msgstr ""
+
+#: includes/I18n.php:193
+msgid "Label"
+msgstr ""
+
+#: includes/I18n.php:194
+msgid "Label font size is required"
+msgstr ""
+
+#: includes/I18n.php:195
+msgid "Limit"
+msgstr ""
+
+#: includes/I18n.php:196
+msgid "Limit the maximum number of options that can be selected."
+msgstr ""
+
+#: includes/I18n.php:197
+msgid "Linked Product"
+msgstr ""
+
+#: includes/I18n.php:198
+msgid "Linked Product (product as an option)"
+msgstr ""
+
+#: includes/I18n.php:199
+msgid "Linked product (product as an option)"
+msgstr ""
+
+#: includes/I18n.php:200
+msgid "Loading..."
+msgstr ""
+
+#: includes/I18n.php:201
+msgid "Manage Stock"
+msgstr ""
+
+#: includes/I18n.php:202
+msgid "Manage actions"
+msgstr ""
+
+#: includes/I18n.php:203
+msgid "Manage options"
+msgstr ""
+
+#: includes/I18n.php:204
+msgid "Matched products:"
+msgstr ""
+
+#: includes/I18n.php:205
+msgid "Material"
+msgstr ""
+
+#: includes/I18n.php:206
+msgid "Max Character"
+msgstr ""
+
+#: includes/I18n.php:207
+msgid "Max number"
+msgstr ""
+
+#: includes/I18n.php:208
+msgid "Min Character"
+msgstr ""
+
+#: includes/I18n.php:209
+msgid "Min number"
+msgstr ""
+
+#: includes/I18n.php:210
+msgid "Monday"
+msgstr ""
+
+#: includes/I18n.php:211
+msgid "Name"
+msgstr ""
+
+#: includes/I18n.php:212
+msgid "Name value"
+msgstr ""
+
+#: includes/I18n.php:213
+msgid "Need help?"
+msgstr ""
+
+#: includes/I18n.php:214
+msgid "No"
+msgstr ""
+
+#: includes/I18n.php:215
+msgid "No data to display."
+msgstr ""
+
+#: includes/I18n.php:216
+msgid "No days found"
+msgstr ""
+
+#: includes/I18n.php:217
+msgid "No options found"
+msgstr ""
+
+#: includes/I18n.php:218
+msgid "No products found"
+msgstr ""
+
+#: includes/I18n.php:219
+msgid "No roles found"
+msgstr ""
+
+#: includes/I18n.php:220
+msgid "Normal"
+msgstr ""
+
+#: includes/I18n.php:221
+msgid "Number"
+msgstr ""
+
+#: includes/I18n.php:222
+msgid "Oops! Something went wrong!"
+msgstr ""
+
+#: includes/I18n.php:223
+msgid "Option Set name"
+msgstr ""
+
+#: includes/I18n.php:224
+msgid "Option Sets"
+msgstr ""
+
+#: includes/I18n.php:225
+msgid "Option name (label)"
+msgstr ""
+
+#: includes/I18n.php:226
+msgid "Option name cannot be empty"
+msgstr ""
+
+#: includes/I18n.php:227
+msgid "Option set deleted successfully"
+msgstr ""
+
+#: includes/I18n.php:228
+msgid "Option set description"
+msgstr ""
+
+#: includes/I18n.php:229
+msgid "Option set duplicated successfully"
+msgstr ""
+
+#: includes/I18n.php:230
+msgid "Option set name"
+msgstr ""
+
+#: includes/I18n.php:231
+msgid "Option set name cannot be empty"
+msgstr ""
+
+#: includes/I18n.php:232
+msgid "Option set saved successfully"
+msgstr ""
+
+#: includes/I18n.php:233
+msgid "Option sets imported successfully"
+msgstr ""
+
+#: includes/I18n.php:234
+msgid "Option type"
+msgstr ""
+
+#: includes/I18n.php:235
+msgid "Option values"
+msgstr ""
+
+#: includes/I18n.php:236
+msgid "Option will be used as product custom field shown on product page."
+msgstr ""
+
+#: includes/I18n.php:237
+msgid "Options"
+msgstr ""
+
+#: includes/I18n.php:238
+msgid "Others"
+msgstr ""
+
+#: includes/I18n.php:239
+msgid "Page"
+msgstr ""
+
+#: includes/I18n.php:240
+msgid "Percentage"
+msgstr ""
+
+#: includes/I18n.php:241
+msgid "Placeholder"
+msgstr ""
+
+#: includes/I18n.php:242
+msgid "Placeholder value"
+msgstr ""
+
+#: includes/I18n.php:243
+msgid "Please enter number"
+msgstr ""
+
+#: includes/I18n.php:244
+msgid "Please provide some descriptions..."
+msgstr ""
+
+#: includes/I18n.php:245
+msgid "Please select at least one file"
+msgstr ""
+
+#: includes/I18n.php:246
+msgid "Please select value"
+msgstr ""
+
+#: includes/I18n.php:247
+msgid "Please select values"
+msgstr ""
+
+#: includes/I18n.php:248
+msgid "Please type text"
+msgstr ""
+
+#: includes/I18n.php:249
+msgid "Position"
+msgstr ""
+
+#: includes/I18n.php:250
+msgid "Preview"
+msgstr ""
+
+#: includes/I18n.php:251
+msgid "Priority"
+msgstr ""
+
+#: includes/I18n.php:252
+msgid "Pro"
+msgstr ""
+
+#: includes/I18n.php:253
+msgid "Product tag"
+msgstr ""
+
+#: includes/I18n.php:254
+msgid "Products"
+msgstr ""
+
+#: includes/I18n.php:255
+msgid "Radio button"
+msgstr ""
+
+#: includes/I18n.php:256
+msgid "Rectangular"
+msgstr ""
+
+#: includes/I18n.php:257
+msgid "Refresh assigned products"
+msgstr ""
+
+#: includes/I18n.php:258
+msgid "Regular expressions"
+msgstr ""
+
+#: includes/I18n.php:259
+msgid "Reset"
+msgstr ""
+
+#: includes/I18n.php:260
+msgid "Reviews"
+msgstr ""
+
+#: includes/I18n.php:261
+msgid "Roles"
+msgstr ""
+
+#: includes/I18n.php:262
+msgid "Rows"
+msgstr ""
+
+#: includes/I18n.php:263
+msgid "Rows per page"
+msgstr ""
+
+#: includes/I18n.php:264
+msgid "Saturday"
+msgstr ""
+
+#: includes/I18n.php:265
+msgid "Save Changes"
+msgstr ""
+
+#: includes/I18n.php:266
+msgid "Search"
+msgstr ""
+
+#: includes/I18n.php:267
+msgid "Search days"
+msgstr ""
+
+#: includes/I18n.php:268
+msgid "Search roles"
+msgstr ""
+
+#: includes/I18n.php:269
+msgid "Search..."
+msgstr ""
+
+#: includes/I18n.php:270
+msgid "Select comparison"
+msgstr ""
+
+#: includes/I18n.php:271
+msgid "Select cost type"
+msgstr ""
+
+#: includes/I18n.php:272
+msgid "Select date"
+msgstr ""
+
+#: includes/I18n.php:273
+msgid "Select days"
+msgstr ""
+
+#: includes/I18n.php:274
+msgid "Select display type"
+msgstr ""
+
+#: includes/I18n.php:275
+msgid "Select font weight"
+msgstr ""
+
+#: includes/I18n.php:276
+msgid "Select option"
+msgstr ""
+
+#: includes/I18n.php:277
+msgid "Select position"
+msgstr ""
+
+#: includes/I18n.php:278
+msgid "Select product(s)"
+msgstr ""
+
+#: includes/I18n.php:279
+msgid "Select roles"
+msgstr ""
+
+#: includes/I18n.php:280
+msgid "Select time"
+msgstr ""
+
+#: includes/I18n.php:281
+msgid "Select value"
+msgstr ""
+
+#: includes/I18n.php:282
+msgid "Select..."
+msgstr ""
+
+#: includes/I18n.php:283
+msgid "Selected"
+msgstr ""
+
+#: includes/I18n.php:284
+msgid "Selected border width is required"
+msgstr ""
+
+#: includes/I18n.php:285
+msgid "Selected option sets deleted successfully"
+msgstr ""
+
+#: includes/I18n.php:286
+msgid "Set as Assigned"
+msgstr ""
+
+#: includes/I18n.php:287
+msgid "Set as Unassigned"
+msgstr ""
+
+#: includes/I18n.php:288
+msgid "Set as default"
+msgstr ""
+
+#: includes/I18n.php:289
+msgid "Settings"
+msgstr ""
+
+#: includes/I18n.php:290
+msgid "Settings saved!"
+msgstr ""
+
+#: includes/I18n.php:291
+msgid "Show additional price text on option value"
+msgstr ""
+
+#: includes/I18n.php:292
+msgid "Show extra options value in mini cart line items"
+msgstr ""
+
+#: includes/I18n.php:293
+msgid "Show extra subtotal on product page"
+msgstr ""
+
+#: includes/I18n.php:294
+msgid "Show options"
+msgstr ""
+
+#: includes/I18n.php:295
+msgid "Show tooltip"
+msgstr ""
+
+#: includes/I18n.php:296
+msgid "Show total item price on product page"
+msgstr ""
+
+#: includes/I18n.php:297
+msgid "Show total price on product page"
+msgstr ""
+
+#: includes/I18n.php:298
+msgid "Show/hide option sets for roles"
+msgstr ""
+
+#: includes/I18n.php:299
+msgid "Size"
+msgstr ""
+
+#: includes/I18n.php:300
+msgid "Size:"
+msgstr ""
+
+#: includes/I18n.php:301
+msgid "Square"
+msgstr ""
+
+#: includes/I18n.php:302
+msgid "Status"
+msgstr ""
+
+#: includes/I18n.php:303
+msgid "Stock"
+msgstr ""
+
+#: includes/I18n.php:304
+msgid "Stock quantity"
+msgstr ""
+
+#: includes/I18n.php:305
+msgid "Stock/inventory of extra options"
+msgstr ""
+
+#: includes/I18n.php:306
+msgid "Stroke weight"
+msgstr ""
+
+#: includes/I18n.php:307
+msgid "Subtotal price"
+msgstr ""
+
+#: includes/I18n.php:308
+msgid "Subtotal price font size is required"
+msgstr ""
+
+#: includes/I18n.php:309
+msgid "Successfully deleted!"
+msgstr ""
+
+#: includes/I18n.php:310
+msgid "Successfully duplicated!"
+msgstr ""
+
+#: includes/I18n.php:311
+msgid "Sunday"
+msgstr ""
+
+#: includes/I18n.php:312
+msgid "Swatch direction"
+msgstr ""
+
+#: includes/I18n.php:313
+msgid "Swatch shape"
+msgstr ""
+
+#: includes/I18n.php:314
+msgid "Swatches"
+msgstr ""
+
+#: includes/I18n.php:315
+msgid "Swatches (Full options)"
+msgstr ""
+
+#: includes/I18n.php:316
+msgid "Swatches (Multi select)"
+msgstr ""
+
+#: includes/I18n.php:317
+msgid "Swatches (few options)"
+msgstr ""
+
+#: includes/I18n.php:318
+msgid "Swatches direction"
+msgstr ""
+
+#: includes/I18n.php:319
+msgid "Swatches direction description."
+msgstr ""
+
+#: includes/I18n.php:320
+msgid "Swatches shape"
+msgstr ""
+
+#: includes/I18n.php:321
+msgid "Swatches shape description."
+msgstr ""
+
+#: includes/I18n.php:322
+msgid "T-shirt"
+msgstr ""
+
+#: includes/I18n.php:323
+msgid "Tag"
+msgstr ""
+
+#: includes/I18n.php:324
+msgid "Tags"
+msgstr ""
+
+#: includes/I18n.php:325
+msgid "Text"
+msgstr ""
+
+#: includes/I18n.php:326
+msgid "Text area"
+msgstr ""
+
+#: includes/I18n.php:327
+msgid "Text color"
+msgstr ""
+
+#: includes/I18n.php:328
+msgid "Text colors"
+msgstr ""
+
+#: includes/I18n.php:329
+msgid "Text format"
+msgstr ""
+
+#: includes/I18n.php:330
+msgid "Thank you for using YayExtra from"
+msgstr ""
+
+#: includes/I18n.php:331
+msgid "Thanks!"
+msgstr ""
+
+#: includes/I18n.php:332
+msgid "Then"
+msgstr ""
+
+#: includes/I18n.php:333
+msgid "There is no condition available, please select one."
+msgstr ""
+
+#: includes/I18n.php:334
+msgid "These values will be shown as"
+msgstr ""
+
+#: includes/I18n.php:335
+msgid "This action cannot be undone. This will permanently delete"
+msgstr ""
+
+#: includes/I18n.php:336
+msgid "This feature is available in YayExtra Pro version"
+msgstr ""
+
+#: includes/I18n.php:337
+msgid "This option is only available in Pro version"
+msgstr ""
+
+#: includes/I18n.php:338
+msgid "This option set will be displayed in products that match"
+msgstr ""
+
+#: includes/I18n.php:339
+msgid "This option will"
+msgstr ""
+
+#: includes/I18n.php:340
+msgid "This option will always display"
+msgstr ""
+
+#: includes/I18n.php:341
+msgid "This will create a copy of"
+msgstr ""
+
+#: includes/I18n.php:342
+msgid "Thursday"
+msgstr ""
+
+#: includes/I18n.php:343
+msgid "Time picker"
+msgstr ""
+
+#: includes/I18n.php:344
+msgid "Tooltips"
+msgstr ""
+
+#: includes/I18n.php:345
+msgid "Top"
+msgstr ""
+
+#: includes/I18n.php:346
+msgid "Total price"
+msgstr ""
+
+#: includes/I18n.php:347
+msgid "Total price font size is required"
+msgstr ""
+
+#: includes/I18n.php:349
+msgid "Tuesday"
+msgstr ""
+
+#: includes/I18n.php:350
+msgid "Type class name separate by comma."
+msgstr ""
+
+#: includes/I18n.php:351
+msgid "Type regular expressions"
+msgstr ""
+
+#: includes/I18n.php:352
+msgid "Type something..."
+msgstr ""
+
+#: includes/I18n.php:353
+msgid "Type the maximum number of days to disable from today."
+msgstr ""
+
+#: includes/I18n.php:354
+msgid "Unassigned"
+msgstr ""
+
+#: includes/I18n.php:355
+msgid "Unlock YayExtra Pro"
+msgstr ""
+
+#: includes/I18n.php:356
+msgid "Unlock this feature"
+msgstr ""
+
+#: includes/I18n.php:357
+msgid "Update product price"
+msgstr ""
+
+#: includes/I18n.php:358
+msgid "Url"
+msgstr ""
+
+#: includes/I18n.php:359
+msgid "VIP live chat support"
+msgstr ""
+
+#: includes/I18n.php:360
+msgid "Value cannot be empty"
+msgstr ""
+
+#: includes/I18n.php:361
+msgid "Value name cannot be empty"
+msgstr ""
+
+#: includes/I18n.php:362
+msgid "Verified Customer"
+msgstr ""
+
+#: includes/I18n.php:363
+msgid "Vertical"
+msgstr ""
+
+#: includes/I18n.php:364
+msgid "View matched products"
+msgstr ""
+
+#: includes/I18n.php:365
+msgid ""
+"We need your support to keep updating and improving the plugin. "
+"Please,"
+msgstr ""
+
+#: includes/I18n.php:366
+msgid "Wednesday"
+msgstr ""
+
+#: includes/I18n.php:367
+msgid "Weight"
+msgstr ""
+
+#: includes/I18n.php:368
+msgid "YayExtra Free"
+msgstr ""
+
+#: includes/I18n.php:369
+msgid "YayExtra Pro"
+msgstr ""
+
+#: includes/I18n.php:370
+msgid "Yes"
+msgstr ""
+
+#: includes/I18n.php:371
+msgid ""
+"You can add fees and discounts to your cart depended on which actions you "
+"created."
+msgstr ""
+
+#: includes/I18n.php:372
+msgid "You must add at least one valid option before adding an action."
+msgstr ""
+
+#: includes/I18n.php:373
+msgid "Your Current"
+msgstr ""
+
+#: includes/I18n.php:374
+msgid "Your email address will not be published. Required fields are marked"
+msgstr ""
+
+#: includes/I18n.php:375
+msgid "button values."
+msgstr ""
+
+#: includes/I18n.php:376
+msgid "do all of these actions"
+msgstr ""
+
+#: includes/I18n.php:377
+msgid "help us by leaving a good review"
+msgstr ""
+
+#: includes/I18n.php:378
+msgid "match"
+msgstr ""
+
+#: includes/I18n.php:379
+msgid "max file size"
+msgstr ""
+
+#: includes/I18n.php:380
+msgid "of"
+msgstr ""
+
+#: includes/I18n.php:381
+msgid "of these conditions"
+msgstr ""
+
+#: includes/I18n.php:382
+msgid "of these conditions."
+msgstr ""
+
+#: includes/I18n.php:383
+msgid "of these logic conditions"
+msgstr ""
+
+#: includes/I18n.php:384
+msgid "option sets"
+msgstr ""
+
+#: includes/I18n.php:385
+msgid "option sets."
+msgstr ""
+
+#: includes/I18n.php:386
+msgid "products to display."
+msgstr ""
+
+#: includes/I18n.php:387
+msgid "selected"
+msgstr ""
+
+#: includes/I18n.php:388
+msgid "Add % fee based on original product"
+msgstr ""
+
+#: includes/I18n.php:389
+msgid "Add % fee based on whole package"
+msgstr ""
+
+#: includes/I18n.php:390
+msgid "Add discount"
+msgstr ""
+
+#: includes/I18n.php:391
+msgid "Add fee"
+msgstr ""
+
+#: includes/I18n.php:392
+msgid "Add file to download"
+msgstr ""
+
+#: includes/I18n.php:393
+msgid "Add fixed discount"
+msgstr ""
+
+#: includes/I18n.php:394
+msgid "Add fixed fee"
+msgstr ""
+
+#: includes/I18n.php:395
+msgid "All applicable option sets"
+msgstr ""
+
+#: includes/I18n.php:396
+msgid "All categories"
+msgstr ""
+
+#: includes/I18n.php:397
+msgid "All tags"
+msgstr ""
+
+#: includes/I18n.php:398
+msgid "Any"
+msgstr ""
+
+#: includes/I18n.php:399
+msgid "Are you sure you want to delete this action?"
+msgstr ""
+
+#: includes/I18n.php:400
+msgid "Are you sure you want to delete this option set?"
+msgstr ""
+
+#: includes/I18n.php:401
+msgid "Are you sure you want to duplicate this option set?"
+msgstr ""
+
+#: includes/I18n.php:402
+msgid "Be the first to review “T-Shirt”"
+msgstr ""
+
+#: includes/I18n.php:403
+msgid "Choose File"
+msgstr ""
+
+#: includes/I18n.php:404
+msgid "Display"
+msgstr ""
+
+#: includes/I18n.php:405
+msgid "Download file"
+msgstr ""
+
+#: includes/I18n.php:406
+msgid "Enter your custom CSS here"
+msgstr ""
+
+#: includes/I18n.php:407
+msgid "Enter your email"
+msgstr ""
+
+#: includes/I18n.php:408
+msgid "Enter your name"
+msgstr ""
+
+#: includes/I18n.php:409
+msgid "Error loading data:"
+msgstr ""
+
+#: includes/I18n.php:410
+msgid "First applicable option set"
+msgstr ""
+
+#: includes/I18n.php:411
+msgid "Fixed amount"
+msgstr ""
+
+#: includes/I18n.php:412
+msgid "Hide"
+msgstr ""
+
+#: includes/I18n.php:413
+msgid "ID"
+msgstr ""
+
+#: includes/I18n.php:414
+msgid "Is not one of"
+msgstr ""
+
+#: includes/I18n.php:415
+msgid "Is one of"
+msgstr ""
+
+#: includes/I18n.php:416
+msgid "Move"
+msgstr ""
+
+#: includes/I18n.php:417
+msgid "No file chosen"
+msgstr ""
+
+#: includes/I18n.php:418
+msgid "Option"
+msgstr ""
+
+#: includes/I18n.php:419
+msgid "Photo"
+msgstr ""
+
+#: includes/I18n.php:420
+msgid "Product category"
+msgstr ""
+
+#: includes/I18n.php:421
+msgid "Product name"
+msgstr ""
+
+#: includes/I18n.php:422
+msgid "Review"
+msgstr ""
+
+#: includes/I18n.php:423 includes/Templates/dropdown_field.php:41
+msgid "Select your option"
+msgstr ""
+
+#: includes/I18n.php:424
+msgid "Set as Status"
+msgstr ""
+
+#: includes/I18n.php:425
+msgid ""
+"Some duplicates may have failed. Please check the console for "
+"details."
+msgstr ""
+
+#: includes/I18n.php:426
+msgid ""
+"Some status updates may have failed. Please check the console for "
+"details."
+msgstr ""
+
+#: includes/I18n.php:427
+msgid "Submit Review"
+msgstr ""
+
+#: includes/I18n.php:428
+msgid "The least options"
+msgstr ""
+
+#: includes/I18n.php:429
+msgid "The most options"
+msgstr ""
+
+#: includes/I18n.php:430
+msgid "There is no review yet."
+msgstr ""
+
+#: includes/I18n.php:431
+msgid "Type your description here."
+msgstr ""
+
+#: includes/I18n.php:432
+msgid "Upload"
+msgstr ""
+
+#: includes/I18n.php:433
+msgid "Write your review here..."
+msgstr ""
+
+#: includes/I18n.php:434
+msgid ""
+"You need to create at least one other option before adding conditional "
+"logic"
+msgstr ""
+
+#: includes/I18n.php:435
+msgid "Your Rating"
+msgstr ""
+
+#: includes/I18n.php:436
+msgid "assigned"
+msgstr ""
+
+#: includes/I18n.php:437
+msgid "image"
+msgstr ""
+
+#: includes/I18n.php:438
+msgid "option(s)"
+msgstr ""
+
+#: includes/I18n.php:439
+msgid "to"
+msgstr ""
+
+#: includes/I18n.php:440
+msgid "unassigned"
+msgstr ""
+
+#: includes/I18n.php:441
+msgid "when match"
+msgstr ""
+
+#: includes/I18n.php:442
+msgid "Text Field"
+msgstr ""
+
+#: includes/I18n.php:443
+msgid "Textarea Field"
+msgstr ""
+
+#: includes/I18n.php:444
+msgid "Radio"
+msgstr ""
+
+#: includes/I18n.php:445
+msgid "Button (multi selectable)"
+msgstr ""
+
+#: includes/I18n.php:446
+msgid "Swatches (multi selectable)"
+msgstr ""
+
+#: includes/I18n.php:447
+msgid "Dropdown"
+msgstr ""
+
+#: includes/I18n.php:448
+msgid "Date picker"
+msgstr ""
+
+#: includes/I18n.php:449
+msgid "File Upload"
+msgstr ""
+
+#: includes/I18n.php:450
+msgid "File Download"
+msgstr ""
+
+#: includes/I18n.php:451
+msgid "Image Upload"
+msgstr ""
+
+#: includes/I18n.php:452
+msgid "Textarea"
+msgstr ""
+
+#: includes/Init/Ajax.php:451
 msgid "Duplicate option set failed."
 msgstr ""
 
-#: includes/Init/Ajax.php:230
+#: includes/Init/Ajax.php:479
 msgid "Import at least 1 JSON file"
 msgstr ""
 
-#: includes/Init/Ajax.php:549 includes/Init/Ajax.php:606
-msgid "Upload Image successful"
-msgstr ""
-
-#: includes/Init/Ajax.php:616
-msgid "Data is empty"
+#: includes/Init/Ajax.php:847
+msgid "Invalid option set ID"
 msgstr ""
 
 #: includes/Init/CustomPostType.php:25 includes/Init/CustomPostType.php:26
 msgid "Option Set"
-msgstr ""
-
-#: includes/Init/CustomPostType.php:27
-msgid "Add New Option Set"
 msgstr ""
 
 #: includes/Init/CustomPostType.php:28
@@ -200,19 +1763,6 @@ msgstr ""
 msgid "No Option Set currently trashed"
 msgstr ""
 
-#: includes/Init/Settings.php:74 includes/Init/Settings.php:86
-#: includes/YayCommerceMenu/RegisterMenu.php:151
-msgid "YayExtra"
-msgstr ""
-
-#: includes/Init/Settings.php:86
-msgid "Settings"
-msgstr ""
-
-#: includes/Templates/dropdown_field.php:41
-msgid "Select your option"
-msgstr ""
-
 #: includes/Templates/file_upload_field.php:28
 #, no-php-format
 msgid "( max file size % s )"
@@ -220,168 +1770,13 @@ msgstr ""
 
 #: includes/UpdateVersion.php:14
 msgid ""
-"It looks like you have another YayExtra version installed, please delete it "
-"before activating this new version. All current settings and data are still "
-"preserved."
-msgstr ""
-
-#: includes/UpdateVersion.php:15
-msgid "Read more details."
-msgstr ""
-
-#: includes/YayCommerceMenu/OtherPluginsMenu.php:122
-msgid "Other Plugins"
-msgstr ""
-
-#: includes/YayCommerceMenu/OtherPluginsMenu.php:310
-msgid "Get data success"
-msgstr ""
-
-#: includes/YayCommerceMenu/OtherPluginsMenu.php:318
-#: includes/YayCommerceMenu/OtherPluginsMenu.php:362
-#: includes/YayCommerceMenu/OtherPluginsMenu.php:472
-msgid "Error exception."
-msgstr ""
-
-#: includes/YayCommerceMenu/OtherPluginsMenu.php:327
-#: includes/YayCommerceMenu/OtherPluginsMenu.php:371
-#: includes/YayCommerceMenu/OtherPluginsMenu.php:481
-msgid "Error."
-msgstr ""
-
-#: includes/YayCommerceMenu/OtherPluginsMenu.php:355
-msgid "Activate success"
-msgstr ""
-
-#: includes/YayCommerceMenu/OtherPluginsMenu.php:438
-msgid "Install success"
-msgstr ""
-
-#: includes/YayCommerceMenu/OtherPluginsMenu.php:462
-msgid "Update success"
-msgstr ""
-
-#: includes/YayCommerceMenu/RegisterMenu.php:87
-msgid "Help"
-msgstr ""
-
-#: includes/YayCommerceMenu/RegisterMenu.php:94
-msgid "Licenses"
-msgstr ""
-
-#: includes/YayCommerceMenu/RegisterMenu.php:101
-msgid "Other plugins"
-msgstr ""
-
-#. translators: %s: Plugin name and version.
-#: includes/YayCommerceMenu/views/other-plugins-content.php:76
-#: includes/YayCommerceMenu/views/other-plugins-content.php:84
-#, php-format
-msgctxt "plugin"
-msgid "Install %s now"
-msgstr ""
-
-#: includes/YayCommerceMenu/views/other-plugins-content.php:77
-#: includes/YayCommerceMenu/views/other-plugins-content.php:85
-msgid "Install Now"
-msgstr ""
-
-#: includes/YayCommerceMenu/views/other-plugins-content.php:91
-msgctxt "plugin"
-msgid "Cannot Install"
-msgstr ""
-
-#. translators: %s: Plugin name and version.
-#: includes/YayCommerceMenu/views/other-plugins-content.php:108
-#: includes/YayCommerceMenu/views/other-plugins-content.php:119
-#, php-format
-msgctxt "plugin"
-msgid "Update %s now"
-msgstr ""
-
-#: includes/YayCommerceMenu/views/other-plugins-content.php:110
-#: includes/YayCommerceMenu/views/other-plugins-content.php:121
-msgid "Update Now"
-msgstr ""
-
-#: includes/YayCommerceMenu/views/other-plugins-content.php:127
-msgctxt "plugin"
-msgid "Cannot Update"
-msgstr ""
-
-#: includes/YayCommerceMenu/views/other-plugins-content.php:144
-msgctxt "plugin"
-msgid "Activated"
-msgstr ""
-
-#: includes/YayCommerceMenu/views/other-plugins-content.php:149
-msgid "Activate"
-msgstr ""
-
-#. translators: %s: Plugin name.
-#: includes/YayCommerceMenu/views/other-plugins-content.php:151
-#, php-format
-msgctxt "plugin"
-msgid "Activate %s"
-msgstr ""
-
-#: includes/YayCommerceMenu/views/other-plugins-content.php:162
-msgid "Network Activate"
-msgstr ""
-
-#. translators: %s: Plugin name.
-#: includes/YayCommerceMenu/views/other-plugins-content.php:164
-#, php-format
-msgctxt "plugin"
-msgid "Network Activate %s"
-msgstr ""
-
-#: includes/YayCommerceMenu/views/other-plugins-content.php:177
-msgctxt "plugin"
-msgid "Cannot Activate"
-msgstr ""
-
-#: includes/YayCommerceMenu/views/other-plugins-content.php:183
-msgctxt "plugin"
-msgid "Installed"
-msgstr ""
-
-#: includes/YayCommerceMenu/views/other-plugins-content.php:213
-msgid "This plugin doesn&#8217;t work with your versions of WordPress and PHP."
-msgstr ""
-
-#. translators: 1: URL to WordPress Updates screen, 2: URL to Update PHP page.
-#: includes/YayCommerceMenu/views/other-plugins-content.php:217
-#, php-format
-msgid ""
-"<a href=\"%1$s\">Please update WordPress</a>, and then <a "
-"href=\"%2$s\">learn more about updating PHP</a>."
-msgstr ""
-
-#. translators: %s: URL to WordPress Updates screen.
-#: includes/YayCommerceMenu/views/other-plugins-content.php:225
-#: includes/YayCommerceMenu/views/other-plugins-content.php:241
-#, php-format
-msgid "<a href=\"%s\">Please update WordPress</a>."
-msgstr ""
-
-#. translators: %s: URL to Update PHP page.
-#: includes/YayCommerceMenu/views/other-plugins-content.php:231
-#: includes/YayCommerceMenu/views/other-plugins-content.php:250
-#, php-format
-msgid "<a href=\"%s\">Learn more about updating PHP</a>."
-msgstr ""
-
-#: includes/YayCommerceMenu/views/other-plugins-content.php:237
-msgid "This plugin doesn&#8217;t work with your version of WordPress."
-msgstr ""
-
-#: includes/YayCommerceMenu/views/other-plugins-content.php:246
-msgid "This plugin doesn&#8217;t work with your version of PHP."
+"You have activated the YayExtra Pro version, so the YayExtra Lite version "
+"has been automatically deactivated. All settings have been "
+"saved."
 msgstr ""
 
 #. translators: %s: search WooCommerce plugin link
-#: yayextra.php:81
+#: yayextra.php:97
 #, php-format
 msgid ""
 "is enabled but not effective. It requires %1$sWooCommerce%2$s in order to "
@@ -398,8 +1793,9 @@ msgstr ""
 
 #. Description of the plugin/theme
 msgid ""
-"Offer extra options like personal engraving, print-on-demand items, gifts, "
-"custom canvas prints, and personalized products."
+"Offer extra options like personal engraving, print-on-demand items, "
+"gifts, custom canvas prints, and personalized "
+"products."
 msgstr ""
 
 #. Author of the plugin/theme
@@ -409,3 +1805,4 @@ msgstr ""
 #. Author URI of the plugin/theme
 msgid "https://yaycommerce.com"
 msgstr ""
+

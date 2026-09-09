@@ -2,6 +2,7 @@
 
 namespace YayExtraScoped\YayCommerce\AdminShell\Pages;
 
+use YayExtraScoped\YayCommerce\AdminShell\Support\AdminContext;
 /**
  * Renders the Licenses admin page.
  * Ported from YayMail Pro LicensesMenu.php.
@@ -10,6 +11,9 @@ class LicensesPage
 {
     public static function render(): void
     {
+        // Exposed to the included view so it can show a per-site notice in
+        // Network Admin (license keys are stored/activated per site).
+        $is_network = AdminContext::is_network();
         ?>
         <script>
             document.querySelector("#wpbody-content").innerHTML = "";

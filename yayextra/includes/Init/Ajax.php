@@ -50,6 +50,8 @@ class Ajax {
 			'get_product_category_list',
 			'get_product_tag_list',
 			'filter_product_meta',
+			'get_product_list_items',
+			'get_product_picker_suggestions',
 			// 'handle_image_upload',
 			// 'handle_image_swatches_upload',
 			'save_settings',
@@ -627,10 +629,22 @@ private function migrate_option_set_logic_value( $option_set ) {
 			if ( ! wp_verify_nonce( $nonce, 'yaye_nonce' ) ) {
 				throw new \Exception( __( 'Nonce is invalid', 'yayextra' ) );
 			}
-			$option_set = isset( $_POST['option_set'] ) ? sanitize_text_field( wp_unslash( $_POST['option_set'] ) ) : "";
-			$option_set = json_decode( $option_set, true );
+			$raw        = isset( $_POST['option_set'] ) ? wp_unslash( $_POST['option_set'] ) : '';
+			$option_set = json_decode( $raw, true );
+			// Only entity-decode the payload if JSON parse failed (do NOT decode string
+			// values like "&lt;a&gt;Lui&lt;/a&gt;" — those must stay literal in the editor).
+			if ( ! is_array( $option_set ) ) {
+				$option_set = json_decode( html_entity_decode( $raw, ENT_COMPAT, 'UTF-8' ), true );
+			}
+
+			if ( empty( $option_set ) || ! is_array( $option_set ) || empty( $option_set['id'] ) ) {
+				throw new \Exception( __( 'Invalid option set data', 'yayextra' ) );
+			}
 
 			$id = $option_set['id'];
+			if ( ! empty( $option_set['options'] ) && is_array( $option_set['options'] ) ) {
+				$option_set['options'] = Utils::sanitize_option_html_fields( $option_set['options'] );
+			}
 			update_post_meta( $id, '_yaye_name', $option_set['name'] );
 			update_post_meta( $id, '_yaye_description', $option_set['description'] );
 			update_post_meta( $id, '_yaye_status', $option_set['status'] );
@@ -705,8 +719,6 @@ private function migrate_option_set_logic_value( $option_set ) {
 			$params = sanitize_text_field( wp_unslash( isset( $_POST['params'] ) ? $_POST['params'] : "" ) );
 			$params = json_decode( $params, true );
 
-			$option_set_id = $params['optionSetId'];
-
 			$response_data = Utils::get_products_match( $condition, $apply, $params );
 
 			wp_send_json_success(
@@ -741,6 +753,186 @@ private function migrate_option_set_logic_value( $option_set ) {
 			$filter        = json_decode( $filter, true );
 			$response_data = Utils::filter_product_meta( $filter );
 			wp_send_json_success( $response_data, 200 );
+		} catch ( \Exception $ex ) {
+			wp_send_json_error( array( 'msg' => $ex->getMessage() ) );
+		} catch ( \Error $err ) {
+			wp_send_json_error( array( 'msg' => $err->getMessage() ) );
+		}
+	}
+
+	/**
+	 * Ajax get product list items by IDs (for Product list option type).
+	 *
+	 * @throws \Exception Exception when check nonce.
+	 *
+	 * @return void
+	 */
+	public function get_product_list_items() {
+		try {
+			$nonce = isset( $_POST['nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['nonce'] ) ) : '';
+			if ( ! wp_verify_nonce( $nonce, 'yaye_nonce' ) ) {
+				throw new \Exception( __( 'Nonce is invalid', 'yayextra' ) );
+			}
+			$product_ids = sanitize_text_field( wp_unslash( isset( $_POST['product_ids'] ) ? $_POST['product_ids'] : '' ) );
+			$product_ids = json_decode( $product_ids, true );
+			if ( ! is_array( $product_ids ) ) {
+				$product_ids = array();
+			}
+			$response_data = Utils::get_product_list_items_by_ids( $product_ids );
+			wp_send_json_success(
+				array(
+					'items' => $response_data,
+				),
+				200
+			);
+		} catch ( \Exception $ex ) {
+			wp_send_json_error( array( 'msg' => $ex->getMessage() ) );
+		} catch ( \Error $err ) {
+			wp_send_json_error( array( 'msg' => $err->getMessage() ) );
+		}
+	}
+
+	/**
+	 * Ajax get a few recent products for Product list picker empty state.
+	 *
+	 * @throws \Exception Exception when check nonce.
+	 *
+	 * @return void
+	 */
+	public function get_product_picker_suggestions() {
+		try {
+			$nonce = isset( $_POST['nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['nonce'] ) ) : '';
+			if ( ! wp_verify_nonce( $nonce, 'yaye_nonce' ) ) {
+				throw new \Exception( __( 'Nonce is invalid', 'yayextra' ) );
+			}
+			$limit = isset( $_POST['limit'] ) ? absint( wp_unslash( $_POST['limit'] ) ) : 5;
+			wp_send_json_success( Utils::get_product_picker_suggestions( $limit ), 200 );
+		} catch ( \Exception $ex ) {
+			wp_send_json_error( array( 'msg' => $ex->getMessage() ) );
+		} catch ( \Error $err ) {
+			wp_send_json_error( array( 'msg' => $err->getMessage() ) );
+		}
+	}
+
+	/**
+	 * Ajax for upload image.
+	 *
+	 * @throws \Exception Exception when check nonce.
+	 *
+	 * @return void
+	 */
+	public function handle_image_upload() {
+		try {
+			$nonce = isset( $_POST['nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['nonce'] ) ) : '';
+			if ( ! wp_verify_nonce( $nonce, 'yaye_nonce' ) ) {
+				throw new \Exception( __( 'Nonce is invalid', 'yayextra' ) );
+			}
+			$FILES      = $_FILES;
+			$image_data = Utils::sanitize_array( isset( $FILES['yayextra-product-image'] ) ? $FILES['yayextra-product-image'] : array() );
+
+			$product_page = ProductPage::get_instance();
+			$restl        = $product_page->handle_upload_file_default( $image_data );
+
+			if ( empty( $restl['error'] ) && ! empty( $restl['file'] ) ) {
+				$file_url   = wc_clean( $restl['url'] );
+				$upload_dir = wp_upload_dir( null, false );
+
+				$base_url  = $upload_dir['baseurl'] . '/';
+				$base_dir  = $upload_dir['basedir'] . '/';
+				$image_url = str_replace( $base_url, '', $file_url );
+				if ( empty( $restl['tc'] ) ) {
+					$product_id = sanitize_text_field( wp_unslash( isset( $_POST['product_id'] ) ? $_POST['product_id'] : '' ) );
+
+					$image_dir     = $base_dir . $image_url;
+					$insert_img_id = wp_insert_attachment(
+						array(
+							'guid'           => $file_url,
+							'post_mime_type' => $image_data['type'],
+							'post_title'     => preg_replace( '/\.[^.]+$/', '', $image_data['name'] ),
+							'post_content'   => '',
+							'post_status'    => 'inherit',
+						),
+						$image_dir
+					);
+
+					// wp_generate_attachment_metadata() won't work if you do not include this file.
+					require_once ABSPATH . 'wp-admin/includes/image.php';
+					// Generate and save the attachment metas into the database.
+					wp_update_attachment_metadata( $insert_img_id, wp_generate_attachment_metadata( $insert_img_id, $image_dir ) );
+					update_post_meta( $insert_img_id, '_wp_attached_file', $image_url );
+
+					// Update thumbnail for current product.
+					update_post_meta( intval( $product_id ), '_thumbnail_id', $insert_img_id );
+
+					wp_send_json_success( array( 'msg' => esc_html__( 'Upload Image successful', 'yayextra' ) ), 200 );
+				}
+			} else {
+				wp_send_json_error( array( 'msg' => $restl['error'] ) );
+			}
+		} catch ( \Exception $ex ) {
+			wp_send_json_error( array( 'msg' => $ex->getMessage() ) );
+		} catch ( \Error $err ) {
+			wp_send_json_error( array( 'msg' => $err->getMessage() ) );
+		}
+	}
+
+	/**
+	 * Ajax for upload image.
+	 *
+	 * @throws \Exception Exception when check nonce.
+	 *
+	 * @return void
+	 */
+	public function handle_image_swatches_upload() {
+		try {
+			Utils::check_nonce();
+			$opt_set_id = ! empty( $_REQUEST['optSetId'] ) ? sanitize_text_field( $_REQUEST['optSetId'] ) : null;
+			$opt_id     = ! empty( $_REQUEST['optId'] ) ? sanitize_text_field( $_REQUEST['optId'] ) : null;
+			$opt_val    = ! empty( $_REQUEST['optVal'] ) ? sanitize_text_field( wp_unslash($_REQUEST['optVal']) ) : null;
+
+			if ( $opt_set_id && $opt_id && $opt_val ) {
+				$FILES      = $_FILES;
+				$image_data = Utils::sanitize_array( $FILES['file'] );
+
+				$product_page = ProductPage::get_instance();
+				$restl        = $product_page->handle_upload_file_default( $image_data );
+
+				if ( empty( $restl['error'] ) && ! empty( $restl['file'] ) ) {
+					$file_url = wc_clean( $restl['url'] );
+
+					if ( empty( $restl['tc'] ) ) {
+						// Handle update swatches image
+						$option_metas = get_post_meta( $opt_set_id, '_yaye_options', true );
+						if ( ! empty( $option_metas ) ) {
+							foreach ( $option_metas as $index => $opt ) {
+								if ( $opt_id === $opt['id'] ) {
+									if ( ! empty( $opt['optionValues'] ) ) {
+										foreach ( $opt['optionValues'] as $inx => $optVal ) {
+											if ( trim($opt_val) === trim($optVal['value']) ) {
+												$option_metas[ $index ]['optionValues'][ $inx ]['imageUrl'] = $file_url;
+											}
+										}
+									}
+								}
+							}
+						}
+
+						update_post_meta( $opt_set_id, '_yaye_options', $option_metas );
+
+						wp_send_json_success(
+							array(
+								'msg'     => esc_html__( 'Upload Image successful', 'yayextra' ),
+								'img_url' => $file_url,
+							),
+							200
+						);
+					}
+				} else {
+					wp_send_json_error( array( 'msg' => $restl['error'] ) );
+				}
+			} else {
+				wp_send_json_error( array( 'msg' => esc_html__( 'Data is empty', 'yayextra' ) ) );
+			}
 		} catch ( \Exception $ex ) {
 			wp_send_json_error( array( 'msg' => $ex->getMessage() ) );
 		} catch ( \Error $err ) {

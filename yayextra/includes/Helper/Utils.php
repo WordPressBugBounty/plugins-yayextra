@@ -40,6 +40,31 @@ class Utils {
 	}
 
 	/**
+	 * Like sanitize_text_field, but does not collapse spaces between words.
+	 *
+	 * @param mixed $value Value to sanitize.
+	 *
+	 * @return string
+	 */
+	public static function sanitize_text_field_preserve_spaces( $value ) {
+		if ( is_array( $value ) || is_object( $value ) ) {
+			return '';
+		}
+
+		$filtered = wp_check_invalid_utf8( (string) $value );
+
+		if ( strpos( $filtered, '<' ) !== false ) {
+			$filtered = wp_pre_kses_less_than( $filtered );
+			$filtered = wp_strip_all_tags( $filtered );
+			$filtered = str_replace( "<\n", "\n", $filtered );
+		}
+
+		$filtered = preg_replace( '/[\r\n\t]+/', ' ', $filtered );
+
+		return trim( $filtered );
+	}
+	
+	/**
 	 * Get template.
 	 *
 	 * @param string $template_folder Template folder path.
@@ -227,6 +252,35 @@ class Utils {
 	}
 
 	/**
+	 * Thumbnail URL for a WooCommerce product (picker / product list).
+	 *
+	 * @param \WC_Product $product Product object.
+	 * @return string
+	 */
+	public static function get_product_picker_image_url( $product ) {
+		if ( ! $product instanceof \WC_Product ) {
+			return wc_placeholder_img_src( 'woocommerce_thumbnail' );
+		}
+
+		$image_id = $product->get_image_id();
+		if ( ! $image_id && $product->is_type( 'variation' ) ) {
+			$parent = wc_get_product( $product->get_parent_id() );
+			if ( $parent ) {
+				$image_id = $parent->get_image_id();
+			}
+		}
+
+		if ( $image_id ) {
+			$url = wp_get_attachment_image_url( $image_id, 'woocommerce_thumbnail' );
+			if ( $url ) {
+				return $url;
+			}
+		}
+
+		return wc_placeholder_img_src( 'woocommerce_thumbnail' );
+	}
+
+	/**
 	 * Get list product by product name.
 	 *
 	 * @param string $filter Product filter.
@@ -252,11 +306,29 @@ class Utils {
 			if ( ! $product ) {
 				continue;
 			}
-			if ( false !== strpos( strtolower( $product->get_name() ), strtolower( $filter ) ) ) {
-				$results[] = array(
-					'value' => $product_id,
-					'label' => $product->get_name(),
-				);
+
+			if ( $product->has_child() ) {
+				$product_variation_ids = $product->get_children();
+				if ( ! empty( $product_variation_ids ) ) {
+					foreach ( $product_variation_ids as $prod_variation_id ) {
+						$prod_variation = wc_get_product( $prod_variation_id );
+						if ( false !== strpos( strtolower( $prod_variation->get_name() ), strtolower( $filter ) ) ) {
+							$results[] = array(
+								'value' => $prod_variation_id,
+								'label' => $prod_variation->get_name(),
+								'image' => self::get_product_picker_image_url( $prod_variation ),
+							);
+						}
+					}
+				}
+			} else {
+				if ( false !== strpos( strtolower( $product->get_name() ), strtolower( $filter ) ) ) {
+					$results[] = array(
+						'value' => $product_id,
+						'label' => $product->get_name(),
+						'image' => self::get_product_picker_image_url( $product ),
+					);
+				}
 			}
 		}
 
@@ -767,5 +839,155 @@ class Utils {
 	 */
 	public static function is_polylang() {
 		return did_action( 'pll_init' );
+	}
+
+	public static function wpKsesAllowedHtml( $cus_attr_tags = [] ) {
+        $allowed_html_tags           = wp_kses_allowed_html( 'post' );
+        $allowed_html_tags['html']   = [];
+        $allowed_html_attr           = $cus_attr_tags;
+        return array_map(
+            function ( $item ) use ( $allowed_html_attr ) {
+                return is_array( $item ) ? array_merge( $item, $allowed_html_attr ) : $item;
+            },
+            $allowed_html_tags
+        );
+    }
+	public static function wpKses( $html ) {
+        $allowed_html = self::wpKsesAllowedHtml();
+        return wp_kses( $html, $allowed_html );
+    }
+
+	/**
+	 * Sanitize rich-text option HTML for save / storefront.
+	 * Allows safe formatting tags (like Expo render) but strips scripts / event handlers.
+	 * Entity-encoded typed tags (e.g. &lt;h1&gt;) stay as visible text — not "converted".
+	 *
+	 * @param mixed $html Raw HTML string.
+	 * @return string
+	 */
+	public static function sanitize_option_html( $html ) {
+		if ( ! is_string( $html ) || '' === $html ) {
+			return '';
+		}
+		return self::wpKses( $html );
+	}
+
+	/**
+	 * Sanitize htmlContent / popupTitle / popupContent across an option tree before save.
+	 *
+	 * @param array $nodes Option tree nodes.
+	 * @return array
+	 */
+	public static function sanitize_option_html_fields( $nodes ) {
+		if ( ! is_array( $nodes ) ) {
+			return array();
+		}
+
+		$html_keys = array( 'htmlContent', 'popupTitle', 'popupContent' );
+
+		foreach ( $nodes as &$node ) {
+			if ( ! is_array( $node ) ) {
+				continue;
+			}
+			foreach ( $html_keys as $key ) {
+				if ( isset( $node[ $key ] ) && is_string( $node[ $key ] ) ) {
+					$node[ $key ] = self::sanitize_option_html( $node[ $key ] );
+				}
+			}
+			if ( ! empty( $node['children'] ) && is_array( $node['children'] ) ) {
+				$node['children'] = self::sanitize_option_html_fields( $node['children'] );
+			}
+		}
+
+		return $nodes;
+	}
+
+	/**
+	 * Build product list snapshot items from WooCommerce product IDs.
+	 *
+	 * @param array $product_ids Product IDs (ordered).
+	 * @return array
+	 */
+	public static function get_product_list_items_by_ids( $product_ids ) {
+		if ( empty( $product_ids ) || ! is_array( $product_ids ) ) {
+			return array();
+		}
+
+		$items = array();
+		foreach ( $product_ids as $raw_id ) {
+			$product_id = absint( $raw_id );
+			if ( ! $product_id ) {
+				continue;
+			}
+			$product = wc_get_product( $product_id );
+			if ( ! $product ) {
+				continue;
+			}
+
+			$image_id  = $product->get_image_id();
+			$image_url = $image_id ? wp_get_attachment_image_url( $image_id, 'woocommerce_thumbnail' ) : '';
+			if ( ! $image_url ) {
+				$image_url = wc_placeholder_img_src( 'woocommerce_thumbnail' );
+			}
+			$image_alt = $image_id ? get_post_meta( $image_id, '_wp_attachment_image_alt', true ) : '';
+			if ( ! is_string( $image_alt ) || '' === $image_alt ) {
+				$image_alt = $product->get_name();
+			}
+
+			$items[] = array(
+				'productId'  => (string) $product_id,
+				'title'      => $product->get_name(),
+				'imageUrl'   => $image_url,
+				'imageAlt'   => $image_alt,
+				'price'      => wp_strip_all_tags( wc_price( wc_get_price_to_display( $product ) ) ),
+				'productUrl' => get_permalink( $product_id ),
+			);
+		}
+
+		return $items;
+	}
+
+	/**
+	 * Recent published products for the Product list picker (empty-state suggestions).
+	 *
+	 * @param int $limit Max products to return.
+	 * @return array List of { value, label }.
+	 */
+	public static function get_product_picker_suggestions( $limit = 5 ) {
+		$limit = absint( $limit );
+		if ( $limit < 1 ) {
+			$limit = 5;
+		}
+		if ( $limit > 20 ) {
+			$limit = 20;
+		}
+
+		$products = wc_get_products(
+			array(
+				'status'  => 'publish',
+				'limit'   => $limit,
+				'orderby' => 'date',
+				'order'   => 'DESC',
+				'return'  => 'objects',
+			)
+		);
+
+		$results = array();
+		if ( empty( $products ) || ! is_array( $products ) ) {
+			return $results;
+		}
+
+		foreach ( $products as $product ) {
+			if ( ! $product instanceof \WC_Product ) {
+				continue;
+			}
+			$results[] = array(
+				'value' => $product->get_id(),
+				'label' => $product->get_name(),
+				'image' => self::get_product_picker_image_url( $product ),
+			);
+		}
+
+		return $results;
 	}
 }

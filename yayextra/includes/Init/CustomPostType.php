@@ -220,10 +220,9 @@ class CustomPostType {
 	public static function get_option( $option_set_id, $option_id ) {
 		$options = get_post_meta( $option_set_id, '_yaye_options', true );
 		if ( ! empty( $options ) ) {
-			foreach ( $options as $option ) {
-				if ( $option_id === $option['id'] ) {
-					return $option;
-				}
+			$found = \YayExtra\Helper\OptionTree::find_by_id( $options, $option_id );
+			if ( ! empty( $found ) ) {
+				return $found;
 			}
 		}
 		return array();
