@@ -4,7 +4,7 @@ Donate link: https://yaycommerce.com/yayextra-woocommerce-extra-product-options/
 Tags: product addons, woocommerce product options, woocommerce product fields, product customizer, extra product options
 Requires at least: 6.2
 Requires PHP: 7.2
-Tested up to: 7.0
+Tested up to: 7.1
 Stable tag: 2.0.3
 License: GPL-2.0+
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
@@ -23,7 +23,7 @@ Perfect for stores that sell personalized, configurable, or add-on products.
 - **Collect extra information** from customers before checkout
 - Improve product pages and increase order value
 
-👉 Check it out: [**YayExtra - Woo Product Options Pro**](https://yaycommerce.com/yayextra-woocommerce-extra-product-options/) 👀
+👉 Check it out: [**YayExtra - Woo Product Options Pro**](https://yaycommerce.com/yayextra-woocommerce-extra-product-options/) 
 
 **Works great for selling:**
 
@@ -36,11 +36,9 @@ Perfect for stores that sell personalized, configurable, or add-on products.
 
 Build better product pages. Offer more choices. Sell more with YayExtra.
 
-📌 [Quick Demo](https://demo.yaycommerce.com/yayextra/product/t-shirt/) | [Admin Test Drive](https://demo.yaycommerce.com/try-yayextra)
+📌 [Documentation](https://docs.yaycommerce.com/yayextra) | [Quick Demo](https://demo.yaycommerce.com/yayextra/product/t-shirt/) | [Admin Test Drive](https://demo.yaycommerce.com/try-yayextra)
 
 [youtube https://youtu.be/qytEac2_Yr0]
-
-Why Upgrade? Check it here: [Free vs Pro](https://docs.yaycommerce.com/yayextra/why-upgrade)
 
 ###⚡️ FEATURES
 
@@ -102,7 +100,6 @@ Each field type comes with various elements to help you enhance the extra produc
 - File upload: Add a single or multiple file uploads, make file uploads mandatory or optional, and many other options.
 - File upload: Allow specific file formats like PNG, JPG, PDF, DOC, XLS, etc.
 
-
 == Installation ==
 1. Download the plugin from wordpress.org
 2. From your WordPress admin dashboard, go to **Plugins** > **Add New**, and upload the yayextra.zip file
@@ -123,9 +120,18 @@ Yes, this feature is called Linked Product in YayExtra Pro settings. You can upg
 
 == Screenshots ==
 1. Extra product options on WooCommerce product page
-2. Gift options in the product field/extra option list
-3. Assign the product option set to the selected products in bulk
-4. Admin dashboard settings for WooCommerce extra product options
+2. Add custom swatches with additional prices
+3. Dropdown and checkbox fields
+4. Number input fields with validation rules
+5. Bulk-assign option sets to products
+6. Add conditional logic to keep your product pages neat and smart
+7. Quickly set up flexible conditions with and/or rules
+8. Add extra charges by percentage or fixed amount
+9. Adjust the price of gift wrapping fees
+10. Check the live preview of your new option set before going live
+11. Create unlimited options and manage all option sets in one dashboard
+12. Customize the appearance of swatches, buttons and other styles to match your WooCommerce theme
+13. Settings to control the price display and export/import your options
 
 == Changelog ==
 

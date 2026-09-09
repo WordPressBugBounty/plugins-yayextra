@@ -8,7 +8,7 @@
  * Author URI: https://yaycommerce.com
  * Text Domain: yayextra
  * WC requires at least: 3.0.0
- * WC tested up to: 10.6.0
+ * WC tested up to: 11.0
  * Domain Path: /i18n/languages/
  */
 
